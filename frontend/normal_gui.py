@@ -25,4 +25,5 @@ class NormalGUI(ctk.CTkFrame):
 
     def logout(self):
         # Logout and go back to login screen
+        self.destroy()
         self.controller.show_login_frame()

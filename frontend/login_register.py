@@ -7,6 +7,7 @@ import io
 from backend.auth import AuthManager
 from frontend.root_gui import RootGUI
 from frontend.normal_gui import NormalGUI
+from frontend.admin_gui import AdminGUI
 import zxcvbn
 class LoginFrame(ctk.CTkFrame):
     def __init__(self, parent):
@@ -78,14 +79,34 @@ class LoginFrame(ctk.CTkFrame):
         return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
     def generate_captcha_image(self, captcha_text):
-        """Generate an image for the CAPTCHA using Pillow."""
-        width, height = 200, 70
-        image = Image.new('RGB', (width, height), color=(255, 255, 255))
+        """Generate a more realistic and visually appealing CAPTCHA image using Pillow."""
+        width, height = 250, 100  # Adjusted size for a better layout
+        image = Image.new('RGB', (width, height), color=(255, 255, 255))  # White background
         draw = ImageDraw.Draw(image)
-        font = ImageFont.load_default()  # Use default font or load a specific font
 
-        # Draw the CAPTCHA text
-        draw.text((20, 20), captcha_text, font=font, fill=(0, 0, 0))
+        # Load a TrueType font (you can replace 'arial.ttf' with any font you like)
+        try:
+            font = ImageFont.truetype("arial.ttf", random.randint(40, 50))  # Random font size
+        except IOError:
+            font = ImageFont.load_default()  # Fallback to default font if custom font is unavailable
+
+        # Add random noise by drawing random lines
+        for _ in range(5):
+            start = (random.randint(0, width), random.randint(0, height))
+            end = (random.randint(0, width), random.randint(0, height))
+            draw.line([start, end], fill=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), width=2)
+
+        # Draw the CAPTCHA text with random positioning and color
+        for i, char in enumerate(captcha_text):
+            # Random position for each character
+            position = (20 + i * 40, random.randint(10, 40))
+            # Random color for each character
+            color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            draw.text(position, char, font=font, fill=color)
+
+        # Add random dots for extra noise
+        for _ in range(100):
+            draw.point((random.randint(0, width), random.randint(0, height)), fill=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
 
         # Convert the image to a format compatible with Tkinter
         img_byte_arr = io.BytesIO()
@@ -95,6 +116,7 @@ class LoginFrame(ctk.CTkFrame):
         captcha_image = ImageTk.PhotoImage(captcha_image)
 
         return captcha_image
+
 
     def login(self):
         """Perform login action with CAPTCHA validation."""
@@ -118,9 +140,10 @@ class LoginFrame(ctk.CTkFrame):
             error_label = ctk.CTkLabel(self, text=str(e), font=("Arial", 18), text_color="red")
             error_label.grid(row=9, column=1, columnspan=2, sticky="w", pady=10)
 class RegisterFrame(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, user_mode=True):
         super().__init__(parent)
         self.controller = parent
+        self.is_user = user_mode
 
         # Custom fonts and sizes
         font_large = ("Arial", 20)
@@ -169,7 +192,11 @@ class RegisterFrame(ctk.CTkFrame):
         self.fullname_label.grid(row=7, column=1)
 
         # Apartment code entry
-        ctk.CTkLabel(self, text="Mã căn hộ:", font=font_large).grid(row=8, column=0, padx=20, pady=10, sticky="w")
+        if self.is_user:
+            code_name = "Mã căn hộ:"
+        else:
+            code_name = "Mã cán bộ:"
+        ctk.CTkLabel(self, text=code_name, font=font_large).grid(row=8, column=0, padx=20, pady=10, sticky="w")
         self.apartment_code_entry = ctk.CTkEntry(self, placeholder_text="Mã căn hộ", width=entry_width, height=entry_height, font=font_large)
         self.apartment_code_entry.grid(row=8, column=1, pady=10, padx=20, sticky="ew")
         self.apartment_code_label = ctk.CTkLabel(self, text="", text_color="red")
@@ -247,7 +274,10 @@ class RegisterFrame(ctk.CTkFrame):
 
         # Attempt to register the user
         try:
-            self.controller.auth_manager.register_user(username, password, full_name, apartment_code)
+            if self.is_user:
+                self.controller.auth_manager.register_user(username, password, full_name, apartment_code)
+            else:
+                self.controller.auth_manager.register_user(username, password, full_name,  apartment_code, account_type='admin')
             ctk.CTkLabel(self, text="Đăng ký thành công", font=("Arial", 18)).grid(row=12, column=1, pady=10)
         except Exception as e:
             ctk.CTkLabel(self, text=str(e), font=("Arial", 18)).grid(row=12, column=1, pady=10)
@@ -272,6 +302,8 @@ class LoginRegisterApp(ctk.CTk):
         self.login_frame = None
         self.register_frame = None
         self.main_frame = None
+        self.root_gui = None  # Store RootGUI instance
+
         self.show_login_frame()
 
     def show_login_frame(self):
@@ -296,10 +328,17 @@ class LoginRegisterApp(ctk.CTk):
         """Show the main frame based on account type after login."""
         if self.login_frame:
             self.login_frame.destroy()
-
-        if user['account_type'] == 'root':
-            self.main_frame = RootGUI(self, user)
+        if user['account_type'] == 'admin':
+            self.admin_gui = AdminGUI(self, user)  # Create an instance of AdminGUI
+            self.admin_gui.pack(fill="both", expand=True)
+        elif user['account_type'] == 'user':
+            self.user_gui = NormalGUI(self, user)  # Create an instance of UserGUI
+            self.user_gui.pack(fill="both", expand=True)
         else:
-            self.main_frame = NormalGUI(self, user)
+            self.root_gui = RootGUI(self, user)  # Create an instance of RootGUI
+            self.root_gui.pack(fill="both", expand=True)
 
-        self.main_frame.pack(fill="both", expand=True)
+    def show_home(self):
+        """Show the home screen of RootGUI."""
+        if self.root_gui:
+            self.root_gui.show_home()  # Call the show_home method of RootGUI
