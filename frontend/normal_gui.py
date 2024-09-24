@@ -10,7 +10,7 @@ class NormalGUI(ctk.CTkFrame):
 
         # Normal User's GUI Layout
         ctk.CTkLabel(self, text=f"Welcome,{self.user['full_name']} ").pack(pady=10)
-        ctk.CTkLabel(self, text=f"Mã căn hộ: {self.user['apartment_code']}").pack(pady=5)
+        ctk.CTkLabel(self, text=f"Appartment ID: {self.user['apartment_code']}").pack(pady=5)
         ctk.CTkButton(self, text="View Profile", command=self.view_profile).pack(pady=5)
         ctk.CTkButton(self, text="View Fees", command=self.view_fees).pack(pady=5)
         ctk.CTkButton(self, text="Logout", command=self.logout).pack(pady=5)
