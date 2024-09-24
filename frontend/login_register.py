@@ -1,5 +1,6 @@
 import random
 import string
+import os
 import customtkinter as ctk
 from PIL import Image, ImageDraw, ImageFont
 from PIL import ImageTk
@@ -43,11 +44,10 @@ class LoginFrame(ctk.CTkFrame):
         self.eye_button.grid(row=3, column=2, padx=10, pady=20)
 
         # Image CAPTCHA
-        self.captcha_text = self.generate_captcha_text()
-        self.captcha_image = self.generate_captcha_image(self.captcha_text)
+        self.captcha_image, self.captcha_text = self.generate_captcha()
 
         # Display the CAPTCHA image
-        self.captcha_image_label = ctk.CTkLabel(self, image=self.captcha_image)
+        self.captcha_image_label = ctk.CTkLabel(self, image=self.captcha_image, text="")
         self.captcha_image_label.grid(row=4, column=1, pady=10)
 
         # CAPTCHA entry
@@ -73,49 +73,17 @@ class LoginFrame(ctk.CTkFrame):
             self.password_entry.configure(show="")
             self.eye_button.configure(text="🚫")
         self.password_visible = not self.password_visible
-
-    def generate_captcha_text(self, length=6):
-        """Generate a random string for the CAPTCHA."""
-        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
-
-    def generate_captcha_image(self, captcha_text):
-        """Generate a more realistic and visually appealing CAPTCHA image using Pillow."""
-        width, height = 250, 100  # Adjusted size for a better layout
-        image = Image.new('RGB', (width, height), color=(255, 255, 255))  # White background
-        draw = ImageDraw.Draw(image)
-
-        # Load a TrueType font (you can replace 'arial.ttf' with any font you like)
-        try:
-            font = ImageFont.truetype("arial.ttf", random.randint(40, 50))  # Random font size
-        except IOError:
-            font = ImageFont.load_default()  # Fallback to default font if custom font is unavailable
-
-        # Add random noise by drawing random lines
-        for _ in range(5):
-            start = (random.randint(0, width), random.randint(0, height))
-            end = (random.randint(0, width), random.randint(0, height))
-            draw.line([start, end], fill=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), width=2)
-
-        # Draw the CAPTCHA text with random positioning and color
-        for i, char in enumerate(captcha_text):
-            # Random position for each character
-            position = (20 + i * 40, random.randint(10, 40))
-            # Random color for each character
-            color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-            draw.text(position, char, font=font, fill=color)
-
-        # Add random dots for extra noise
-        for _ in range(100):
-            draw.point((random.randint(0, width), random.randint(0, height)), fill=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-
-        # Convert the image to a format compatible with Tkinter
-        img_byte_arr = io.BytesIO()
-        image.save(img_byte_arr, format='PNG')
-        img_byte_arr = img_byte_arr.getvalue()
-        captcha_image = Image.open(io.BytesIO(img_byte_arr))
+    
+    def generate_captcha(self):
+        folder='samples'
+        image= random.choice([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))])
+        captcha_text=str(image[:5])
+        image_path='samples/'+image
+        captcha_image=Image.open(image_path)
+        captcha_image = captcha_image.resize((400, 100))
         captcha_image = ImageTk.PhotoImage(captcha_image)
+        return captcha_image, captcha_text
 
-        return captcha_image
 
 
     def login(self):
@@ -128,7 +96,7 @@ class LoginFrame(ctk.CTkFrame):
         if not captcha_input:
             self.captcha_error_label.configure(text="CAPTCHA is required")
             return
-        elif captcha_input.upper() != self.captcha_text:
+        elif captcha_input != self.captcha_text:
             self.captcha_error_label.configure(text="Incorrect CAPTCHA")
             return
 
