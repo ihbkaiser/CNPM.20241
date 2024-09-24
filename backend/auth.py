@@ -5,8 +5,8 @@ class AuthManager:
         self.db = DBManager(host="localhost",user="root", password="IHBKaiser@04", database="CNPMdb")
         
 
-    def register_user(self, username, password, full_name, apartment_code, email=None, phone=None):
-        self.db.add_user(username, password, full_name, apartment_code, email=email, phone=phone)
+    def register_user(self, username, password, full_name, apartment_code, account_type='user', email=None, phone=None):
+        self.db.add_user(username, password, full_name, apartment_code, email=email, phone=phone, account_type=account_type) 
 
     def login(self, username, password):
         user = self.db.get_user(username)
