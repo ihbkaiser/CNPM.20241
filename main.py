@@ -1,4 +1,3 @@
-# main.py
 
 from frontend.login_register import LoginRegisterApp
 

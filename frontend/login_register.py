@@ -255,11 +255,7 @@ class RegisterFrame(ctk.CTkFrame):
                 self.controller.auth_manager.register_user(username, password, full_name, apartment_code)
             else:
                 self.controller.auth_manager.register_user(username, password, full_name,  apartment_code, account_type='admin')
-<<<<<<< Updated upstream
-            ctk.CTkLabel(self, text="Register success", font=("Arial", 18)).grid(row=12, column=1, pady=10)
-=======
             messagebox.showinfo("Register Success", "User registered successfully")
->>>>>>> Stashed changes
         except Exception as e:
             messagebox.showerror("Register Error", str(e))
 
