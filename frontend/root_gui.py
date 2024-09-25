@@ -46,13 +46,13 @@ class RootGUI(ctk.CTkFrame):
         popup.geometry("800x600")  # Set larger size for the popup window
 
         # Tạo Treeview với các cột
-        columns = ("Username", "Account Type", "Full Name", "Apartment Code", "Email", "Phone")
+        columns = ("Username", "Password", "Full Name", "Apartment Code", "Email", "Phone")
         tree = ttk.Treeview(popup, columns=columns, show="headings", height=25)  # Set larger height for the Treeview
 
         # Đặt tiêu đề cho các cột và tăng kích thước cột
         column_widths = {
             "Username": 150,
-            "Account Type": 150,
+            "Password": 150,
             "Full Name": 200,
             "Apartment Code": 150,
             "Email": 200,
@@ -67,7 +67,7 @@ class RootGUI(ctk.CTkFrame):
         for item in data:
             tree.insert("", "end", values=(
                 item.get('username', 'N/A'), 
-                item.get('account_type', 'N/A'), 
+                item.get('password', 'N/A'), 
                 item.get('full_name', 'N/A'), 
                 item.get('apartment_code', 'N/A'), 
                 item.get('email', 'N/A'), 
@@ -145,29 +145,29 @@ class AdminRegisterFrame(ctk.CTkFrame):
         self.confirm_password_label.grid(row=5, column=1)
 
         # Full name entry
-        ctk.CTkLabel(self, text="Họ tên:", font=font_large).grid(row=6, column=0, padx=20, pady=10, sticky="w")
-        self.fullname_entry = ctk.CTkEntry(self, placeholder_text="Họ tên", width=entry_width, height=entry_height, font=font_large)
+        ctk.CTkLabel(self, text="Full name:", font=font_large).grid(row=6, column=0, padx=20, pady=10, sticky="w")
+        self.fullname_entry = ctk.CTkEntry(self, placeholder_text="Full name", width=entry_width, height=entry_height, font=font_large)
         self.fullname_entry.grid(row=6, column=1, pady=10, padx=20, sticky="ew")
         self.fullname_label = ctk.CTkLabel(self, text="", text_color="red")
         self.fullname_label.grid(row=7, column=1)
 
         # Apartment code entry
         if self.is_user:
-            code_name = "Mã căn hộ:"
+            code_name = "Apartment ID:"
         else:
-            code_name = "Mã cán bộ:"
+            code_name = "Officer ID:"
         ctk.CTkLabel(self, text=code_name, font=font_large).grid(row=8, column=0, padx=20, pady=10, sticky="w")
-        self.apartment_code_entry = ctk.CTkEntry(self, placeholder_text="Mã căn hộ", width=entry_width, height=entry_height, font=font_large)
+        self.apartment_code_entry = ctk.CTkEntry(self, placeholder_text="Apartment ID", width=entry_width, height=entry_height, font=font_large)
         self.apartment_code_entry.grid(row=8, column=1, pady=10, padx=20, sticky="ew")
         self.apartment_code_label = ctk.CTkLabel(self, text="", text_color="red")
         self.apartment_code_label.grid(row=9, column=1)
 
         # Register button
-        self.register_button = ctk.CTkButton(self, text="Đăng ký tài khoản", width=button_width, height=60, font=font_large, command=self.register)
+        self.register_button = ctk.CTkButton(self, text="Sign up", width=button_width, height=60, font=font_large, command=self.register)
         self.register_button.grid(row=10, column=1, pady=20)
 
         # Switch to home frame with Return button
-        self.switch_login_button = ctk.CTkButton(self, text="Quay lại", width=button_width, height=60, font=font_large, command=self.return_to_home)
+        self.switch_login_button = ctk.CTkButton(self, text="Return", width=button_width, height=60, font=font_large, command=self.return_to_home)
         self.switch_login_button.grid(row=11, column=1, pady=20)
 
         # Center the grid elements
@@ -240,7 +240,7 @@ class AdminRegisterFrame(ctk.CTkFrame):
                 self.controller.db_manager.add_user(username, password, full_name, apartment_code, account_type='admin')
 
             # Show success message
-            ctk.CTkLabel(self, text="Admin đăng ký thành công!", font=("Arial", 18)).grid(row=12, column=1, pady=10)
+            ctk.CTkLabel(self, text="Admin register successfully!", font=("Arial", 18)).grid(row=12, column=1, pady=10)
 
         except Exception as e:
             ctk.CTkLabel(self, text=str(e), font=("Arial", 18), text_color="red").grid(row=12, column=1, pady=10)

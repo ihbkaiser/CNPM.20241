@@ -61,7 +61,7 @@ class LoginFrame(ctk.CTkFrame):
         self.login_button.grid(row=7, column=1, pady=20, padx=20)
 
         # Switch to register frame button
-        self.switch_register_button = ctk.CTkButton(self, text="Đăng ký tài khoản dân cư", width=button_width, height=60, font=font_large, command=self.controller.show_register_frame)
+        self.switch_register_button = ctk.CTkButton(self, text="Sign Up ", width=button_width, height=60, font=font_large, command=self.controller.show_register_frame)
         self.switch_register_button.grid(row=8, column=1, pady=20)
 
     def toggle_password(self):
@@ -153,29 +153,29 @@ class RegisterFrame(ctk.CTkFrame):
         self.confirm_password_label.grid(row=5, column=1)
 
         # Full name entry
-        ctk.CTkLabel(self, text="Họ tên:", font=font_large).grid(row=6, column=0, padx=20, pady=10, sticky="w")
-        self.fullname_entry = ctk.CTkEntry(self, placeholder_text="Họ tên", width=entry_width, height=entry_height, font=font_large)
+        ctk.CTkLabel(self, text="Full Name:", font=font_large).grid(row=6, column=0, padx=20, pady=10, sticky="w")
+        self.fullname_entry = ctk.CTkEntry(self, placeholder_text="Full Name", width=entry_width, height=entry_height, font=font_large)
         self.fullname_entry.grid(row=6, column=1, pady=10, padx=20, sticky="ew")
         self.fullname_label = ctk.CTkLabel(self, text="", text_color="red")
         self.fullname_label.grid(row=7, column=1)
 
         # Apartment code entry
         if self.is_user:
-            code_name = "Mã căn hộ:"
+            code_name = "Apartment ID:"
         else:
-            code_name = "Mã cán bộ:"
+            code_name = "Officer ID:"
         ctk.CTkLabel(self, text=code_name, font=font_large).grid(row=8, column=0, padx=20, pady=10, sticky="w")
-        self.apartment_code_entry = ctk.CTkEntry(self, placeholder_text="Mã căn hộ", width=entry_width, height=entry_height, font=font_large)
+        self.apartment_code_entry = ctk.CTkEntry(self, placeholder_text="Apartment ID", width=entry_width, height=entry_height, font=font_large)
         self.apartment_code_entry.grid(row=8, column=1, pady=10, padx=20, sticky="ew")
         self.apartment_code_label = ctk.CTkLabel(self, text="", text_color="red")
         self.apartment_code_label.grid(row=9, column=1)
 
         # Register button
-        self.register_button = ctk.CTkButton(self, text="Đăng ký tài khoản", width=button_width, height=60, font=font_large, command=self.register)
+        self.register_button = ctk.CTkButton(self, text="Sign Up", width=button_width, height=60, font=font_large, command=self.register)
         self.register_button.grid(row=10, column=1, pady=20)
 
         # Switch to login frame
-        self.switch_login_button = ctk.CTkButton(self, text="Quay lại Đăng nhập", width=button_width, height=60, font=font_large, command=self.controller.show_login_frame)
+        self.switch_login_button = ctk.CTkButton(self, text="Back to log in", width=button_width, height=60, font=font_large, command=self.controller.show_login_frame)
         self.switch_login_button.grid(row=11, column=1, pady=20)
 
         # Center the grid elements
@@ -246,7 +246,7 @@ class RegisterFrame(ctk.CTkFrame):
                 self.controller.auth_manager.register_user(username, password, full_name, apartment_code)
             else:
                 self.controller.auth_manager.register_user(username, password, full_name,  apartment_code, account_type='admin')
-            ctk.CTkLabel(self, text="Đăng ký thành công", font=("Arial", 18)).grid(row=12, column=1, pady=10)
+            ctk.CTkLabel(self, text="Register success", font=("Arial", 18)).grid(row=12, column=1, pady=10)
         except Exception as e:
             ctk.CTkLabel(self, text=str(e), font=("Arial", 18)).grid(row=12, column=1, pady=10)
 
