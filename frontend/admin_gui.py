@@ -44,7 +44,7 @@ class AdminGUI(RootGUI):
         popup.geometry("800x600")  # Set larger size for the popup window
 
         # Tạo Treeview với các cột
-        columns = ("Username", "Account Type", "Full Name", "Apartment Code", "Email", "Phone")
+        columns = ("Username", "Account Type", "Full Name", "Phone Number", "Apartment Code", "Email")
         tree = ttk.Treeview(popup, columns=columns, show="headings", height=25)  # Set larger height for the Treeview
 
         # Đặt tiêu đề cho các cột và tăng kích thước cột
@@ -52,9 +52,9 @@ class AdminGUI(RootGUI):
             "Username": 150,
             "Account Type": 150,
             "Full Name": 200,
+            "Phone Number": 150,
             "Apartment Code": 150,
-            "Email": 200,
-            "Phone": 150
+            "Email": 200
         }
 
         for col in columns:
@@ -67,9 +67,9 @@ class AdminGUI(RootGUI):
                 item.get('username', 'N/A'), 
                 item.get('account_type', 'N/A'), 
                 item.get('full_name', 'N/A'), 
+                item.get('phone_number', 'N/A'),
                 item.get('apartment_code', 'N/A'), 
-                item.get('email', 'N/A'), 
-                item.get('phone', 'N/A')
+                item.get('email', 'N/A')
             ))
 
         tree.pack(pady=10, padx=10, expand=True, fill='both')

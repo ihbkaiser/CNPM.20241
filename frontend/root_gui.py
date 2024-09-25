@@ -41,15 +41,15 @@ class RootGUI(ctk.CTkFrame):
         self.table_frame = ctk.CTkFrame(self)
         self.table_frame.pack(fill='both', expand=True)
         ctk.CTkLabel(self.table_frame, text=title, font=("Arial", 24)).pack(pady=10)
-        columns = ("Username", "Account Type", "Full Name", "Apartment Code", "Email", "Phone")
+        columns = ("Username", "Account Type", "Full Name", "Phone Number", "Apartment Code", "Email")
         self.tree = ttk.Treeview(self.table_frame, columns=columns, show="headings", height=25)
         column_widths = {
             "Username": 150,
             "Account Type": 150,
             "Full Name": 200,
+            "Phone Number": 150,
             "Apartment Code": 150,
-            "Email": 200,
-            "Phone": 150
+            "Email": 200
         }
         for col in columns:
             self.tree.heading(col, text=col)
@@ -59,9 +59,9 @@ class RootGUI(ctk.CTkFrame):
                 item.get('username', 'N/A'),
                 item.get('account_type', 'N/A'),
                 item.get('full_name', 'N/A'),
+                item.get('phone_number', 'N/A'),
                 item.get('apartment_code', 'N/A'),
-                item.get('email', 'N/A'),
-                item.get('phone', 'N/A')
+                item.get('email', 'N/A')
             ))
         self.tree.bind("<Double-1>", self.on_item_double_click)
         self.tree.pack(pady=10, padx=10, expand=True, fill='both')
@@ -77,7 +77,7 @@ class RootGUI(ctk.CTkFrame):
         self.edit_window = ctk.CTkToplevel(self)
         self.edit_window.title("Edit User")
         font_large = ("Arial", 16)
-        labels = ["Username", "Account Type", "Full Name", "Apartment Code", "Email", "Phone"]
+        labels = ["Username", "Account Type", "Full Name", "Phone Number", "Apartment Code", "Email"]
         entries = {}
         for idx, label in enumerate(labels):
             ctk.CTkLabel(self.edit_window, text=label + ":", font=font_large).grid(row=idx, column=0, padx=10, pady=5, sticky="e")
@@ -94,11 +94,11 @@ class RootGUI(ctk.CTkFrame):
         username = entries["Username"].get()
         account_type = entries["Account Type"].get()
         full_name = entries["Full Name"].get()
+        phone_number = entries["Phone Number"].get()
         apartment_code = entries["Apartment Code"].get()
         email = entries["Email"].get()
-        phone = entries["Phone"].get()
-        self.db_manager.update_user(username, account_type=account_type, full_name=full_name,
-                                    apartment_code=apartment_code, email=email, phone=phone)
+        self.db_manager.update_user(username, account_type=account_type, full_name=full_name, phone_number=phone_number,
+                                    apartment_code=apartment_code, email=email)
         self.edit_window.destroy()
         self.refresh_table()
 
@@ -119,7 +119,7 @@ class RootGUI(ctk.CTkFrame):
         self.edit_window = ctk.CTkToplevel(self)
         self.edit_window.title("Add New User")
         font_large = ("Arial", 16)
-        labels = ["Username", "Password", "Confirm Password", "Account Type", "Full Name", "Apartment Code", "Email", "Phone"]
+        labels = ["Username", "Password", "Confirm Password", "Account Type", "Full Name", "Phone Number", "Apartment Code", "Email"]
         entries = {}
         for idx, label in enumerate(labels):
             ctk.CTkLabel(self.edit_window, text=label + ":", font=font_large).grid(row=idx, column=0, padx=10, pady=5, sticky="e")
@@ -138,14 +138,14 @@ class RootGUI(ctk.CTkFrame):
         confirm_password = entries["Confirm Password"].get()
         account_type = entries["Account Type"].get()
         full_name = entries["Full Name"].get()
+        phone_number = entries["Phone Number"].get()
         apartment_code = entries["Apartment Code"].get()
         email = entries["Email"].get()
-        phone = entries["Phone"].get()
         if password != confirm_password:
             self.show_popup("Error", "Passwords do not match!")
             return
         try:
-            self.db_manager.add_user(username, password, full_name, apartment_code, account_type=account_type, email=email, phone=phone)
+            self.db_manager.add_user(username, password, full_name, phone_number, apartment_code, account_type=account_type, email=email)
             self.edit_window.destroy()
             self.refresh_table()
         except Exception as e:
@@ -162,9 +162,9 @@ class RootGUI(ctk.CTkFrame):
                     item.get('username', 'N/A'),
                     item.get('account_type', 'N/A'),
                     item.get('full_name', 'N/A'),
+                    item.get('phone_number', 'N/A'),
                     item.get('apartment_code', 'N/A'),
-                    item.get('email', 'N/A'),
-                    item.get('phone', 'N/A')
+                    item.get('email', 'N/A')
                 ))
 
     def return_to_home(self):

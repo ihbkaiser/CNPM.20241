@@ -14,7 +14,7 @@ class NormalGUI(ctk.CTkFrame):
         ctk.CTkButton(self, text="View Profile", command=self.view_profile).pack(pady=5)
         ctk.CTkButton(self, text="View Fees", command=self.view_fees).pack(pady=5)
         ctk.CTkButton(self, text="Logout", command=self.logout).pack(pady=5)
-        ctk.CTKButton(self, text = "Change Password", command = self.show_change_password).pack(pady=5)
+        ctk.CTkButton(self, text = "Change Password", command = self.show_change_password).pack(pady=5)
         
     def view_profile(self):
         # Functionality for viewing profile
@@ -23,6 +23,10 @@ class NormalGUI(ctk.CTkFrame):
     def view_fees(self):
         # Functionality for viewing fees
         print("Viewing Fees...")
+    
+    def show_change_password(self):
+        # Change password functionality
+        print("Changing Password...")
 
     def logout(self):
         # Logout and go back to login screen

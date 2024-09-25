@@ -67,9 +67,13 @@ class LoginFrame(ctk.CTkFrame):
         self.login_button = ctk.CTkButton(self, text="Login", width=button_width, height=60, font=font_large, command=self.login)
         self.login_button.grid(row=7, column=1, pady=20, padx=20)
 
+        # Change password button
+        self.login_button = ctk.CTkButton(self, text="Forget password", width=button_width, height=60, font=font_large, command=self.controller.show_forget_frame)
+        self.login_button.grid(row=8, column=1, pady=20, padx=20)
+
         # Switch to register frame button
         self.switch_register_button = ctk.CTkButton(self, text="Sign Up ", width=button_width, height=60, font=font_large, command=self.controller.show_register_frame)
-        self.switch_register_button.grid(row=8, column=1, pady=20)
+        self.switch_register_button.grid(row=9, column=1, pady=20)
 
     def toggle_password(self):
         """Toggle password visibility."""
@@ -116,6 +120,142 @@ class LoginFrame(ctk.CTkFrame):
             self.controller.show_main_frame(user)
         except Exception as e:
             messagebox.showerror("Login Error", str(e))
+    
+    def forget_password(self):
+        self.controller.show_forget_frame(user)
+
+class ForgetFrame(ctk.CTkFrame):
+    def __init__(self, parent, user_mode=True):
+        super().__init__(parent)
+        self.controller = parent
+        self.is_user = user_mode
+
+        # Custom fonts and sizes
+        font_large = ("Arial", 20)
+        button_width = 250
+        entry_width = 300
+        entry_height = 50
+
+        # Username entry
+        ctk.CTkLabel(self, text="Username:", font=font_large).grid(row=0, column=0, padx=20, pady=10, sticky="w")
+        self.username_entry = ctk.CTkEntry(self, placeholder_text="Username", width=entry_width, height=entry_height, font=font_large)
+        self.username_entry.grid(row=0, column=1, pady=10, padx=20, sticky="ew")
+        self.username_label = ctk.CTkLabel(self, text="", text_color="red")
+        self.username_label.grid(row=1, column=1)
+
+        # Phone number entry
+        ctk.CTkLabel(self, text="Phone Number:", font=font_large).grid(row=2, column=0, padx=20, pady=10, sticky="w")
+        self.phonenumber_entry = ctk.CTkEntry(self, placeholder_text="Phone Number", width=entry_width, height=entry_height, font=font_large)
+        self.phonenumber_entry.grid(row=2, column=1, pady=10, padx=20, sticky="ew")
+        self.phonenumber_label = ctk.CTkLabel(self, text="", text_color="red")
+        self.phonenumber_label.grid(row=3, column=1)
+
+        # New Password entry
+        ctk.CTkLabel(self, text="New password:", font=font_large).grid(row=4, column=0, padx=20, pady=10, sticky="w")
+        self.newpassword_entry = ctk.CTkEntry(self, placeholder_text="New password", show="*", width=entry_width, height=entry_height, font=font_large)
+        self.newpassword_entry.grid(row=4, column=1, pady=10, padx=20, sticky="ew")
+        self.newpassword_label = ctk.CTkLabel(self, text="", text_color="red")
+        self.newpassword_label.grid(row=5, column=1)
+
+        # Add a label to display password strength
+        self.password_strength_label = ctk.CTkLabel(self, text="", font=("Arial", 16), text_color="gray")
+        self.password_strength_label.grid(row=5, column=0, columnspan=2, padx=20, sticky="w")
+
+        # Bind the password entry to update password strength dynamically
+        self.newpassword_entry.bind("<KeyRelease>", self.check_password_strength)
+
+        # Add button for showing/hiding password
+        self.password_visible = False
+        self.eye_button = ctk.CTkButton(self, text="👁", width=50, command=self.toggle_password)
+        self.eye_button.grid(row=4, column=2, padx=10)
+
+        # Confirm new password entry
+        ctk.CTkLabel(self, text="Confirm New Password:", font=font_large).grid(row=6, column=0, padx=20, pady=10, sticky="w")
+        self.confirm_newpassword_entry = ctk.CTkEntry(self, placeholder_text="Confirm New Password", show="*", width=entry_width, height=entry_height, font=font_large)
+        self.confirm_newpassword_entry.grid(row=6, column=1, pady=10, padx=20, sticky="ew")
+        self.confirm_newpassword_label = ctk.CTkLabel(self, text="", text_color="red")
+        self.confirm_newpassword_label.grid(row=7, column=1)
+
+        # Change password button
+        self.change_button = ctk.CTkButton(self, text="Change password", width=button_width, height=60, font=font_large, command=self.change)
+        self.change_button.grid(row=12, column=1, pady=20)
+
+        # Switch to login frame
+        self.switch_login_button = ctk.CTkButton(self, text="Back to log in", width=button_width, height=60, font=font_large, command=self.controller.show_login_frame)
+        self.switch_login_button.grid(row=13, column=1, pady=20)
+
+        # Center the grid elements
+        self.grid_columnconfigure(0, weight=1)  # Left label column
+        self.grid_columnconfigure(1, weight=1)  # Center input field column
+        self.grid_columnconfigure(2, weight=1)  # Right for button (like eye button)
+
+    def toggle_password(self):
+        """Toggle password visibility."""
+        if self.password_visible:
+            self.newpassword_entry.configure(show="*")
+            self.eye_button.configure(text="👁")
+        else:
+            self.newpassword_entry.configure(show="")
+            self.eye_button.configure(text="🚫")
+        self.password_visible = not self.password_visible
+
+    def check_password_strength(self, event=None):
+        """Check the password strength and update the label."""
+        password = self.password_entry.get()
+        result = zxcvbn.zxcvbn(password)
+
+        strength_score = result['score']
+        feedback = result['feedback']['suggestions']
+
+        # Convert strength score to a user-friendly message
+        strength_text = {0: "Very Weak", 1: "Weak", 2: "Medium", 3: "Strong", 4: "Very Strong"}
+        strength_color = {0: "red", 1: "red", 2: "orange", 3: "green", 4: "green"}
+
+        self.password_strength_label.configure(text=f"Strength: {strength_text[strength_score]}", text_color=strength_color[strength_score])
+
+    def change(self):
+        """Perform register action."""
+        # Get input values
+        username = self.username_entry.get()
+        phone_number = self.phonenumber_entry.get()
+        newpassword = self.newpassword_entry.get()
+        confirm_newpassword = self.confirm_newpassword_entry.get()
+
+        # Clear previous warnings
+        self.clear_warnings()
+
+        # Input validation
+        valid = True
+        if not username:
+            self.username_label.configure(text="Username is required")
+            valid = False
+        if not newpassword:
+            self.newpassword_label.configure(text="Password is required")
+            valid = False
+        elif newpassword != confirm_newpassword:
+            self.confirm_newpassword_label.configure(text="Passwords do not match")
+            valid = False
+        if not phone_number:
+            self.phonenumber_label.configure(text="Phone number is required")
+            valid = False
+        if not valid:
+            return
+
+        # Attempt to register the user
+        try:
+            self.controller.auth_manager.change_password(username, phone_number, newpassword)
+            messagebox.showinfo("Change Password Success", "Password changed successfully")
+        except Exception as e:
+            messagebox.showerror("Change Password Error", str(e))
+
+    def clear_warnings(self):
+        """Clear all warning labels."""
+        self.username_label.configure(text="")
+        self.newpassword_label.configure(text="")
+        self.confirm_newpassword_label.configure(text="")
+        self.phonenumber_label.configure(text="")
+
+
 class RegisterFrame(ctk.CTkFrame):
     def __init__(self, parent, user_mode=True):
         super().__init__(parent)
@@ -168,24 +308,31 @@ class RegisterFrame(ctk.CTkFrame):
         self.fullname_label = ctk.CTkLabel(self, text="", text_color="red")
         self.fullname_label.grid(row=7, column=1)
 
+        # Phone number entry
+        ctk.CTkLabel(self, text="Phone Number:", font=font_large).grid(row=8, column=0, padx=20, pady=10, sticky="w")
+        self.phonenumber_entry = ctk.CTkEntry(self, placeholder_text="Phone Number", width=entry_width, height=entry_height, font=font_large)
+        self.phonenumber_entry.grid(row=8, column=1, pady=10, padx=20, sticky="ew")
+        self.phonenumber_label = ctk.CTkLabel(self, text="", text_color="red")
+        self.phonenumber_label.grid(row=9, column=1)
+
         # Apartment code entry
         if self.is_user:
             code_name = "Apartment ID:"
         else:
             code_name = "Officer ID:"
-        ctk.CTkLabel(self, text=code_name, font=font_large).grid(row=8, column=0, padx=20, pady=10, sticky="w")
+        ctk.CTkLabel(self, text=code_name, font=font_large).grid(row=10, column=0, padx=20, pady=10, sticky="w")
         self.apartment_code_entry = ctk.CTkEntry(self, placeholder_text="Apartment ID", width=entry_width, height=entry_height, font=font_large)
-        self.apartment_code_entry.grid(row=8, column=1, pady=10, padx=20, sticky="ew")
+        self.apartment_code_entry.grid(row=10, column=1, pady=10, padx=20, sticky="ew")
         self.apartment_code_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.apartment_code_label.grid(row=9, column=1)
+        self.apartment_code_label.grid(row=11, column=1)
 
         # Register button
         self.register_button = ctk.CTkButton(self, text="Sign Up", width=button_width, height=60, font=font_large, command=self.register)
-        self.register_button.grid(row=10, column=1, pady=20)
+        self.register_button.grid(row=12, column=1, pady=20)
 
         # Switch to login frame
         self.switch_login_button = ctk.CTkButton(self, text="Back to log in", width=button_width, height=60, font=font_large, command=self.controller.show_login_frame)
-        self.switch_login_button.grid(row=11, column=1, pady=20)
+        self.switch_login_button.grid(row=13, column=1, pady=20)
 
         # Center the grid elements
         self.grid_columnconfigure(0, weight=1)  # Left label column
@@ -223,6 +370,7 @@ class RegisterFrame(ctk.CTkFrame):
         password = self.password_entry.get()
         confirm_password = self.confirm_password_entry.get()
         full_name = self.fullname_entry.get()
+        phone_number = self.phonenumber_entry.get()
         apartment_code = self.apartment_code_entry.get()
 
         # Clear previous warnings
@@ -242,6 +390,10 @@ class RegisterFrame(ctk.CTkFrame):
         if not full_name:
             self.fullname_label.configure(text="Full name is required")
             valid = False
+        if not phone_number:
+            self.phonenumber_label.configure(text="Phone number is required")
+            valid = False
+
         if not apartment_code:
             self.apartment_code_label.configure(text="Apartment code is required")
             valid = False
@@ -252,9 +404,9 @@ class RegisterFrame(ctk.CTkFrame):
         # Attempt to register the user
         try:
             if self.is_user:
-                self.controller.auth_manager.register_user(username, password, full_name, apartment_code)
+                self.controller.auth_manager.register_user(username, password, full_name, phone_number, apartment_code)
             else:
-                self.controller.auth_manager.register_user(username, password, full_name,  apartment_code, account_type='admin')
+                self.controller.auth_manager.register_user(username, password, full_name, phone_number,  apartment_code, account_type='admin')
             messagebox.showinfo("Register Success", "User registered successfully")
         except Exception as e:
             messagebox.showerror("Register Error", str(e))
@@ -279,6 +431,7 @@ class LoginRegisterApp(ctk.CTk):
         self.login_frame = None
         self.register_frame = None
         self.main_frame = None
+        self.forget_frame = None
         self.root_gui = None  # Store RootGUI instance
         
 
@@ -288,6 +441,8 @@ class LoginRegisterApp(ctk.CTk):
         """Show login frame and hide other frames."""
         if self.register_frame:
             self.register_frame.destroy()
+        if self.forget_frame:
+            self.forget_frame.destroy()
         if self.main_frame:
             self.main_frame.destroy()
 
@@ -301,6 +456,14 @@ class LoginRegisterApp(ctk.CTk):
 
         self.register_frame = RegisterFrame(self)
         self.register_frame.pack(fill="both", expand=True)
+    
+    def show_forget_frame(self):
+        """Show forget frame and hide other frames."""
+        if self.login_frame:
+            self.login_frame.destroy()
+
+        self.forget_frame = ForgetFrame(self)
+        self.forget_frame.pack(fill="both", expand=True)
 
     def show_main_frame(self, user):
         """Show the main frame based on account type after login."""

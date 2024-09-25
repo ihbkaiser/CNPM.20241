@@ -1,12 +1,3 @@
-    widths, heights = zip(*(img.size for img in selected_images))
-
-        total_width = sum(widths)
-        max_height = max(heights)
-
-        captcha_image = Image.new('RGB', (total_width, max_height))
-
-        x_offset = 0
-        for img in selected_images:
-            captcha_image.paste(img, (x_offset, 0))
-            x_offset += img.width
-            return captcha_image, captcha_text
+# Add a label to display password strength
+        # self.password_strength_label = ctk.CTkLabel(self, text="", font=("Arial", 16), text_color="gray")
+        # self.password_strength_label.grid(row=5, column=0, columnspan=2, padx=20, sticky="w")
