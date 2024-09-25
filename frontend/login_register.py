@@ -4,6 +4,7 @@ import os
 import customtkinter as ctk
 from PIL import Image, ImageDraw, ImageFont
 from PIL import ImageTk
+from tkinter import messagebox
 import io
 from backend.auth import AuthManager
 from frontend.root_gui import RootGUI
@@ -15,6 +16,8 @@ class LoginFrame(ctk.CTkFrame):
         super().__init__(parent)
         self.controller = parent
         self.password_visible = False
+        self.header_label = ctk.CTkLabel(self, text="Phần mềm quản lý chung cư BlueMoon", font=("Arial", 26, "bold"))
+        self.header_label.grid(row=0, column=0, columnspan=3, pady=20)
 
         # Custom fonts and sizes
         font_large = ("Arial", 20)
@@ -29,7 +32,7 @@ class LoginFrame(ctk.CTkFrame):
 
         # Username entry
         self.username_label = ctk.CTkLabel(self, text="Username:", font=font_large)
-        self.username_label.grid(row=0, column=1, sticky="w", pady=10)
+        self.username_label.grid(row=1, column=1, sticky="w", pady=10)
         self.username_entry = ctk.CTkEntry(self, placeholder_text="Username", width=entry_width, height=entry_height, font=font_large)
         self.username_entry.grid(row=1, column=1, pady=20, padx=20)
 
@@ -37,18 +40,22 @@ class LoginFrame(ctk.CTkFrame):
         self.password_label = ctk.CTkLabel(self, text="Password:", font=font_large)
         self.password_label.grid(row=2, column=1, sticky="w", pady=10)
         self.password_entry = ctk.CTkEntry(self, placeholder_text="Password", show="*", width=entry_width, height=entry_height, font=font_large)
-        self.password_entry.grid(row=3, column=1, pady=20, padx=20)
+        self.password_entry.grid(row=2, column=1, pady=20, padx=20)
 
         # Button to toggle password visibility
         self.eye_button = ctk.CTkButton(self, text="👁", width=50, height=50, font=font_large, command=self.toggle_password)
-        self.eye_button.grid(row=3, column=2, padx=10, pady=20)
+        self.eye_button.grid(row=2, column=2, padx=10, pady=0)
 
         # Image CAPTCHA
         self.captcha_image, self.captcha_text = self.generate_captcha()
 
         # Display the CAPTCHA image
         self.captcha_image_label = ctk.CTkLabel(self, image=self.captcha_image, text="")
-        self.captcha_image_label.grid(row=4, column=1, pady=10)
+        self.captcha_image_label.grid(row=3, column=1, pady=10)
+        
+        self.refresh_image = ImageTk.PhotoImage(Image.open("assets/refresh_button.png").resize((50, 50)))
+        self.refresh_captcha_button = ctk.CTkButton(self, image=self.refresh_image, text="", width=20, height=50, font=font_large, command=self.refresh_captcha)
+        self.refresh_captcha_button.grid(row=3, column=2, padx=10, pady=0)
 
         # CAPTCHA entry
         self.captcha_entry = ctk.CTkEntry(self, placeholder_text="Enter CAPTCHA", width=entry_width, height=entry_height, font=font_large)
@@ -84,7 +91,10 @@ class LoginFrame(ctk.CTkFrame):
         captcha_image = ImageTk.PhotoImage(captcha_image)
         return captcha_image, captcha_text
 
-
+    def refresh_captcha(self):
+        """Refresh the CAPTCHA image and text."""
+        self.captcha_image, self.captcha_text = self.generate_captcha()
+        self.captcha_image_label.configure(image=self.captcha_image)
 
     def login(self):
         """Perform login action with CAPTCHA validation."""
@@ -105,8 +115,7 @@ class LoginFrame(ctk.CTkFrame):
             user = self.controller.auth_manager.login(username, password)
             self.controller.show_main_frame(user)
         except Exception as e:
-            error_label = ctk.CTkLabel(self, text=str(e), font=("Arial", 18), text_color="red")
-            error_label.grid(row=9, column=1, columnspan=2, sticky="w", pady=10)
+            messagebox.showerror("Login Error", str(e))
 class RegisterFrame(ctk.CTkFrame):
     def __init__(self, parent, user_mode=True):
         super().__init__(parent)
@@ -246,9 +255,13 @@ class RegisterFrame(ctk.CTkFrame):
                 self.controller.auth_manager.register_user(username, password, full_name, apartment_code)
             else:
                 self.controller.auth_manager.register_user(username, password, full_name,  apartment_code, account_type='admin')
+<<<<<<< Updated upstream
             ctk.CTkLabel(self, text="Register success", font=("Arial", 18)).grid(row=12, column=1, pady=10)
+=======
+            messagebox.showinfo("Register Success", "User registered successfully")
+>>>>>>> Stashed changes
         except Exception as e:
-            ctk.CTkLabel(self, text=str(e), font=("Arial", 18)).grid(row=12, column=1, pady=10)
+            messagebox.showerror("Register Error", str(e))
 
     def clear_warnings(self):
         """Clear all warning labels."""
@@ -271,6 +284,7 @@ class LoginRegisterApp(ctk.CTk):
         self.register_frame = None
         self.main_frame = None
         self.root_gui = None  # Store RootGUI instance
+        
 
         self.show_login_frame()
 

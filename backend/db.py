@@ -44,6 +44,14 @@ class DBManager:
     def get_user(self, username):
         self.cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
         return self.cursor.fetchone()
+    def delete_user(self, username):
+        self.cursor.execute("DELETE FROM users WHERE username = %s", (username,))
+        self.conn.commit()
+
+    def update_user(self, username, account_type, full_name, apartment_code, email, phone):
+        self.cursor.execute("UPDATE users SET account_type = %s, full_name = %s, apartment_code = %s, email = %s, phone = %s WHERE username = %s",
+                            (account_type, full_name, apartment_code, email, phone, username))
+        self.conn.commit()
 
     def get_all_users(self, account_type=None):
         if account_type:
