@@ -1,8 +1,14 @@
 from backend.db import DBManager
-
+import yaml
 class AuthManager:
     def __init__(self):
-        self.db = DBManager(host="localhost",user="root", password="123456", database="CNPMdb")
+        try:
+            with open("config.yml", 'r') as ymlfile:
+                cfg = yaml.safe_load(ymlfile)
+        except:
+            raise Exception("Cannot open config.yml")
+        self.db = DBManager(host=cfg['db']['host'], user=cfg['db']['user'], password=cfg['db']['password'], database=cfg['db']['database'])
+
         
 
     def register_user(self, username, password, full_name, phone_number, apartment_code, account_type='user', email=None):
