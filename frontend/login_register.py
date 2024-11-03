@@ -201,7 +201,7 @@ class ForgetFrame(ctk.CTkFrame):
 
     def check_password_strength(self, event=None):
         """Check the password strength and update the label."""
-        password = self.password_entry.get()
+        password = self.newpassword_entry.get()
         result = zxcvbn.zxcvbn(password)
 
         strength_score = result['score']

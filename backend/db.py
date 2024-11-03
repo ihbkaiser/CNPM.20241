@@ -2,15 +2,30 @@ import mysql.connector
 
 class DBManager:
     def __init__(self, host, user, password, database):
+        # create if not exists database
+        self.create_database(host, user, password, database)
         self.conn = mysql.connector.connect(
             host=host,
             user=user,
             password=password,
             database=database
         )
-        self.cursor = self.conn.cursor(dictionary=True)
 
+        self.cursor = self.conn.cursor(dictionary=True)
         self.create_tables()
+    def create_database(self, host, user, password, database):
+        conn = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password
+        )
+        cursor = conn.cursor()
+        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database}")
+        conn.close()
+
+
+    def clear_tables(self):
+        self.cursor.execute("DELETE FROM users")
 
     def create_tables(self):
         self.cursor.execute("""
