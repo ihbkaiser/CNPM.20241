@@ -1,5 +1,5 @@
 import mysql.connector
-
+import yaml
 class DBManager:
     def __init__(self, host, user, password, database):
         # create if not exists database
