@@ -3,4 +3,9 @@
 setup.sql
 /se11_env
 /TEMP
+/config.yml
+/backend/__pycache__
+/frontend/__pycache__
+/ihb/
+/my_env/
 
