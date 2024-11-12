@@ -37,10 +37,30 @@ class DBManager:
             phone_number VARCHAR(20) NOT NULL,
             apartment_code VARCHAR(50) NOT NULL,
             email VARCHAR(255)
-        );
+        );              
         """)
         self.conn.commit()
-
+        self.cursor.execute("""
+        CREATE TABLE IF NOT EXISTS userfee (
+            apartment_code VARCHAR(50) NOT NULL,
+            fee_name VARCHAR(50) NOT NULL,
+            total int,
+            paid int,
+            remain int,
+            residual int
+        );    
+        """)
+        self.conn.commit()
+        self.cursor.execute("""
+        CREATE TABLE IF NOT EXISTS fees (
+            fee_name VARCHAR(50) NOT NULL,
+            deadline datetime,
+            total int,
+            paid int,
+            remain int
+        );  
+        """)
+        self.conn.commit()
 
         self.cursor.execute("SELECT * FROM users WHERE username = 'root'")
         if self.cursor.fetchone() is None:
@@ -82,6 +102,53 @@ class DBManager:
             self.conn.commit()
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi cập nhật mật khẩu: {err}")
+    
+    def get_all_userfee(self):
+        self.cursor.execute("SELECT * FROM userfee")
+        return self.cursor.fetchall()
+
+    
+    def add_userfee(self, apartment_code, fee_name, total, paid, remain, residual):
+        try:
+            self.cursor.execute("""
+            INSERT INTO userfee ( apartment_code, fee_name, total, paid, remain, residual)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """, (apartment_code, fee_name, total, paid, remain, residual))
+            self.conn.commit() 
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi thêm căn hộ: {err}")
         
+    def delete_userfee(self, apartment_code, fee_name):
+        self.cursor.execute("DELETE FROM userfee WHERE apartment_code = %s AND fee_name = %s", (apartment_code, fee_name))
+        self.conn.commit()
+    
+    def update_userfee(self, apartment_code, fee_name, total, paid, remain, residual):
+        self.cursor.execute("UPDATE userfee SET total = %s, paid = %s, remain = %s, residual = %s WHERE apartment_code = %s AND fee_name = %s",
+                            (total, paid, remain, residual, apartment_code, fee_name))
+        self.conn.commit()
+    
+    def get_all_fees(self):
+        self.cursor.execute("SELECT * FROM fees")
+        return self.cursor.fetchall()
+
+    def add_fee(self, fee_name, deadline, total, paid, remain):
+        try:
+            self.cursor.execute("""
+            INSERT INTO fees (fee_name, deadline, total, paid, remain)
+            VALUES (%s, %s, %s, %s, %s)
+            """, (fee_name, deadline, total, paid, remain))
+            self.conn.commit() 
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi thêm phí: {err}")
+    
+    def delete_fee(self, apartment_code, fee_name):
+        self.cursor.execute("DELETE FROM fees WHERE apartment_code=%s and fee_name = %s ", (apartment_code,fee_name,))
+        self.conn.commit()
+    
+    def update_fee(self, fee_name, deadline, total, paid, remain):
+        self.cursor.execute("UPDATE fees SET deadline = %s, total = %s, paid = %s, remain = %s WHERE fee_name = %s",
+                            (deadline, total, paid, remain, fee_name))
+        self.conn.commit()
+
     def close(self):
         self.conn.close()
