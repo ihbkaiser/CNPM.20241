@@ -130,6 +130,9 @@ class DBManager:
     def get_all_fees(self):
         self.cursor.execute("SELECT * FROM fees")
         return self.cursor.fetchall()
+    def get_fee_names(self):
+        self.cursor.execute("SELECT fee_name FROM fees")
+        return [row['fee_name'] for row in self.cursor.fetchall()]
 
     def add_fee(self, fee_name, deadline, total, paid, remain):
         try:
@@ -148,6 +151,49 @@ class DBManager:
     def update_fee(self, fee_name, deadline, total, paid, remain):
         self.cursor.execute("UPDATE fees SET deadline = %s, total = %s, paid = %s, remain = %s WHERE fee_name = %s",
                             (deadline, total, paid, remain, fee_name))
+        self.conn.commit()
+    def user_fee_info(self, apt_code, fee_name):
+        self.cursor.execute("SELECT * FROM userfee WHERE apartment_code = %s AND fee_name = %s", (apt_code, fee_name))
+        row = self.cursor.fetchone()
+        if row is None:
+            return None
+
+        apt_code = row['apartment_code']
+        feename = row['fee_name']
+        money_paid = row['paid']
+        money_remain = row['remain']
+        money_residual = row['residual']
+        self.cursor.execute("SELECT full_name, username FROM users WHERE apartment_code = %s", (apt_code,))
+        info = self.cursor.fetchone()
+        fullname = info['full_name']
+        username = info['username']
+        status = 'Complete' if money_remain == 0 else 'Incomplete'
+        return {
+            'username': username,
+            'fullname': fullname,
+            'apt_code': apt_code,
+            'feename': feename,
+            'money_paid': money_paid,
+            'money_remain': money_remain,
+            'money_residual': money_residual,
+            'status' : status
+        }
+    def thu_fee(self, apartment_code, fee_name, pay_money):
+        self.cursor.execute("SELECT * FROM userfee WHERE apartment_code = %s AND fee_name = %s", (apartment_code, fee_name))
+        row = self.cursor.fetchone()
+        if row is None:
+            return None
+        total = row['total']
+        paid = row['paid']
+        remain = row['remain']
+        residual = row['residual']
+        paid += pay_money
+        remain = total - paid
+        if remain < 0:
+            residual = -remain
+            remain = 0
+        self.cursor.execute("UPDATE userfee SET paid = %s, remain = %s, residual = %s WHERE apartment_code = %s AND fee_name = %s",
+                            (paid, remain, residual, apartment_code, fee_name))
         self.conn.commit()
 
     def close(self):

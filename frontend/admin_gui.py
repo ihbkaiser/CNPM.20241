@@ -9,19 +9,16 @@ class AdminGUI(RootGUI):
         super().__init__(parent, user)
 
     def show_home(self):
-        """Giao diện chính của người dùng admin (không có nút Create Admin)."""
-        # Clear previous widgets
         for widget in self.winfo_children():
             widget.pack_forget()
-
-        # Show the remaining buttons and labels
-        ctk.CTkLabel(self, text=f"Welcome, {self.user['full_name']}").pack(pady=10)  # Hiển thị tên người dùng đăng nhập
-        ctk.CTkButton(self, text="View Admins", command=self.view_admins, width=200, height=50).pack(pady=5)  # Nút xem danh sách Admins
-        ctk.CTkButton(self, text="View Users", command=self.view_users, width=200, height=50).pack(pady=5)    # Nút xem danh sách Users
+        ctk.CTkLabel(self, text=f"Welcome, {self.user['full_name']}").pack(pady=10)
+        ctk.CTkButton(self, text="View Admins", command=self.view_admins, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(self, text="View Users", command=self.view_users, width=200, height=50).pack(pady=5)
         ctk.CTkButton(self, text="Manage Fees", command=self.manage_fees, width=200, height=50).pack(pady=5)
         ctk.CTkButton(self, text="Edit Fees", command=self.edit_fees, width=200, height=50).pack(pady=5)
-        # Notice there's no "Create Admin" button here
-        ctk.CTkButton(self, text="Logout", command=self.logout, width=200, height=50).pack(pady=5)            # Nút đăng xuất
+        ctk.CTkButton(self, text="Payment", command=self.thu_fee_frame_gui, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(self, text="Logout", command=self.logout, width=200, height=50).pack(pady=5)
+
 
     def view_admins(self):
         """Lấy danh sách Admins từ cơ sở dữ liệu và hiển thị trong bảng."""
@@ -98,6 +95,7 @@ class AdminGUI(RootGUI):
         # Thêm nút đóng
         ctk.CTkButton(popup, text="Close", command=popup.destroy).pack(pady=10)
     
+    
     def show_fees_table(self,fees):
         for widget in self.winfo_children():
             widget.pack_forget()
@@ -124,6 +122,7 @@ class AdminGUI(RootGUI):
 
         # Thêm nút đóng
         ctk.CTkButton(self.table_frame, text="Close", command=self.show_home).pack(pady=10)
+
 
     def show_userfee_table(self,userfee):
         for widget in self.winfo_children():
@@ -253,6 +252,83 @@ class AdminGUI(RootGUI):
             entry.grid(row=idx, column=1, padx=10, pady=5)
         ctk.CTkButton(self.edit_window, text="Save", command=lambda: self.save_user(entries), width=100).grid(row=len(labels), column=0, pady=10)
         ctk.CTkButton(self.edit_window, text="Delete", command=lambda: self.delete_user(entries["apartment_code"].get()), width=100).grid(row=len(labels), column=1, pady=10)
+    def thu_fee(self, apartment_code, fee_name, pay_money):
+        self.db_manager.thu_fee(apartment_code, fee_name, pay_money)
+    def thu_fee_frame_gui(self):
+        for widget in self.winfo_children():
+            widget.pack_forget()
+        if hasattr(self, 'user_info_frame'):
+            self.user_info_frame.destroy()
+        self.thu_fee_frame = ctk.CTkFrame(self, width=450, height=350, corner_radius=15)
+        self.thu_fee_frame.pack(padx=20, pady=20, fill="both", expand=True)
+        header_font = ("Arial", 18, "bold")
+        ctk.CTkLabel(self.thu_fee_frame, text="Fee Payment", font=header_font).grid(row=0, column=0, columnspan=2, pady=(20, 10))
+        font_large = ("Arial", 14)
+        ctk.CTkLabel(self.thu_fee_frame, text="Apartment Code:", font=font_large).grid(row=1, column=0, padx=(30, 10), pady=10, sticky="e")
+        self.apartment_code_var = ctk.StringVar()
+        self.apartment_code_entry = ctk.CTkEntry(self.thu_fee_frame, textvariable=self.apartment_code_var, width=220, font=font_large)
+        self.apartment_code_entry.grid(row=1, column=1, padx=(10, 30), pady=10)
+        ctk.CTkLabel(self.thu_fee_frame, text="Fee Name:", font=font_large).grid(row=2, column=0, padx=(30, 10), pady=10, sticky="e")
+        self.fee_name_var = ctk.StringVar()
+        fee_types = self.db_manager.get_fee_names()
+        self.fee_type_dropdown = ctk.CTkOptionMenu(self.thu_fee_frame, variable=self.fee_name_var, values=fee_types, width=220)
+        self.fee_type_dropdown.grid(row=2, column=1, padx=(10, 30), pady=10)
+        submit_button = ctk.CTkButton(self.thu_fee_frame, text="Submit", command=self.display_user_info, width=120)
+        submit_button.grid(row=3, column=0, columnspan=2, pady=(20, 20))
+        back_button = ctk.CTkButton(self.thu_fee_frame, text="Back", command=self.show_home, width=120)
+        back_button.grid(row=4, column=0, columnspan=2, pady=(0, 10))
+
+
+
+
+    def display_user_info(self):
+        if hasattr(self, 'user_info_frame'):
+            self.user_info_frame.destroy()
+        user_fee_info = self.db_manager.user_fee_info(self.apartment_code_var.get(), self.fee_name_var.get())
+        try:
+            username = user_fee_info['username']
+        except:
+            self.show_popup("Error", "No user found!")
+            return
+        fullname = user_fee_info['fullname']
+        apt_code = user_fee_info['apt_code']
+        feename = user_fee_info['feename']
+        money_paid = user_fee_info['money_paid']
+        money_remain = user_fee_info['money_remain']
+        money_residual = user_fee_info['money_residual']
+        status = user_fee_info['status']
+        self.user_info_frame = ctk.CTkFrame(self, width=450, height=350, corner_radius=15)
+        self.user_info_frame.pack(padx=20, pady=20, fill="both", expand=True)
+        font_large = ("Arial", 14)
+        ctk.CTkLabel(self.user_info_frame, text=f"Username: {username}", font=font_large).pack(anchor="w", padx=10, pady=5)
+        ctk.CTkLabel(self.user_info_frame, text=f"Full Name: {fullname}", font=font_large).pack(anchor="w", padx=10, pady=5)
+        ctk.CTkLabel(self.user_info_frame, text=f"Apt Code: {apt_code}", font=font_large).pack(anchor="w", padx=10, pady=5)
+        ctk.CTkLabel(self.user_info_frame, text=f"Fee Name: {feename}", font=font_large).pack(anchor="w", padx=10, pady=5)
+        ctk.CTkLabel(self.user_info_frame, text=f"Money Paid: {money_paid}", font=font_large).pack(anchor="w", padx=10, pady=5)
+        if status == 'Complete':
+            ctk.CTkLabel(self.user_info_frame, text=f"Money Remain: {money_remain}", font=font_large, text_color="green").pack(anchor="w", padx=10, pady=5)
+        else:
+            ctk.CTkLabel(self.user_info_frame, text=f"Money Remain: {money_remain}", font=font_large, text_color="red").pack(anchor="w", padx=10, pady=5)
+        ctk.CTkLabel(self.user_info_frame, text=f"Money Residual: {money_residual}", font=font_large).pack(anchor="w", padx=10, pady=5)
+        payment_button = ctk.CTkButton(self.user_info_frame, text="Proceed to Payment", command=self.thu_fee_dialog)
+        payment_button.pack(pady=(20, 10))
+
+    def thu_fee_dialog(self):
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("Payment")
+        font_large = ("Arial", 16)
+        ctk.CTkLabel(dialog, text="Amount:", font=font_large).grid(row=0, column=0, padx=10, pady=5, sticky="e")
+        self.pay_money_var = ctk.StringVar()
+        ctk.CTkEntry(dialog, textvariable=self.pay_money_var, width=200, font=font_large).grid(row=0, column=1, padx=10, pady=5)
+        def pay_and_update():
+            self.thu_fee(self.apartment_code_var.get(), self.fee_name_var.get(), int(self.pay_money_var.get()))
+            self.display_user_info()
+        ctk.CTkButton(dialog, text="Pay", command=pay_and_update, width=100).grid(row=1, column=0, pady=10)
+        ctk.CTkButton(dialog, text="Cancel", command=dialog.destroy, width=100).grid(row=1, column=1, pady=10)
+
+
+
+
 
     def logout(self):
         """Đăng xuất và quay lại màn hình đăng nhập."""
