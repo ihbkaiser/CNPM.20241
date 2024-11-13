@@ -198,3 +198,55 @@ class DBManager:
 
     def close(self):
         self.conn.close()
+
+    def get_parking_fee_summary(self):
+        """Lấy thống kê tổng hợp tiền gửi xe."""
+        try:
+            self.cursor.execute("""
+            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Parking Paid', SUM(remain) AS 'Remaining Parking Fee'
+            FROM fees
+            WHERE fee_name LIKE 'parking%'
+            GROUP BY Month_Year
+            """)
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi lấy thống kê tiền gửi xe: {err}")
+        
+    def get_service_fee_summary(self):
+        """Lấy thống kê tổng hợp tiền dịch vụ."""
+        try:
+            self.cursor.execute("""
+            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Service Paid', SUM(remain) AS 'Remaining Service Fee'
+            FROM fees
+            WHERE fee_name LIKE 'service%'
+            GROUP BY Month_Year
+            """)
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi lấy thống kê tiền dịch vụ: {err}")
+        
+    def get_water_fee_summary(self):
+        """Lấy thống kê tổng hợp tiền nước."""
+        try:
+            self.cursor.execute("""
+            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Water Paid', SUM(remain) AS 'Remaining Water Fee'
+            FROM fees
+            WHERE fee_name LIKE 'water%'
+            GROUP BY Month_Year
+            """)
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi lấy thống kê tiền nước: {err}")
+        
+    def get_electricity_fee_summary(self):
+        """Lấy thống kê tổng hợp tiền điện."""
+        try:
+            self.cursor.execute("""
+            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Electricity Paid', SUM(remain) AS 'Remaining Electricity Fee'
+            FROM fees
+            WHERE fee_name LIKE 'electricity%'
+            GROUP BY Month_Year
+            """)
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi lấy thống kê tiền điện: {err}")

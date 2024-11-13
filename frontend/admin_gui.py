@@ -17,7 +17,53 @@ class AdminGUI(RootGUI):
         ctk.CTkButton(self, text="Manage Fees", command=self.manage_fees, width=200, height=50).pack(pady=5)
         ctk.CTkButton(self, text="Edit Fees", command=self.edit_fees, width=200, height=50).pack(pady=5)
         ctk.CTkButton(self, text="Payment", command=self.thu_fee_frame_gui, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(self, text="Statistics", command=self.show_statistics_options, width=200, height=50).pack(pady=5)  # Nút thống kê khoản thu
         ctk.CTkButton(self, text="Logout", command=self.logout, width=200, height=50).pack(pady=5)
+
+    def show_statistics_options(self):
+        """Hiển thị các tùy chọn thống kê."""
+        popup = ctk.CTkToplevel(self)
+        popup.title("Statistics Options")
+        popup.geometry("400x300")
+
+        ctk.CTkLabel(popup, text="Choose a statistics option:").pack(pady=10)
+
+        ctk.CTkButton(popup, text="Electricity Fee", command=self.show_electricity_fee_summary, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(popup, text="Water Fee", command=self.show_water_fee_summary, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(popup, text="Service Fee", command=self.show_service_fee_summary, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(popup, text="Parking Fee", command=self.show_parking_fee_summary, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(popup, text="By Household", command=self.show_household_statistics, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(popup, text="Close", command=popup.destroy, width=200, height=50).pack(pady=5)
+
+    def show_summary_table(self, title, data, columns):
+        """Hiển thị bảng thống kê tổng hợp các loại phí."""
+        popup = ctk.CTkToplevel(self)  # Tạo cửa sổ popup
+        popup.title(title)
+        popup.geometry("1000x600")  # Set larger size for the popup window
+
+        # Tạo Treeview với các cột
+        tree = ttk.Treeview(popup, columns=columns, show="headings", height=25)  # Set larger height for the Treeview
+
+        # Đặt tiêu đề cho các cột và tăng kích thước cột
+        column_widths = {col: 150 for col in columns}
+
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, width=column_widths[col])
+
+        # Chèn dữ liệu vào bảng
+        for item in data:
+            values = []
+            for col in columns:
+                print(col)
+                value = item.get(col, 'N/A')
+                values.append(value)
+            tree.insert("", "end", values=tuple(values))
+
+        tree.pack(pady=10, padx=10, expand=True, fill='both')
+
+        # Thêm nút đóng
+        ctk.CTkButton(popup, text="Close", command=popup.destroy).pack(pady=10)
 
 
     def view_admins(self):
@@ -334,3 +380,37 @@ class AdminGUI(RootGUI):
         """Đăng xuất và quay lại màn hình đăng nhập."""
         self.destroy()
         self.controller.show_login_frame()
+
+
+    
+    def show_electricity_fee_summary(self):
+        """Hiển thị thống kê tổng hợp tiền điện."""
+        summary = self.db_manager.get_electricity_fee_summary()  # Lấy thống kê tổng hợp từ db
+        if summary:
+            self.show_summary_table("Electricity Fee Summary", summary, ["Month_Year", "Total Electricity Paid", "Remaining Electricity Fee"])
+        else:
+            self.show_popup("Error", "No Electricity Fee Summary found!")
+
+    def show_water_fee_summary(self):
+        """Hiển thị thống kê tổng hợp tiền nước."""
+        summary = self.db_manager.get_water_fee_summary()  # Lấy thống kê tổng hợp từ db
+        if summary:
+            self.show_summary_table("Water Fee Summary", summary, ["Month_Year", "Total Water Paid", "Remaining Water Fee"])
+        else:
+            self.show_popup("Error", "No Water Fee Summary found!")
+
+    def show_service_fee_summary(self):
+        """Hiển thị thống kê tổng hợp tiền dịch vụ."""
+        summary = self.db_manager.get_service_fee_summary()  # Lấy thống kê tổng hợp từ db
+        if summary:
+            self.show_summary_table("Service Fee Summary", summary, ["Month_Year", "Total Service Paid", "Remaining Service Fee"])
+        else:
+            self.show_popup("Error", "No Service Fee Summary found!")
+
+    def show_parking_fee_summary(self):
+        """Hiển thị thống kê tổng hợp tiền gửi xe."""
+        summary = self.db_manager.get_parking_fee_summary()  # Lấy thống kê tổng hợp từ db
+        if summary:
+            self.show_summary_table("Parking Fee Summary", summary, ["Month_Year", "Total Parking Paid", "Remaining Parking Fee"])
+        else:
+            self.show_popup("Error", "No Parking Fee Summary found!")

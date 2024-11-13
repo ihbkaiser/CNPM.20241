@@ -1,6 +1,6 @@
 db:
   host: "localhost"
   port: 3306
-  user: "XXXXXXXXXXXXX"
-  password: "YYYYYYYYYYYYY"
+  user: "haminhhieu"
+  password: "10052004"
   database: "ZZZZZZZZZZZZZ"
