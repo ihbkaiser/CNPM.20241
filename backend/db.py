@@ -205,7 +205,7 @@ class DBManager:
             self.cursor.execute("""
             SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Parking Paid', SUM(remain) AS 'Remaining Parking Fee'
             FROM fees
-            WHERE fee_name LIKE 'parking%'
+            WHERE fee_name LIKE 'Parking%'
             GROUP BY Month_Year
             """)
             return self.cursor.fetchall()
@@ -218,7 +218,7 @@ class DBManager:
             self.cursor.execute("""
             SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Service Paid', SUM(remain) AS 'Remaining Service Fee'
             FROM fees
-            WHERE fee_name LIKE 'service%'
+            WHERE fee_name LIKE 'Service%'
             GROUP BY Month_Year
             """)
             return self.cursor.fetchall()
@@ -231,7 +231,7 @@ class DBManager:
             self.cursor.execute("""
             SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Water Paid', SUM(remain) AS 'Remaining Water Fee'
             FROM fees
-            WHERE fee_name LIKE 'water%'
+            WHERE fee_name LIKE 'Water%'
             GROUP BY Month_Year
             """)
             return self.cursor.fetchall()
@@ -244,7 +244,7 @@ class DBManager:
             self.cursor.execute("""
             SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Electricity Paid', SUM(remain) AS 'Remaining Electricity Fee'
             FROM fees
-            WHERE fee_name LIKE 'electricity%'
+            WHERE fee_name LIKE 'Electricity%'
             GROUP BY Month_Year
             """)
             return self.cursor.fetchall()

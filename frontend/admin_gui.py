@@ -22,18 +22,22 @@ class AdminGUI(RootGUI):
 
     def show_statistics_options(self):
         """Hiển thị các tùy chọn thống kê."""
-        popup = ctk.CTkToplevel(self)
-        popup.title("Statistics Options")
-        popup.geometry("400x300")
 
-        ctk.CTkLabel(popup, text="Choose a statistics option:").pack(pady=10)
 
-        ctk.CTkButton(popup, text="Electricity Fee", command=self.show_electricity_fee_summary, width=200, height=50).pack(pady=5)
-        ctk.CTkButton(popup, text="Water Fee", command=self.show_water_fee_summary, width=200, height=50).pack(pady=5)
-        ctk.CTkButton(popup, text="Service Fee", command=self.show_service_fee_summary, width=200, height=50).pack(pady=5)
-        ctk.CTkButton(popup, text="Parking Fee", command=self.show_parking_fee_summary, width=200, height=50).pack(pady=5)
-        ctk.CTkButton(popup, text="By Household", command=self.show_household_statistics, width=200, height=50).pack(pady=5)
-        ctk.CTkButton(popup, text="Close", command=popup.destroy, width=200, height=50).pack(pady=5)
+        for widget in self.winfo_children():
+            widget.pack_forget()
+        self.statistic_frame = ctk.CTkFrame(self)
+        self.statistic_frame.pack(fill='both', expand=True)
+        ctk.CTkLabel(self.statistic_frame, text="Statistic", font=("Arial", 24)).pack(pady=10)
+
+        ctk.CTkLabel(self.statistic_frame, text="Choose a statistics option:").pack(pady=10)
+
+        ctk.CTkButton(self.statistic_frame, text="Electricity Fee", command=self.show_electricity_fee_summary, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(self.statistic_frame, text="Water Fee", command=self.show_water_fee_summary, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(self.statistic_frame, text="Service Fee", command=self.show_service_fee_summary, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(self.statistic_frame, text="Parking Fee", command=self.show_parking_fee_summary, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(self.statistic_frame, text="By Household", command=self.show_household_statistics, width=200, height=50).pack(pady=5)
+        ctk.CTkButton(self.statistic_frame, text="Close", command=self.show_home, width=200, height=50).pack(pady=5)
 
     def show_summary_table(self, title, data, columns):
         """Hiển thị bảng thống kê tổng hợp các loại phí."""
