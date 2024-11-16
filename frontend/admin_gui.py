@@ -39,6 +39,38 @@ class AdminGUI(RootGUI):
         ctk.CTkButton(self.statistic_frame, text="By Household", command=self.show_household_statistics, width=200, height=50).pack(pady=5)
         ctk.CTkButton(self.statistic_frame, text="Close", command=self.show_home, width=200, height=50).pack(pady=5)
 
+
+    def show_household_statistics(self):
+        """Hiển thị form nhập mã căn hộ để xem thống kê."""
+        popup = ctk.CTkToplevel(self)
+        popup.title("Household Statistics")
+        popup.geometry("400x200")
+
+        ctk.CTkLabel(popup, text="Enter Apartment Code:").pack(pady=10)
+        apartment_code_entry = ctk.CTkEntry(popup)
+        apartment_code_entry.pack(pady=10)
+
+        def fetch_statistics():
+            apartment_code = apartment_code_entry.get()
+            print(apartment_code)
+            if apartment_code:
+                self.show_household_fee_summary(apartment_code)
+                popup.destroy()
+            else:
+                self.show_popup("Error", "Apartment Code cannot be empty!")
+
+        ctk.CTkButton(popup, text="Submit", command=fetch_statistics, width=200, height=50).pack(pady=10)
+        ctk.CTkButton(popup, text="Close", command=popup.destroy, width=200, height=50).pack(pady=10)
+
+    def show_household_fee_summary(self, apartment_code):
+        """Hiển thị thống kê tổng hợp các loại phí cho một hộ gia đình."""
+        summary = self.db_manager.get_userfee_by_apartment_code(apartment_code)  # Lấy thống kê tổng hợp từ db
+        if summary:
+            self.show_summary_table(f"Household Fee Summary for {apartment_code}", summary, ["fee_name", "paid", "remain"])
+        else:
+            self.show_popup("Error", f"No Fee Summary found for Apartment Code: {apartment_code}")
+
+
     def show_summary_table(self, title, data, columns):
         """Hiển thị bảng thống kê tổng hợp các loại phí."""
         popup = ctk.CTkToplevel(self)  # Tạo cửa sổ popup
@@ -59,7 +91,6 @@ class AdminGUI(RootGUI):
         for item in data:
             values = []
             for col in columns:
-                print(col)
                 value = item.get(col, 'N/A')
                 values.append(value)
             tree.insert("", "end", values=tuple(values))

@@ -250,3 +250,13 @@ class DBManager:
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi lấy thống kê tiền điện: {err}")
+        
+    def get_userfee_by_apartment_code(self, apartment_code):
+        """Lấy thông tin userfee theo mã căn hộ."""
+        try:
+            self.cursor.execute("""
+            SELECT fee_name, paid, remain FROM userfee WHERE apartment_code = %s
+            """, (apartment_code,))
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi lấy thông tin userfee: {err}")
