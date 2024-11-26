@@ -10,79 +10,250 @@ from backend.auth import AuthManager
 from frontend.root_gui import RootGUI
 from frontend.normal_gui import NormalGUI
 from frontend.admin_gui import AdminGUI
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
+from pathlib import Path
 import zxcvbn
-class LoginFrame(ctk.CTkFrame):
-    def __init__(self, parent):
-        super().__init__(parent)
+class LoginFrame(Frame):
+    def __init__(self,parent):
+        super().__init__(parent)  # Gọi constructor của Tk()
         self.controller = parent
         self.password_visible = False
-        self.header_label = ctk.CTkLabel(self, text="Phần mềm quản lý chung cư BlueMoon", font=("Arial", 26, "bold"))
-        self.header_label.grid(row=0, column=0, columnspan=3, pady=20)
-
-        # Custom fonts and sizes
-        font_large = ("Arial", 20)
-        button_width = 200
-        entry_width = 400
-        entry_height = 50
-
-        # Setup grid configuration for centering elements
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure(2, weight=1)
-
-        # Username entry
-        self.username_label = ctk.CTkLabel(self, text="Username:", font=font_large)
-        self.username_label.grid(row=1, column=1, sticky="w", pady=10)
-        self.username_entry = ctk.CTkEntry(self, placeholder_text="Username", width=entry_width, height=entry_height, font=font_large)
-        self.username_entry.grid(row=1, column=1, pady=20, padx=20)
-
-        # Password entry with eye icon
-        self.password_label = ctk.CTkLabel(self, text="Password:", font=font_large)
-        self.password_label.grid(row=2, column=1, sticky="w", pady=10)
-        self.password_entry = ctk.CTkEntry(self, placeholder_text="Password", show="*", width=entry_width, height=entry_height, font=font_large)
-        self.password_entry.grid(row=2, column=1, pady=20, padx=20)
-
-        # Button to toggle password visibility
-        self.eye_button = ctk.CTkButton(self, text="👁", width=50, height=50, font=font_large, command=self.toggle_password)
-        self.eye_button.grid(row=2, column=2, padx=10, pady=0)
-
-        # Image CAPTCHA
         self.captcha_image, self.captcha_text = self.generate_captcha()
 
-        # Display the CAPTCHA image
-        self.captcha_image_label = ctk.CTkLabel(self, image=self.captcha_image, text="")
-        self.captcha_image_label.grid(row=3, column=1, pady=10)
-        
-        self.refresh_image = ImageTk.PhotoImage(Image.open("assets/refresh_button.png").resize((50, 50)))
-        self.refresh_captcha_button = ctk.CTkButton(self, image=self.refresh_image, text="", width=20, height=50, font=font_large, command=self.refresh_captcha)
-        self.refresh_captcha_button.grid(row=3, column=2, padx=10, pady=0)
+        # Tạo frame đăng nhập
+        self.log_in_frame = Frame(self)
+        self.log_in_frame.pack(fill="both", expand=True)
 
-        # CAPTCHA entry
-        self.captcha_entry = ctk.CTkEntry(self, placeholder_text="Enter CAPTCHA", width=entry_width, height=entry_height, font=font_large)
-        self.captcha_entry.grid(row=5, column=1, pady=20, padx=20)
-        self.captcha_error_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.captcha_error_label.grid(row=6, column=1)
+        self.canvas = Canvas(
+            self.log_in_frame,
+            bg = "#FFFFFF",
+            height = 1024,
+            width = 1440,
+            bd = 0,
+            highlightthickness = 0,
+            relief = "ridge"
+        )
 
-        # Login button
-        self.login_button = ctk.CTkButton(self, text="Login", width=button_width, height=60, font=font_large, command=self.login)
-        self.login_button.grid(row=7, column=1, pady=20, padx=20)
+        self.canvas.place(x = 0, y = 0)
 
-        # Change password button
-        self.login_button = ctk.CTkButton(self, text="Forget password", width=button_width, height=60, font=font_large, command=self.controller.show_forget_frame)
-        self.login_button.grid(row=8, column=1, pady=20, padx=20)
+        self.image_image_1 = PhotoImage(
+            file="assets/frame0/image_1.png")
+        self.image_1 = self.canvas.create_image(
+            721.0,
+            519.0,
+            image=self.image_image_1
+        )
 
-        # Switch to register frame button
-        self.switch_register_button = ctk.CTkButton(self, text="Sign Up ", width=button_width, height=60, font=font_large, command=self.controller.show_register_frame)
-        self.switch_register_button.grid(row=9, column=1, pady=20)
+        self.canvas.create_text(
+            382.0,
+            582.0,
+            anchor="nw",
+            text="text",
+            fill="#ECD8D2",
+            font=("Inter Bold", 12 * -1)
+        )
+
+        self.canvas.create_text(
+            778.0,
+            23.0,
+            anchor="nw",
+            text="BLUE MOON APARTMENT",
+            fill="#FFFFFF",
+            font=("Inter Bold", 48 * -1)
+        )
+
+        self.canvas.create_text(
+            703.0,
+            133.0,
+            anchor="nw",
+            text="Username:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 36 * -1)
+        )
+
+        self.canvas.create_text(
+            704.0,
+            293.0,
+            anchor="nw",
+            text="Password:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 36 * -1)
+        )
+
+        self.canvas.create_text(
+            703.0,
+            646.0,
+            anchor="nw",
+            text="Captcha:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 36 * -1)
+        )
+
+        self.image_image_2 = PhotoImage(
+            file="assets/frame0/image_2.png")
+        self.image_2 = self.canvas.create_image(
+            343.0,
+            516.5,
+            image=self.image_image_2
+        )
+
+        entry_image_1 = PhotoImage(
+            file="assets/frame0/entry_1.png")
+        self.entry_bg_1 = self.canvas.create_image(
+            1173.0,
+            157.0,
+            image=entry_image_1
+        )
+        self.username_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            highlightthickness=0,
+            font=("Arial", 20)
+        )
+        self.username_entry.place(
+            x=950.0,
+            y=121.0,
+            width=446.0,
+            height=70.0
+        )
+
+        entry_image_2 = PhotoImage(
+            file="assets/frame0/entry_2.png")
+        self.entry_bg_2 = self.canvas.create_image(
+            1173.0,
+            319.0,
+            image=entry_image_2
+        )
+        self.password_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            show="*",
+            highlightthickness=0,
+            font=("Arial", 20)
+        )
+        self.password_entry.place(
+            x=950.0,
+            y=283.0,
+            width=446.0,
+            height=70.0
+        )
+
+        self.image_image_3 = self.captcha_image,
+        self.image_3 = self.canvas.create_image(
+            1119.5,
+            489.0,
+            image=self.image_image_3
+        )
+
+        self.entry_image_3 = PhotoImage(
+            file="assets/frame0/entry_3.png")
+        self.entry_bg_3 = self.canvas.create_image(
+            1169.0,
+            660.0,
+            image=self.entry_image_3
+        )
+        self.captcha_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            highlightthickness=0,
+            font=("Arial", 20)
+        )
+        self.captcha_entry.place(
+            x=946.0,
+            y=624.0,
+            width=446.0,
+            height=70.0
+        )
+
+        self.eye_button = PhotoImage(
+            file="assets/frame0/button_1.png")
+        button_1 = Button(
+            image=self.eye_button,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.toggle_password,
+            relief="flat"
+        )
+        button_1.place(
+            x=1301.0,
+            y=293.0,
+            width=91.0,
+            height=57.0
+        )
+
+        self.button_image_2 = PhotoImage(
+            file="assets/frame0/button_2.png")
+        self.button_2 = Button(
+            image=self.button_image_2,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.login,
+            relief="flat"
+        )
+        self.button_2.place(
+            x=981.0,
+            y=766.0,
+            width=287.0,
+            height=95.0
+        )
+
+        self.button_image_3 = PhotoImage(
+            file="assets/frame0/button_3.png")
+        button_3 = Button(
+            image=self.button_image_3,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.controller.show_forget_frame,
+            relief="flat"
+        )
+        button_3.place(
+            x=785.0,
+            y=907.0,
+            width=293.0,
+            height=51.0
+        )
+
+        self.button_image_4 = PhotoImage(
+            file="assets/frame0/button_4.png")
+        button_4 = Button(
+            image=self.button_image_4,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.controller.show_register_frame,
+            relief="flat"
+        )
+        button_4.place(
+            x=1187.0,
+            y=903.0,
+            width=160.0,
+            height=60.0
+        )
+
+        self.button_image_5 = PhotoImage(
+            file="assets/frame0/button_5.png")
+        button_5 = Button(
+            image=self.button_image_5,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.refresh_captcha,
+            relief="flat"
+        )
+        button_5.place(
+            x=1322.0,
+            y=451.0,
+            width=83.0,
+            height=72.0
+        )
 
     def toggle_password(self):
         """Toggle password visibility."""
         if self.password_visible:
             self.password_entry.configure(show="*")
-            self.eye_button.configure(text="👁")
         else:
             self.password_entry.configure(show="")
-            self.eye_button.configure(text="🚫")
         self.password_visible = not self.password_visible
     
     def generate_captcha(self):
@@ -98,7 +269,12 @@ class LoginFrame(ctk.CTkFrame):
     def refresh_captcha(self):
         """Refresh the CAPTCHA image and text."""
         self.captcha_image, self.captcha_text = self.generate_captcha()
-        self.captcha_image_label.configure(image=self.captcha_image)
+        #self.image_3.configure(image=self.captcha_image)
+        self.canvas.create_image(
+            1119.5,
+            489.0,
+            image=self.captcha_image
+        )
 
     def login(self):
         """Perform login action with CAPTCHA validation."""
@@ -128,75 +304,234 @@ class ForgetFrame(ctk.CTkFrame):
     def __init__(self, parent, user_mode=True):
         super().__init__(parent)
         self.controller = parent
+        self.password_visible = False
         self.is_user = user_mode
 
-        # Custom fonts and sizes
-        font_large = ("Arial", 20)
-        button_width = 250
-        entry_width = 300
-        entry_height = 50
+        self.forget_frame = Frame(self)
+        self.forget_frame.pack(fill="both", expand=True)
 
-        # Username entry
-        ctk.CTkLabel(self, text="Username:", font=font_large).grid(row=0, column=0, padx=20, pady=10, sticky="w")
-        self.username_entry = ctk.CTkEntry(self, placeholder_text="Username", width=entry_width, height=entry_height, font=font_large)
-        self.username_entry.grid(row=0, column=1, pady=10, padx=20, sticky="ew")
-        self.username_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.username_label.grid(row=1, column=1)
+        self.canvas = Canvas(
+            self.forget_frame,
+            bg = "#FFFFFF",
+            height = 1024,
+            width = 1440,
+            bd = 0,
+            highlightthickness = 0,
+            relief = "ridge"
+        )
+        self.canvas.place(x = 0, y = 0)
 
-        # Phone number entry
-        ctk.CTkLabel(self, text="Phone Number:", font=font_large).grid(row=2, column=0, padx=20, pady=10, sticky="w")
-        self.phonenumber_entry = ctk.CTkEntry(self, placeholder_text="Phone Number", width=entry_width, height=entry_height, font=font_large)
-        self.phonenumber_entry.grid(row=2, column=1, pady=10, padx=20, sticky="ew")
-        self.phonenumber_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.phonenumber_label.grid(row=3, column=1)
+        self.image_image_1 = PhotoImage(
+            file="assets/frame2/image_1.png")
+        self.image_1 = self.canvas.create_image(
+            721.0,
+            519.0,
+            image=self.image_image_1
+        )
 
-        # New Password entry
-        ctk.CTkLabel(self, text="New password:", font=font_large).grid(row=4, column=0, padx=20, pady=10, sticky="w")
-        self.newpassword_entry = ctk.CTkEntry(self, placeholder_text="New password", show="*", width=entry_width, height=entry_height, font=font_large)
-        self.newpassword_entry.grid(row=4, column=1, pady=10, padx=20, sticky="ew")
-        self.newpassword_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.newpassword_label.grid(row=5, column=1)
+        self.canvas.create_text(
+            382.0,
+            582.0,
+            anchor="nw",
+            text="text",
+            fill="#ECD8D2",
+            font=("Inter Bold", 12 * -1)
+        )
 
-        # Add a label to display password strength
-        self.password_strength_label = ctk.CTkLabel(self, text="", font=("Arial", 16), text_color="gray")
-        self.password_strength_label.grid(row=5, column=0, columnspan=2, padx=20, sticky="w")
+        self.canvas.create_text(
+            778.0,
+            23.0,
+            anchor="nw",
+            text="BLUE MOON APARTMENT",
+            fill="#FFFFFF",
+            font=("Inter Bold", 48 * -1)
+        )
 
-        # Bind the password entry to update password strength dynamically
-        self.newpassword_entry.bind("<KeyRelease>", self.check_password_strength)
+        self.canvas.create_text(
+            703.0,
+            133.0,
+            anchor="nw",
+            text="Username:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 36 * -1)
+        )
 
-        # Add button for showing/hiding password
-        self.password_visible = False
-        self.eye_button = ctk.CTkButton(self, text="👁", width=50, command=self.toggle_password)
-        self.eye_button.grid(row=4, column=2, padx=10)
+        self.canvas.create_text(
+            703.0,
+            458.0,
+            anchor="nw",
+            text="New Password:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 32 * -1)
+        )
 
-        # Confirm new password entry
-        ctk.CTkLabel(self, text="Confirm New Password:", font=font_large).grid(row=6, column=0, padx=20, pady=10, sticky="w")
-        self.confirm_newpassword_entry = ctk.CTkEntry(self, placeholder_text="Confirm New Password", show="*", width=entry_width, height=entry_height, font=font_large)
-        self.confirm_newpassword_entry.grid(row=6, column=1, pady=10, padx=20, sticky="ew")
-        self.confirm_newpassword_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.confirm_newpassword_label.grid(row=7, column=1)
+        self.image_image_2 = PhotoImage(
+            file="assets/frame2/image_2.png")
+        self.image_2 = self.canvas.create_image(
+            343.0,
+            512.0,
+            image=self.image_image_2
+        )
 
-        # Change password button
-        self.change_button = ctk.CTkButton(self, text="Change password", width=button_width, height=60, font=font_large, command=self.change)
-        self.change_button.grid(row=12, column=1, pady=20)
+        self.entry_image_1 = PhotoImage(
+            file="assets/frame2/entry_1.png")
+        self.entry_bg_1 = self.canvas.create_image(
+            1173.0,
+            157.0,
+            image=self.entry_image_1
+        )
+        self.username_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            font=("Arial", 20),
+            highlightthickness=0
+        )
+        self.username_entry.place(
+            x=950.0,
+            y=121.0,
+            width=446.0,
+            height=70.0
+        )
 
-        # Switch to login frame
-        self.switch_login_button = ctk.CTkButton(self, text="Back to log in", width=button_width, height=60, font=font_large, command=self.controller.show_login_frame)
-        self.switch_login_button.grid(row=13, column=1, pady=20)
+        self.entry_image_2 = PhotoImage(
+            file="assets/frame2/entry_2.png")
+        self.entry_bg_2 = self.canvas.create_image(
+            1173.0,
+            315.0,
+            image=self.entry_image_2
+        )
+        self.phonenumber_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            font=("Arial", 20),
+            highlightthickness=0
+        )
+        self.phonenumber_entry.place(
+            x=950.0,
+            y=279.0,
+            width=446.0,
+            height=70.0
+        )
 
-        # Center the grid elements
-        self.grid_columnconfigure(0, weight=1)  # Left label column
-        self.grid_columnconfigure(1, weight=1)  # Center input field column
-        self.grid_columnconfigure(2, weight=1)  # Right for button (like eye button)
+        self.entry_image_3 = PhotoImage(
+            file="assets/frame2/entry_3.png")
+        self.entry_bg_3 = self.canvas.create_image(
+            1173.0,
+            481.0,
+            image=self.entry_image_3
+        )
+        self.newpassword_entry = Entry(
+            bd=0,
+            show="*",
+            bg="#EEEEEE",
+            fg="#000716",
+            font=("Arial", 20),
+            highlightthickness=0
+        )
+        self.newpassword_entry.place(
+            x=950.0,
+            y=445.0,
+            width=446.0,
+            height=70.0
+        )
+
+        self.entry_image_4 = PhotoImage(
+            file="assets/frame2/entry_4.png")
+        self.entry_bg_4 = self.canvas.create_image(
+            1173.0,
+            651.0,
+            image=self.entry_image_4
+        )
+        self.confirm_newpassword_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            font=("Arial", 20),
+            highlightthickness=0
+        )
+        self.confirm_newpassword_entry.place(
+            x=950.0,
+            y=615.0,
+            width=446.0,
+            height=70.0
+        )
+
+
+        self.button_image_1 = PhotoImage(
+            file="assets/frame2/button_1.png")
+        self.button_1 = Button(
+            image=self.button_image_1,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.toggle_password,
+            relief="flat"
+        )
+        self.button_1.place(
+            x=1301.0,
+            y=452.0,
+            width=91.0,
+            height=57.0
+        )
+
+        self.canvas.create_text(
+            703.0,
+            643.0,
+            anchor="nw",
+            text="Confirm New Password:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 22 * -1)
+        )
+
+        self.canvas.create_text(
+            703.0,
+            294.0,
+            anchor="nw",
+            text="Phone Number:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 32 * -1)
+        )
+
+        self.button_image_2 = PhotoImage(
+            file="assets/frame2/button_2.png")
+        self.button_2 = Button(
+            image=self.button_image_2,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.controller.show_login_frame,
+            relief="flat"
+        )
+        self.button_2.place(
+            x=910.0,
+            y=884.0,
+            width=315.0,
+            height=66.0
+        )
+
+        self.button_image_3 = PhotoImage(
+            file="assets/frame2/button_3.png")
+        self.button_3 = Button(
+            image=self.button_image_3,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.change,
+            relief="flat"
+        )
+        self.button_3.place(
+            x=870.0,
+            y=761.0,
+            width=396.0,
+            height=84.0
+        )
+
 
     def toggle_password(self):
         """Toggle password visibility."""
         if self.password_visible:
             self.newpassword_entry.configure(show="*")
-            self.eye_button.configure(text="👁")
         else:
             self.newpassword_entry.configure(show="")
-            self.eye_button.configure(text="🚫")
         self.password_visible = not self.password_visible
 
     def check_password_strength(self, event=None):
@@ -222,7 +557,7 @@ class ForgetFrame(ctk.CTkFrame):
         confirm_newpassword = self.confirm_newpassword_entry.get()
 
         # Clear previous warnings
-        self.clear_warnings()
+        # self.clear_warnings()
 
         # Input validation
         valid = True
@@ -256,97 +591,287 @@ class ForgetFrame(ctk.CTkFrame):
         self.phonenumber_label.configure(text="")
 
 
-class RegisterFrame(ctk.CTkFrame):
+class RegisterFrame(Frame):
     def __init__(self, parent, user_mode=True):
         super().__init__(parent)
         self.controller = parent
+        self.password_visible = False
         self.is_user = user_mode
 
-        # Custom fonts and sizes
-        font_large = ("Arial", 20)
-        button_width = 250
-        entry_width = 300
-        entry_height = 50
+        self.register_frame = Frame(self)
+        self.register_frame.pack(fill="both", expand=True)
 
-        # Username entry
-        ctk.CTkLabel(self, text="Username:", font=font_large).grid(row=0, column=0, padx=20, pady=10, sticky="w")
-        self.username_entry = ctk.CTkEntry(self, placeholder_text="Username", width=entry_width, height=entry_height, font=font_large)
-        self.username_entry.grid(row=0, column=1, pady=10, padx=20, sticky="ew")
-        self.username_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.username_label.grid(row=1, column=1)
+        self.canvas = Canvas(
+            self.register_frame,
+            bg = "#FFFFFF",
+            height = 1024,
+            width = 1440,
+            bd = 0,
+            highlightthickness = 0,
+            relief = "ridge"
+        )
 
-        # Password entry
-        ctk.CTkLabel(self, text="Password:", font=font_large).grid(row=2, column=0, padx=20, pady=10, sticky="w")
-        self.password_entry = ctk.CTkEntry(self, placeholder_text="Password", show="*", width=entry_width, height=entry_height, font=font_large)
-        self.password_entry.grid(row=2, column=1, pady=10, padx=20, sticky="ew")
-        self.password_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.password_label.grid(row=3, column=1)
+        self.canvas.place(x = 0, y = 0)
+        self.image_image_1 = PhotoImage(
+            file="assets/frame1/image_1.png")
+        self.image_1 = self.canvas.create_image(
+            721.0,
+            519.0,
+            image=self.image_image_1
+        )
 
-        # Add a label to display password strength
-        self.password_strength_label = ctk.CTkLabel(self, text="", font=("Arial", 16), text_color="gray")
-        self.password_strength_label.grid(row=3, column=0, columnspan=2, padx=20, sticky="w")
+        self.canvas.create_text(
+            778.0,
+            23.0,
+            anchor="nw",
+            text="BLUE MOON APARTMENT",
+            fill="#FFFFFF",
+            font=("Inter Bold", 48 * -1)
+        )
 
-        # Bind the password entry to update password strength dynamically
-        self.password_entry.bind("<KeyRelease>", self.check_password_strength)
+        self.canvas.create_text(
+            703.0,
+            133.0,
+            anchor="nw",
+            text="Username:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 36 * -1)
+        )
 
-        # Add button for showing/hiding password
-        self.password_visible = False
-        self.eye_button = ctk.CTkButton(self, text="👁", width=50, command=self.toggle_password)
-        self.eye_button.grid(row=2, column=2, padx=10)
+        self.canvas.create_text(
+            703.0,
+            244.0,
+            anchor="nw",
+            text="Password:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 36 * -1)
+        )
 
-        # Confirm password entry
-        ctk.CTkLabel(self, text="Confirm Password:", font=font_large).grid(row=4, column=0, padx=20, pady=10, sticky="w")
-        self.confirm_password_entry = ctk.CTkEntry(self, placeholder_text="Confirm Password", show="*", width=entry_width, height=entry_height, font=font_large)
-        self.confirm_password_entry.grid(row=4, column=1, pady=10, padx=20, sticky="ew")
-        self.confirm_password_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.confirm_password_label.grid(row=5, column=1)
+        self.canvas.create_text(
+            703.0,
+            359.0,
+            anchor="nw",
+            text="Confirm Password:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 28 * -1)
+        )
+    
+        self.canvas.create_text(
+            703.0,
+            486.0,
+            anchor="nw",
+            text="Full Name:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 32 * -1)
+        )
 
-        # Full name entry
-        ctk.CTkLabel(self, text="Full Name:", font=font_large).grid(row=6, column=0, padx=20, pady=10, sticky="w")
-        self.fullname_entry = ctk.CTkEntry(self, placeholder_text="Full Name", width=entry_width, height=entry_height, font=font_large)
-        self.fullname_entry.grid(row=6, column=1, pady=10, padx=20, sticky="ew")
-        self.fullname_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.fullname_label.grid(row=7, column=1)
+        self.canvas.create_text(
+            703.0,
+            603.0,
+            anchor="nw",
+            text="Phone Number:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 32 * -1)
+        )
 
-        # Phone number entry
-        ctk.CTkLabel(self, text="Phone Number:", font=font_large).grid(row=8, column=0, padx=20, pady=10, sticky="w")
-        self.phonenumber_entry = ctk.CTkEntry(self, placeholder_text="Phone Number", width=entry_width, height=entry_height, font=font_large)
-        self.phonenumber_entry.grid(row=8, column=1, pady=10, padx=20, sticky="ew")
-        self.phonenumber_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.phonenumber_label.grid(row=9, column=1)
+        self.canvas.create_text(
+            703.0,
+            710.0,
+            anchor="nw",
+            text="Appartment ID:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 32 * -1)
+        )
 
-        # Apartment code entry
-        if self.is_user:
-            code_name = "Apartment ID:"
-        else:
-            code_name = "Officer ID:"
-        ctk.CTkLabel(self, text=code_name, font=font_large).grid(row=10, column=0, padx=20, pady=10, sticky="w")
-        self.apartment_code_entry = ctk.CTkEntry(self, placeholder_text="Apartment ID", width=entry_width, height=entry_height, font=font_large)
-        self.apartment_code_entry.grid(row=10, column=1, pady=10, padx=20, sticky="ew")
-        self.apartment_code_label = ctk.CTkLabel(self, text="", text_color="red")
-        self.apartment_code_label.grid(row=11, column=1)
+        self.image_image_2 = PhotoImage(
+            file="assets/frame1/image_2.png")
+        self.image_2 = self.canvas.create_image(
+            343.0,
+            516.5,
+            image=self.image_image_2
+        )
 
-        # Register button
-        self.register_button = ctk.CTkButton(self, text="Sign Up", width=button_width, height=60, font=font_large, command=self.register)
-        self.register_button.grid(row=12, column=1, pady=20)
+        entry_image_1 = PhotoImage(
+            file="assets/frame1/entry_1.png")
+        self.entry_bg_1 = self.canvas.create_image(
+            1173.0,
+            157.0,
+            image=entry_image_1
+        )
+        self.username_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            highlightthickness=0,
+            font=("Arial", 20)
+        )
+        self.username_entry.place(
+            x=950.0,
+            y=121.0,
+            width=446.0,
+            height=70.0
+        )
 
-        # Switch to login frame
-        self.switch_login_button = ctk.CTkButton(self, text="Back to log in", width=button_width, height=60, font=font_large, command=self.controller.show_login_frame)
-        self.switch_login_button.grid(row=13, column=1, pady=20)
+        self.entry_image_2 = PhotoImage(
+            file="assets/frame1/entry_2.png")
+        self.entry_bg_2 = self.canvas.create_image(
+            1173.0,
+            272.0,
+            image=self.entry_image_2
+        )
+        self.password_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            font=("Arial", 20),
+            show='*',
+            highlightthickness=0
+        )
+        self.password_entry.place(
+            x=950.0,
+            y=236.0,
+            width=446.0,
+            height=70.0
+        )
 
-        # Center the grid elements
-        self.grid_columnconfigure(0, weight=1)  # Left label column
-        self.grid_columnconfigure(1, weight=1)  # Center input field column
-        self.grid_columnconfigure(2, weight=1)  # Right for button (like eye button)
+        self.entry_image_3 = PhotoImage(
+            file="assets/frame1/entry_3.png")
+        self.entry_bg_3 = self.canvas.create_image(
+            1173.0,
+            385.0,
+            image=self.entry_image_3
+        )
+        self.confirm_password_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            font=("Arial", 20),
+            highlightthickness=0
+        )
+        self.confirm_password_entry.place(
+            x=950.0,
+            y=349.0,
+            width=446.0,
+            height=70.0
+        )
+
+        self.entry_image_4 = PhotoImage(
+            file="assets/frame1/entry_4.png")
+        self.entry_bg_4 = self.canvas.create_image(
+            1173.0,
+            500.0,
+            image=self.entry_image_4
+        )
+        self.fullname_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            font=("Arial", 20),
+            highlightthickness=0
+        )
+        self.fullname_entry.place(
+            x=950.0,
+            y=464.0,
+            width=446.0,
+            height=70.0
+        )
+
+        self.entry_image_5 = PhotoImage(
+            file="assets/frame1/entry_5.png")
+        self.entry_bg_5 = self.canvas.create_image(
+            1173.0,
+            615.0,
+            image=self.entry_image_5
+        )
+        self.phonenumber_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            font=("Arial", 20),
+            highlightthickness=0
+        )
+        self.phonenumber_entry.place(
+            x=950.0,
+            y=579.0,
+            width=446.0,
+            height=70.0
+        )
+
+        self.entry_image_6 = PhotoImage(
+            file="assets/frame1/entry_6.png")
+        self.entry_bg_6 = self.canvas.create_image(
+            1173.0,
+            728.0,
+            image=self.entry_image_6
+        )
+        self.apartment_code_entry = Entry(
+            bd=0,
+            bg="#EEEEEE",
+            fg="#000716",
+            font=("Arial", 20),
+            highlightthickness=0
+        )
+        self.apartment_code_entry.place(
+            x=950.0,
+            y=692.0,
+            width=446.0,
+            height=70.0
+        )
+
+        self.button_image_1 = PhotoImage(
+            file="assets/frame1/button_1.png")
+        self.button_1 = Button(
+            image=self.button_image_1,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.toggle_password,
+            relief="flat"
+        )
+        self.button_1.place(
+            x=1293.0,
+            y=243.0,
+            width=91.0,
+            height=57.0
+        )
+
+        self.button_image_2 = PhotoImage(
+            file="assets/frame1/button_2.png")
+        self.button_2 = Button(
+            image=self.button_image_2,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.register,
+            relief="flat"
+        )
+        self.button_2.place(
+            x=922.0,
+            y=805.0,
+            width=291.0,
+            height=97.0
+        )
+
+        self.button_image_3 = PhotoImage(
+            file="assets/frame1/button_3.png")
+        self.button_3 = Button(
+            image=self.button_image_3,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.controller.show_login_frame,
+            relief="flat"
+        )
+        self.button_3.place(
+            x=910.0,
+            y=919.0,
+            width=315.0,
+            height=66.0
+        )
 
     def toggle_password(self):
         """Toggle password visibility."""
         if self.password_visible:
             self.password_entry.configure(show="*")
-            self.eye_button.configure(text="👁")
         else:
             self.password_entry.configure(show="")
-            self.eye_button.configure(text="🚫")
         self.password_visible = not self.password_visible
 
     def check_password_strength(self, event=None):
@@ -374,7 +899,7 @@ class RegisterFrame(ctk.CTkFrame):
         apartment_code = self.apartment_code_entry.get()
 
         # Clear previous warnings
-        self.clear_warnings()
+        # self.clear_warnings()
 
         # Input validation
         valid = True
@@ -418,14 +943,15 @@ class RegisterFrame(ctk.CTkFrame):
         self.confirm_password_label.configure(text="")
         self.fullname_label.configure(text="")
         self.apartment_code_label.configure(text="")
-class LoginRegisterApp(ctk.CTk):
+
+class LoginRegisterApp(Tk):
     def __init__(self):
         super().__init__()
 
         self.auth_manager = AuthManager()
 
-        self.title("Login and Register")
-        self.geometry("1200x1000")  # Default size before full screen
+        self.title("Blue Moon Apartment")
+        self.geometry("1440x1024")  # Default size before full screen
 
         # Create containers for frames
         self.login_frame = None

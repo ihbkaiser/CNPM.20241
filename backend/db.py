@@ -1,11 +1,12 @@
 import mysql.connector
 
 class DBManager:
-    def __init__(self, host, user, password, database):
+    def __init__(self, host,port, user, password, database):
         # create if not exists database
-        self.create_database(host, user, password, database)
+        self.create_database(host,port, user, password, database)
         self.conn = mysql.connector.connect(
             host=host,
+            port=port,
             user=user,
             password=password,
             database=database
@@ -13,9 +14,10 @@ class DBManager:
 
         self.cursor = self.conn.cursor(dictionary=True)
         self.create_tables()
-    def create_database(self, host, user, password, database):
+    def create_database(self, host,port, user, password, database):
         conn = mysql.connector.connect(
             host=host,
+            port=port,
             user=user,
             password=password
         )

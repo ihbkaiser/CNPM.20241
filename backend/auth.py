@@ -7,7 +7,7 @@ class AuthManager:
                 cfg = yaml.safe_load(ymlfile)
         except:
             raise Exception("Cannot open config.yml")
-        self.db = DBManager(host=cfg['db']['host'], user=cfg['db']['user'], password=cfg['db']['password'], database=cfg['db']['database'])
+        self.db = DBManager(host=cfg['db']['host'], port = cfg['db']['port'],user=cfg['db']['user'], password=cfg['db']['password'], database=cfg['db']['database'])
 
         
 
