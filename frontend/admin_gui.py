@@ -137,14 +137,15 @@ class AdminGUI(RootGUI):
             self.show_popup("Error", "No fees found!")
 
     def show_table(self, title, data):
+        for widget in self.winfo_children():
+            widget.pack_forget()
         """Hiển thị danh sách người dùng trong một bảng (popup)."""
-        popup = ctk.CTkToplevel(self)  # Tạo cửa sổ popup
-        popup.title(title)
-        popup.geometry("800x600")  # Set larger size for the popup window
-
+        self.table_frame = ctk.CTkFrame(self)
+        self.table_frame.pack(fill='both', expand=True)
+        ctk.CTkLabel(self.table_frame, text=title, font=("Arial", 24)).pack(pady=10)
         # Tạo Treeview với các cột
         columns = ("Username", "Account Type", "Full Name", "Phone Number", "Apartment Code", "Email")
-        tree = ttk.Treeview(popup, columns=columns, show="headings", height=25)  # Set larger height for the Treeview
+        tree = ttk.Treeview(self.table_frame, columns=columns, show="headings", height=25)  # Set larger height for the Treeview
 
         # Đặt tiêu đề cho các cột và tăng kích thước cột
         column_widths = {
@@ -174,7 +175,7 @@ class AdminGUI(RootGUI):
         tree.pack(pady=10, padx=10, expand=True, fill='both')
 
         # Thêm nút đóng
-        ctk.CTkButton(popup, text="Close", command=popup.destroy).pack(pady=10)
+        ctk.CTkButton(self.table_frame, text="Close", command=self.return_to_home).pack(pady=10)
     
     
     def show_fees_table(self,fees):
@@ -202,7 +203,7 @@ class AdminGUI(RootGUI):
         self.tree.pack(pady=10, padx=10, expand=True, fill='both')
 
         # Thêm nút đóng
-        ctk.CTkButton(self.table_frame, text="Close", command=self.show_home).pack(pady=10)
+        ctk.CTkButton(self.table_frame, text="Close", command=self.return_to_home).pack(pady=10)
 
 
     def show_userfee_table(self,userfee):
@@ -449,3 +450,7 @@ class AdminGUI(RootGUI):
             self.show_summary_table("Parking Fee Summary", summary, ["Month_Year", "Total Parking Paid", "Remaining Parking Fee"])
         else:
             self.show_popup("Error", "No Parking Fee Summary found!")
+
+    def return_to_home(self):
+        self.table_frame.destroy()
+        self.show_home()
