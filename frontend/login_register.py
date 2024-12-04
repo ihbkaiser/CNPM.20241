@@ -300,7 +300,7 @@ class LoginFrame(Frame):
     def forget_password(self):
         self.controller.show_forget_frame(user)
 
-class ForgetFrame(ctk.CTkFrame):
+class ForgetFrame(Frame):
     def __init__(self, parent, user_mode=True):
         super().__init__(parent)
         self.controller = parent
@@ -446,6 +446,7 @@ class ForgetFrame(ctk.CTkFrame):
         )
         self.confirm_newpassword_entry = Entry(
             bd=0,
+            show="*",  
             bg="#EEEEEE",
             fg="#000716",
             font=("Arial", 20),
@@ -530,8 +531,10 @@ class ForgetFrame(ctk.CTkFrame):
         """Toggle password visibility."""
         if self.password_visible:
             self.newpassword_entry.configure(show="*")
+            self.confirm_newpassword_entry.configure(show="*")
         else:
             self.newpassword_entry.configure(show="")
+            self.confirm_newpassword_entry.configure(show="")
         self.password_visible = not self.password_visible
 
     def check_password_strength(self, event=None):
@@ -952,6 +955,8 @@ class LoginRegisterApp(Tk):
 
         self.title("Blue Moon Apartment")
         self.geometry("1440x1024")  # Default size before full screen
+
+        self.resizable(False, False)
 
         # Create containers for frames
         self.login_frame = None
