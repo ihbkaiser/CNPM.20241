@@ -15,7 +15,7 @@ from pathlib import Path
 import zxcvbn
 class LoginFrame(Frame):
     def __init__(self,parent):
-        super().__init__(parent)  # Gọi constructor của Tk()
+        super().__init__(parent)
         self.controller = parent
         self.password_visible = False
         self.captcha_image, self.captcha_text = self.generate_captcha()
@@ -27,8 +27,8 @@ class LoginFrame(Frame):
         self.canvas = Canvas(
             self.log_in_frame,
             bg = "#FFFFFF",
-            height = 1024,
-            width = 1440,
+            height = 720,
+            width = 1012,
             bd = 0,
             highlightthickness = 0,
             relief = "ridge"
@@ -37,73 +37,57 @@ class LoginFrame(Frame):
         self.canvas.place(x = 0, y = 0)
 
         self.image_image_1 = PhotoImage(
-            file="assets/frame0/image_1.png")
+            file="assets/login/image_1.png")
         self.image_1 = self.canvas.create_image(
-            721.0,
-            519.0,
+            514.25,
+            358.0,
             image=self.image_image_1
         )
 
         self.canvas.create_text(
-            382.0,
-            582.0,
-            anchor="nw",
-            text="text",
-            fill="#ECD8D2",
-            font=("Inter Bold", 12 * -1)
-        )
-
-        self.canvas.create_text(
-            778.0,
-            23.0,
+            547.03125,
+            16.171897888183594,
             anchor="nw",
             text="BLUE MOON APARTMENT",
             fill="#FFFFFF",
-            font=("Inter Bold", 48 * -1)
+            font=("Inter Bold", 33 * -1)
         )
 
         self.canvas.create_text(
-            703.0,
-            133.0,
+            494.296875,
+            93.51563262939453,
             anchor="nw",
             text="Username:",
             fill="#FFFFFF",
-            font=("Inter Bold", 36 * -1)
+            font=("Inter Bold", 25 * -1)
         )
 
         self.canvas.create_text(
-            704.0,
-            293.0,
+            495.0,
+            206.015625,
             anchor="nw",
             text="Password:",
             fill="#FFFFFF",
-            font=("Inter Bold", 36 * -1)
+            font=("Inter Bold", 25 * -1)
         )
 
         self.canvas.create_text(
-            703.0,
-            646.0,
+            494.296875,
+            444.21875,
             anchor="nw",
             text="Captcha:",
             fill="#FFFFFF",
-            font=("Inter Bold", 36 * -1)
+            font=("Inter Bold", 25 * -1)
         )
 
         self.image_image_2 = PhotoImage(
-            file="assets/frame0/image_2.png")
+            file="assets/login/image_2.png")
         self.image_2 = self.canvas.create_image(
-            343.0,
-            516.5,
+            227.25,
+            363.0,
             image=self.image_image_2
         )
 
-        entry_image_1 = PhotoImage(
-            file="assets/frame0/entry_1.png")
-        self.entry_bg_1 = self.canvas.create_image(
-            1173.0,
-            157.0,
-            image=entry_image_1
-        )
         self.username_entry = Entry(
             bd=0,
             bg="#EEEEEE",
@@ -112,19 +96,13 @@ class LoginFrame(Frame):
             font=("Arial", 20)
         )
         self.username_entry.place(
-            x=950.0,
-            y=121.0,
-            width=446.0,
-            height=70.0
+            x=635.0,
+            y=90.0,
+            width=346.0,
+            height=50.0
         )
 
-        entry_image_2 = PhotoImage(
-            file="assets/frame0/entry_2.png")
-        self.entry_bg_2 = self.canvas.create_image(
-            1173.0,
-            319.0,
-            image=entry_image_2
-        )
+
         self.password_entry = Entry(
             bd=0,
             bg="#EEEEEE",
@@ -134,26 +112,20 @@ class LoginFrame(Frame):
             font=("Arial", 20)
         )
         self.password_entry.place(
-            x=950.0,
-            y=283.0,
-            width=446.0,
-            height=70.0
+            x=635.0,
+            y=200.0,
+            width=346.0,
+            height=50.0
         )
 
-        self.image_image_3 = self.captcha_image,
+        self.image_image_3 = self.captcha_image
         self.image_3 = self.canvas.create_image(
-            1119.5,
-            489.0,
+            775.5,
+            335.0,
             image=self.image_image_3
         )
 
-        self.entry_image_3 = PhotoImage(
-            file="assets/frame0/entry_3.png")
-        self.entry_bg_3 = self.canvas.create_image(
-            1169.0,
-            660.0,
-            image=self.entry_image_3
-        )
+
         self.captcha_entry = Entry(
             bd=0,
             bg="#EEEEEE",
@@ -162,14 +134,14 @@ class LoginFrame(Frame):
             font=("Arial", 20)
         )
         self.captcha_entry.place(
-            x=946.0,
-            y=624.0,
-            width=446.0,
-            height=70.0
+            x=635.0,
+            y=434.0,
+            width=346.0,
+            height=50.0
         )
 
         self.eye_button = PhotoImage(
-            file="assets/frame0/button_1.png")
+            file="assets/login/button_5.png")
         button_1 = Button(
             image=self.eye_button,
             borderwidth=0,
@@ -178,30 +150,32 @@ class LoginFrame(Frame):
             relief="flat"
         )
         button_1.place(
-            x=1301.0,
-            y=293.0,
-            width=91.0,
-            height=57.0
+            x=905.0,
+            y=205.0,
+            width=70.0,
+            height=40.0
         )
 
-        self.button_image_2 = PhotoImage(
-            file="assets/frame0/button_2.png")
-        self.button_2 = Button(
+        self.button_image_2 = Image.open("assets/login/button_2.png")
+        self.button_image_2 = self.button_image_2.resize((237, 75))
+        self.button_image_2 = ImageTk.PhotoImage(self.button_image_2)
+        button_2 = Button(
             image=self.button_image_2,
             borderwidth=0,
             highlightthickness=0,
             command=self.login,
             relief="flat"
         )
-        self.button_2.place(
-            x=981.0,
-            y=766.0,
-            width=287.0,
-            height=95.0
+        button_2.place(
+            x=681.0,
+            y=516.0,
+            width=237.0,
+            height=75.0
         )
 
-        self.button_image_3 = PhotoImage(
-            file="assets/frame0/button_3.png")
+        self.button_image_3 = Image.open("assets/login/button_3.png")
+        self.button_image_3 = self.button_image_3.resize((187, 55))
+        self.button_image_3 = ImageTk.PhotoImage(self.button_image_3)
         button_3 = Button(
             image=self.button_image_3,
             borderwidth=0,
@@ -210,14 +184,15 @@ class LoginFrame(Frame):
             relief="flat"
         )
         button_3.place(
-            x=785.0,
-            y=907.0,
-            width=293.0,
-            height=51.0
+            x=565.0,
+            y=627.0,
+            width=187.0,
+            height=55.0
         )
 
-        self.button_image_4 = PhotoImage(
-            file="assets/frame0/button_4.png")
+        self.button_image_4 = Image.open("assets/login/button_4.png")
+        self.button_image_4 = self.button_image_4.resize((120, 55))
+        self.button_image_4 = ImageTk.PhotoImage(self.button_image_4)
         button_4 = Button(
             image=self.button_image_4,
             borderwidth=0,
@@ -226,14 +201,15 @@ class LoginFrame(Frame):
             relief="flat"
         )
         button_4.place(
-            x=1187.0,
-            y=903.0,
-            width=160.0,
-            height=60.0
+            x=825.0,
+            y=627.0,
+            width=120.0,
+            height=55.0
         )
 
-        self.button_image_5 = PhotoImage(
-            file="assets/frame0/button_5.png")
+        self.button_image_5 = Image.open("assets/login/button_1.png")
+        self.button_image_5 = self.button_image_5.resize((83, 72))
+        self.button_image_5 = ImageTk.PhotoImage(self.button_image_5)
         button_5 = Button(
             image=self.button_image_5,
             borderwidth=0,
@@ -242,8 +218,8 @@ class LoginFrame(Frame):
             relief="flat"
         )
         button_5.place(
-            x=1322.0,
-            y=451.0,
+            x=922.0,
+            y=301.0,
             width=83.0,
             height=72.0
         )
@@ -262,7 +238,7 @@ class LoginFrame(Frame):
         captcha_text=str(image[:5])
         image_path='samples/'+image
         captcha_image=Image.open(image_path)
-        captcha_image = captcha_image.resize((400, 100))
+        captcha_image = captcha_image.resize((280, 70))
         captcha_image = ImageTk.PhotoImage(captcha_image)
         return captcha_image, captcha_text
 
@@ -271,8 +247,8 @@ class LoginFrame(Frame):
         self.captcha_image, self.captcha_text = self.generate_captcha()
         #self.image_3.configure(image=self.captcha_image)
         self.canvas.create_image(
-            1119.5,
-            489.0,
+            775.5,
+            335.0,
             image=self.captcha_image
         )
 
@@ -313,73 +289,75 @@ class ForgetFrame(Frame):
         self.canvas = Canvas(
             self.forget_frame,
             bg = "#FFFFFF",
-            height = 1024,
-            width = 1440,
+            height = 720,
+            width = 1012,
             bd = 0,
             highlightthickness = 0,
             relief = "ridge"
         )
-        self.canvas.place(x = 0, y = 0)
 
+        self.canvas.place(x = 0, y = 0)
         self.image_image_1 = PhotoImage(
-            file="assets/frame2/image_1.png")
+            file="assets/change/image_1.png")
         self.image_1 = self.canvas.create_image(
-            721.0,
-            519.0,
+            514.25,
+            358.0,
             image=self.image_image_1
         )
 
         self.canvas.create_text(
-            382.0,
-            582.0,
-            anchor="nw",
-            text="text",
-            fill="#ECD8D2",
-            font=("Inter Bold", 12 * -1)
-        )
-
-        self.canvas.create_text(
-            778.0,
-            23.0,
+            547.03125,
+            16.171897888183594,
             anchor="nw",
             text="BLUE MOON APARTMENT",
             fill="#FFFFFF",
-            font=("Inter Bold", 48 * -1)
+            font=("Inter Bold", 33 * -1)
         )
 
         self.canvas.create_text(
-            703.0,
-            133.0,
+            494.296875,
+            93.51563262939453,
             anchor="nw",
             text="Username:",
             fill="#FFFFFF",
-            font=("Inter Bold", 36 * -1)
+            font=("Inter Bold", 25 * -1)
         )
 
         self.canvas.create_text(
-            703.0,
-            458.0,
+            494.296875,
+            200,
             anchor="nw",
-            text="New Password:",
+            text="Phone \nNumber:",
             fill="#FFFFFF",
-            font=("Inter Bold", 32 * -1)
+            font=("Inter Bold", 25 * -1)
+        )
+
+        self.canvas.create_text(
+            494.296875,
+            306,
+            anchor="nw",
+            text="New \nPassword:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 25 * -1)
+        )
+
+        self.canvas.create_text(
+            494.296875,
+            426,
+            anchor="nw",
+            text="Confirm New\nPassword:",
+            fill="#FFFFFF",
+            font=("Inter Bold", 23 * -1)
         )
 
         self.image_image_2 = PhotoImage(
-            file="assets/frame2/image_2.png")
+            file="assets/change/image_2.png")
         self.image_2 = self.canvas.create_image(
-            343.0,
-            512.0,
+            227.25,
+            363.0,
             image=self.image_image_2
         )
 
-        self.entry_image_1 = PhotoImage(
-            file="assets/frame2/entry_1.png")
-        self.entry_bg_1 = self.canvas.create_image(
-            1173.0,
-            157.0,
-            image=self.entry_image_1
-        )
         self.username_entry = Entry(
             bd=0,
             bg="#EEEEEE",
@@ -388,19 +366,12 @@ class ForgetFrame(Frame):
             highlightthickness=0
         )
         self.username_entry.place(
-            x=950.0,
-            y=121.0,
-            width=446.0,
-            height=70.0
+            x=635.0,
+            y=90.0,
+            width=346.0,
+            height=50.0
         )
 
-        self.entry_image_2 = PhotoImage(
-            file="assets/frame2/entry_2.png")
-        self.entry_bg_2 = self.canvas.create_image(
-            1173.0,
-            315.0,
-            image=self.entry_image_2
-        )
         self.phonenumber_entry = Entry(
             bd=0,
             bg="#EEEEEE",
@@ -409,19 +380,12 @@ class ForgetFrame(Frame):
             highlightthickness=0
         )
         self.phonenumber_entry.place(
-            x=950.0,
-            y=279.0,
-            width=446.0,
-            height=70.0
+            x=635.0,
+            y=205.0,
+            width=346.0,
+            height=50.0
         )
 
-        self.entry_image_3 = PhotoImage(
-            file="assets/frame2/entry_3.png")
-        self.entry_bg_3 = self.canvas.create_image(
-            1173.0,
-            481.0,
-            image=self.entry_image_3
-        )
         self.newpassword_entry = Entry(
             bd=0,
             show="*",
@@ -431,19 +395,12 @@ class ForgetFrame(Frame):
             highlightthickness=0
         )
         self.newpassword_entry.place(
-            x=950.0,
-            y=445.0,
-            width=446.0,
-            height=70.0
+            x=635.0,
+            y=310.0,
+            width=346.0,
+            height=50.0
         )
 
-        self.entry_image_4 = PhotoImage(
-            file="assets/frame2/entry_4.png")
-        self.entry_bg_4 = self.canvas.create_image(
-            1173.0,
-            651.0,
-            image=self.entry_image_4
-        )
         self.confirm_newpassword_entry = Entry(
             bd=0,
             show="*",  
@@ -453,15 +410,15 @@ class ForgetFrame(Frame):
             highlightthickness=0
         )
         self.confirm_newpassword_entry.place(
-            x=950.0,
-            y=615.0,
-            width=446.0,
-            height=70.0
+            x=635.0,
+            y=422.0,
+            width=346.0,
+            height=50.0
         )
 
 
         self.button_image_1 = PhotoImage(
-            file="assets/frame2/button_1.png")
+            file="assets/change/button_1.png")
         self.button_1 = Button(
             image=self.button_image_1,
             borderwidth=0,
@@ -470,32 +427,15 @@ class ForgetFrame(Frame):
             relief="flat"
         )
         self.button_1.place(
-            x=1301.0,
-            y=452.0,
-            width=91.0,
-            height=57.0
+            x=900.0,
+            y=315.0,
+            width=70.0,
+            height=40.0
         )
 
-        self.canvas.create_text(
-            703.0,
-            643.0,
-            anchor="nw",
-            text="Confirm New Password:",
-            fill="#FFFFFF",
-            font=("Inter Bold", 22 * -1)
-        )
-
-        self.canvas.create_text(
-            703.0,
-            294.0,
-            anchor="nw",
-            text="Phone Number:",
-            fill="#FFFFFF",
-            font=("Inter Bold", 32 * -1)
-        )
-
-        self.button_image_2 = PhotoImage(
-            file="assets/frame2/button_2.png")
+        self.button_image_2 = Image.open("assets/change/button_2.png")
+        self.button_image_2 = self.button_image_2.resize((200, 40))
+        self.button_image_2 = ImageTk.PhotoImage(self.button_image_2)
         self.button_2 = Button(
             image=self.button_image_2,
             borderwidth=0,
@@ -504,14 +444,15 @@ class ForgetFrame(Frame):
             relief="flat"
         )
         self.button_2.place(
-            x=910.0,
-            y=884.0,
-            width=315.0,
-            height=66.0
+            x=680.0,
+            y=630.0,
+            width=200.0,
+            height=40.0
         )
 
-        self.button_image_3 = PhotoImage(
-            file="assets/frame2/button_3.png")
+        self.button_image_3 = Image.open("assets/change/button_3.png")
+        self.button_image_3 = self.button_image_3.resize((220, 72))
+        self.button_image_3 = ImageTk.PhotoImage(self.button_image_3)
         self.button_3 = Button(
             image=self.button_image_3,
             borderwidth=0,
@@ -520,10 +461,10 @@ class ForgetFrame(Frame):
             relief="flat"
         )
         self.button_3.place(
-            x=870.0,
-            y=761.0,
-            width=396.0,
-            height=84.0
+            x=680.0,
+            y=530.0,
+            width=220.0,
+            height=72.0
         )
 
 
@@ -607,8 +548,8 @@ class RegisterFrame(Frame):
         self.canvas = Canvas(
             self.register_frame,
             bg = "#FFFFFF",
-            height = 1024,
-            width = 1440,
+            height = 720,
+            width = 1012,
             bd = 0,
             highlightthickness = 0,
             relief = "ridge"
@@ -616,91 +557,84 @@ class RegisterFrame(Frame):
 
         self.canvas.place(x = 0, y = 0)
         self.image_image_1 = PhotoImage(
-            file="assets/frame1/image_1.png")
+            file="assets/signup/image_1.png")
         self.image_1 = self.canvas.create_image(
-            721.0,
-            519.0,
+            514.25,
+            358.0,
             image=self.image_image_1
         )
 
         self.canvas.create_text(
-            778.0,
-            23.0,
+            547.03125,
+            16.171897888183594,
             anchor="nw",
             text="BLUE MOON APARTMENT",
             fill="#FFFFFF",
-            font=("Inter Bold", 48 * -1)
+            font=("Inter Bold", 33 * -1)
         )
 
         self.canvas.create_text(
-            703.0,
-            133.0,
+            494.296875,
+            93.51563262939453,
             anchor="nw",
             text="Username:",
             fill="#FFFFFF",
-            font=("Inter Bold", 36 * -1)
+            font=("Inter Bold", 25 * -1)
         )
 
         self.canvas.create_text(
-            703.0,
-            244.0,
+            494.296875,
+            171.5625,
             anchor="nw",
             text="Password:",
             fill="#FFFFFF",
-            font=("Inter Bold", 36 * -1)
+            font=("Inter Bold", 25 * -1)
         )
 
         self.canvas.create_text(
-            703.0,
-            359.0,
+            494.296875,
+            245.390625,
             anchor="nw",
-            text="Confirm Password:",
+            text="Confirm\nPassword:",
             fill="#FFFFFF",
-            font=("Inter Bold", 28 * -1)
+            font=("Inter Bold", 22 * -1)
         )
     
         self.canvas.create_text(
-            703.0,
-            486.0,
+            494.296875,
+            341.71875,
             anchor="nw",
             text="Full Name:",
             fill="#FFFFFF",
-            font=("Inter Bold", 32 * -1)
+            font=("Inter Bold", 25 * -1)
         )
 
         self.canvas.create_text(
-            703.0,
-            603.0,
+            494.296875,
+            423.984375,
             anchor="nw",
             text="Phone Number:",
             fill="#FFFFFF",
-            font=("Inter Bold", 32 * -1)
+            font=("Inter Bold", 23 * -1)
         )
 
         self.canvas.create_text(
-            703.0,
-            710.0,
+            494.296875,
+            499.21875,
             anchor="nw",
             text="Appartment ID:",
             fill="#FFFFFF",
-            font=("Inter Bold", 32 * -1)
+            font=("Inter Bold", 25 * -1)
         )
 
         self.image_image_2 = PhotoImage(
-            file="assets/frame1/image_2.png")
+            file="assets/signup/image_2.png")
         self.image_2 = self.canvas.create_image(
-            343.0,
-            516.5,
+            227.25,
+            363.0,
             image=self.image_image_2
         )
 
-        entry_image_1 = PhotoImage(
-            file="assets/frame1/entry_1.png")
-        self.entry_bg_1 = self.canvas.create_image(
-            1173.0,
-            157.0,
-            image=entry_image_1
-        )
         self.username_entry = Entry(
             bd=0,
             bg="#EEEEEE",
@@ -709,19 +643,12 @@ class RegisterFrame(Frame):
             font=("Arial", 20)
         )
         self.username_entry.place(
-            x=950.0,
-            y=121.0,
-            width=446.0,
-            height=70.0
+            x=667.96875,
+            y=85.07814025878906,
+            width=313.59375,
+            height=48.624996185302734
         )
 
-        self.entry_image_2 = PhotoImage(
-            file="assets/frame1/entry_2.png")
-        self.entry_bg_2 = self.canvas.create_image(
-            1173.0,
-            272.0,
-            image=self.entry_image_2
-        )
         self.password_entry = Entry(
             bd=0,
             bg="#EEEEEE",
@@ -731,40 +658,27 @@ class RegisterFrame(Frame):
             highlightthickness=0
         )
         self.password_entry.place(
-            x=950.0,
-            y=236.0,
-            width=446.0,
-            height=70.0
+            x=667.96875,
+            y=165.93751525878906,
+            width=313.59375,
+            height=48.624996185302734
         )
 
-        self.entry_image_3 = PhotoImage(
-            file="assets/frame1/entry_3.png")
-        self.entry_bg_3 = self.canvas.create_image(
-            1173.0,
-            385.0,
-            image=self.entry_image_3
-        )
         self.confirm_password_entry = Entry(
             bd=0,
             bg="#EEEEEE",
             fg="#000716",
             font=("Arial", 20),
+            show='*',
             highlightthickness=0
         )
         self.confirm_password_entry.place(
-            x=950.0,
-            y=349.0,
-            width=446.0,
-            height=70.0
+            x=667.96875,
+            y=245.390625,
+            width=313.59375,
+            height=48.624996185302734
         )
 
-        self.entry_image_4 = PhotoImage(
-            file="assets/frame1/entry_4.png")
-        self.entry_bg_4 = self.canvas.create_image(
-            1173.0,
-            500.0,
-            image=self.entry_image_4
-        )
         self.fullname_entry = Entry(
             bd=0,
             bg="#EEEEEE",
@@ -773,19 +687,12 @@ class RegisterFrame(Frame):
             highlightthickness=0
         )
         self.fullname_entry.place(
-            x=950.0,
-            y=464.0,
-            width=446.0,
-            height=70.0
+            x=667.96875,
+            y=326.25,
+            width=313.59375,
+            height=48.624996185302734
         )
 
-        self.entry_image_5 = PhotoImage(
-            file="assets/frame1/entry_5.png")
-        self.entry_bg_5 = self.canvas.create_image(
-            1173.0,
-            615.0,
-            image=self.entry_image_5
-        )
         self.phonenumber_entry = Entry(
             bd=0,
             bg="#EEEEEE",
@@ -794,19 +701,12 @@ class RegisterFrame(Frame):
             highlightthickness=0
         )
         self.phonenumber_entry.place(
-            x=950.0,
-            y=579.0,
-            width=446.0,
-            height=70.0
+            x=667.96875,
+            y=407.109375,
+            width=313.59375,
+            height=48.624996185302734
         )
 
-        self.entry_image_6 = PhotoImage(
-            file="assets/frame1/entry_6.png")
-        self.entry_bg_6 = self.canvas.create_image(
-            1173.0,
-            728.0,
-            image=self.entry_image_6
-        )
         self.apartment_code_entry = Entry(
             bd=0,
             bg="#EEEEEE",
@@ -815,14 +715,14 @@ class RegisterFrame(Frame):
             highlightthickness=0
         )
         self.apartment_code_entry.place(
-            x=950.0,
-            y=692.0,
-            width=446.0,
-            height=70.0
+            x=667.96875,
+            y=486.5625,
+            width=313.59375,
+            height=48.624996185302734
         )
 
         self.button_image_1 = PhotoImage(
-            file="assets/frame1/button_1.png")
+            file="assets/signup/button_1.png")
         self.button_1 = Button(
             image=self.button_image_1,
             borderwidth=0,
@@ -831,14 +731,14 @@ class RegisterFrame(Frame):
             relief="flat"
         )
         self.button_1.place(
-            x=1293.0,
-            y=243.0,
-            width=91.0,
-            height=57.0
+            x=909.140625,
+            y=170.859375,
+            width=63.984375,
+            height=40.078125
         )
 
         self.button_image_2 = PhotoImage(
-            file="assets/frame1/button_2.png")
+            file="assets/signup/button_2.png")
         self.button_2 = Button(
             image=self.button_image_2,
             borderwidth=0,
@@ -847,14 +747,14 @@ class RegisterFrame(Frame):
             relief="flat"
         )
         self.button_2.place(
-            x=922.0,
-            y=805.0,
-            width=291.0,
-            height=97.0
+            x=648.28125,
+            y=566.015625,
+            width=204.609375,
+            height=68.20311737060547
         )
 
         self.button_image_3 = PhotoImage(
-            file="assets/frame1/button_3.png")
+            file="assets/signup/button_3.png")
         self.button_3 = Button(
             image=self.button_image_3,
             borderwidth=0,
@@ -863,18 +763,20 @@ class RegisterFrame(Frame):
             relief="flat"
         )
         self.button_3.place(
-            x=910.0,
-            y=919.0,
-            width=315.0,
-            height=66.0
+            x=639.84375,
+            y=646.171875,
+            width=221.484375,
+            height=46.40625
         )
 
     def toggle_password(self):
         """Toggle password visibility."""
         if self.password_visible:
             self.password_entry.configure(show="*")
+            self.confirm_password_entry.configure(show="*")
         else:
             self.password_entry.configure(show="")
+            self.confirm_password_entry.configure(show="")
         self.password_visible = not self.password_visible
 
     def check_password_strength(self, event=None):
@@ -954,7 +856,7 @@ class LoginRegisterApp(Tk):
         self.auth_manager = AuthManager()
 
         self.title("Blue Moon Apartment")
-        self.geometry("1440x1024")  # Default size before full screen
+        self.geometry("1012x720")  # Default size before full screen
 
         self.resizable(False, False)
 
