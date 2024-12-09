@@ -1001,8 +1001,8 @@ class LoginRegisterApp(Tk):
         if self.login_frame:
             self.login_frame.destroy()
         if user['account_type'] == 'admin':
-            self.admin_gui = AdminGUI(self, user)  # Create an instance of AdminGUI
-            self.admin_gui.pack(fill="both", expand=True)
+            self.admin_gui = AdminGUI(self, user)
+            # self.admin_gui.pack(fill="both", expand=True)
         elif user['account_type'] == 'user':
             self.user_gui = NormalGUI(self, user)  # Create an instance of UserGUI
             self.user_gui.pack(fill="both", expand=True)

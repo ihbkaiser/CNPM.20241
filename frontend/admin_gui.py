@@ -2,8 +2,9 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 from frontend.abstract_admin_gui import AbstractAdminGUI
 class AdminGUI(AbstractAdminGUI):
-    def __init__(self, root):
+    def __init__(self, root, user):
         super().__init__(root)
+        self.user = user
         self.show_home()
     def show_home(self):
         # self.home_img = PhotoImage(
@@ -15,6 +16,15 @@ class AdminGUI(AbstractAdminGUI):
         #     command=self.show_home,
         #     relief="flat"
         # )
+        self.canvas.delete(self.hello_text_field)
+        self.canvas.create_text(
+            301.640625,
+            18.984375,
+            anchor="nw",
+            text=f"Hello, Admin {self.user['username']}  ",
+            fill="#000000",
+            font=("Inter Bold", 28 * -1)
+        )
         self.canvas.create_text(
             424.25,
             147.0,

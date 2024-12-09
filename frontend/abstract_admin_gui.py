@@ -35,7 +35,7 @@ class AbstractAdminGUI:
             fill="#FFFFFF",
             outline="")
 
-        self.canvas.create_text(
+        self.hello_text_field = self.canvas.create_text(
             301.640625,
             18.984375,
             anchor="nw",
