@@ -1,5 +1,6 @@
 from pathlib import Path
-from tkinter import Tk,ttk, Canvas, Entry, Text, Button, PhotoImage, Frame, Label
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, Label
+from tkinter import ttk
 import tkinter as tk
 from backend.weather import get_address_and_weather
 class AdminGUI(Tk):
@@ -242,7 +243,7 @@ class AdminGUI(Tk):
             height=42.890625
             
         )
-
+        self.tree = None
         self.show_home()
 
     def show_home(self):
@@ -267,7 +268,8 @@ class AdminGUI(Tk):
         new_image = PhotoImage(file="assets/admin_gui/button_7.png")
         self.statistic_button.config(image=new_image)
         self.statistic_button.image = new_image
-
+        if self.tree:
+            self.tree.place_forget()
 
         self.canvas.create_text(
             424.25,
@@ -307,6 +309,8 @@ class AdminGUI(Tk):
         new_image = PhotoImage(file="assets/admin_gui/button_7.png")
         self.statistic_button.config(image=new_image)
         self.statistic_button.image = new_image
+        if self.tree:
+            self.tree.place_forget()
 
         self.canvas.create_rectangle(
         220,
@@ -316,67 +320,30 @@ class AdminGUI(Tk):
         fill="#FFFFFF",
         outline="#000000")
 
-    #     # Create a Treeview
-    #     style = ttk.Style()
-    #     style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
-    #     self.tree = ttk.Treeview(style="Custom.Treeview")
-    #     self.tree["columns"] = ("one", "two", "three")
-    #     self.tree.column("#0", width=100, minwidth=100)
-    #     self.tree.column("one", width=100, minwidth=100)
-    #     self.tree.column("two", width=100, minwidth=100)
-    #     self.tree.column("three", width=100, minwidth=100)
+        # Create a Treeview
+        style = ttk.Style()
+        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
+        self.tree["columns"] = ("one", "two", "three")
+        self.tree.column("#0", width=100, minwidth=100)
+        self.tree.column("one", width=100, minwidth=100)
+        self.tree.column("two", width=100, minwidth=100)
+        self.tree.column("three", width=100, minwidth=100)
 
-    #     self.tree.heading("#0", text="ID", anchor=tk.W)
-    #     self.tree.heading("one", text="Column 1", anchor=tk.W)
-    #     self.tree.heading("two", text="Column 2", anchor=tk.W)
-    #     self.tree.heading("three", text="Column 3", anchor=tk.W)
+        self.tree.heading("#0", text="ID", anchor=tk.W)
+        self.tree.heading("one", text="Column 1", anchor=tk.W)
+        self.tree.heading("two", text="Column 2", anchor=tk.W)
+        self.tree.heading("three", text="Column 3", anchor=tk.W)
 
-    #     # Insert some sample data
-    #     for i in range(10):
-    #         self.tree.insert("", "end", text=f"Item {i+1}", values=(f"A{i+1}", f"B{i+1}", f"C{i+1}"))
+        # Insert some sample data
+        for i in range(10):
+            self.tree.insert("", "end", text=f"Item {i+1}", values=(f"A{i+1}", f"B{i+1}", f"C{i+1}"))
 
-    #     # Place the Treeview on top of the Canvas
-    #     self.tree.place(x=220, y=141, width=792, height=579)
+        # Place the Treeview on top of the Canvas
+        self.tree.place(x=220, y=141, width=792, height=579)
 
-    #     # Bind double-click event
-    #     self.tree.bind("<Double-1>", self.on_double_click)
-
-    # def on_double_click(self, event):
-    #     # Get selected item
-    #     item_id = self.tree.selection()[0]
-    #     item = self.tree.item(item_id)
-
-    #     # Create a top-level window for editing
-    #     edit_window = tk.Toplevel(self)
-    #     edit_window.title("Edit Item")
-
-    #     # Create entry widgets for each column
-    #     tk.Label(edit_window, text="ID").grid(row=0, column=0)
-    #     id_entry = tk.Entry(edit_window)
-    #     id_entry.grid(row=0, column=1)
-    #     id_entry.insert(0, item["text"])
-
-    #     tk.Label(edit_window, text="Column 1").grid(row=1, column=0)
-    #     col1_entry = tk.Entry(edit_window)
-    #     col1_entry.grid(row=1, column=1)
-    #     col1_entry.insert(0, item["values"][0])
-
-    #     tk.Label(edit_window, text="Column 2").grid(row=2, column=0)
-    #     col2_entry = tk.Entry(edit_window)
-    #     col2_entry.grid(row=2, column=1)
-    #     col2_entry.insert(0, item["values"][1])
-
-    #     tk.Label(edit_window, text="Column 3").grid(row=3, column=0)
-    #     col3_entry = tk.Entry(edit_window)
-    #     col3_entry.grid(row=3, column=1)
-    #     col3_entry.insert(0, item["values"][2])
-
-    #     # Save button to update the item
-    #     def save_changes():
-    #         self.tree.item(item_id, text=id_entry.get(), values=(col1_entry.get(), col2_entry.get(), col3_entry.get()))
-    #         edit_window.destroy()
-
-    #     tk.Button(edit_window, text="Save", command=save_changes).grid(row=4, column=0, columnspan=2)
+        # Bind double-click event
+        self.tree.bind("<Double-1>", self.on_double_click)
 
     def view_user(self):
         new_image = PhotoImage(file="assets/admin_gui/button_1.png")
@@ -400,6 +367,8 @@ class AdminGUI(Tk):
         new_image = PhotoImage(file="assets/admin_gui/button_7.png")
         self.statistic_button.config(image=new_image)
         self.statistic_button.image = new_image
+        if self.tree:
+            self.tree.place_forget()
 
         self.canvas.create_rectangle(
         220,
@@ -408,6 +377,31 @@ class AdminGUI(Tk):
         720,
         fill="#FFFFFF",
         outline="#000000")
+
+        # Create a Treeview
+        style = ttk.Style()
+        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
+        self.tree["columns"] = ("one", "two", "three")
+        self.tree.column("#0", width=100, minwidth=100)
+        self.tree.column("one", width=100, minwidth=100)
+        self.tree.column("two", width=100, minwidth=100)
+        self.tree.column("three", width=100, minwidth=100)
+
+        self.tree.heading("#0", text="ID", anchor=tk.W)
+        self.tree.heading("one", text="Column 1", anchor=tk.W)
+        self.tree.heading("two", text="Column 2", anchor=tk.W)
+        self.tree.heading("three", text="Column 3", anchor=tk.W)
+
+        # Insert some sample data
+        for i in range(10):
+            self.tree.insert("", "end", text=f"Item {i+1}", values=(f"C{i+1}", f"D{i+1}", f"E{i+1}"))
+
+        # Place the Treeview on top of the Canvas
+        self.tree.place(x=220, y=141, width=792, height=579)
+
+        # Bind double-click event
+        self.tree.bind("<Double-1>", self.on_double_click)
 
     def manage_fee(self):
         new_image = PhotoImage(file="assets/admin_gui/button_1.png")
@@ -431,6 +425,8 @@ class AdminGUI(Tk):
         new_image = PhotoImage(file="assets/admin_gui/button_7.png")
         self.statistic_button.config(image=new_image)
         self.statistic_button.image = new_image
+        if self.tree:
+            self.tree.place_forget()
 
         self.canvas.create_rectangle(
         220,
@@ -462,6 +458,8 @@ class AdminGUI(Tk):
         new_image = PhotoImage(file="assets/admin_gui/button_7.png")
         self.statistic_button.config(image=new_image)
         self.statistic_button.image = new_image
+        if self.tree:
+            self.tree.place_forget()
 
         self.canvas.create_rectangle(
         220,
@@ -493,6 +491,8 @@ class AdminGUI(Tk):
         new_image = PhotoImage(file="assets/admin_gui/button_7.png")
         self.statistic_button.config(image=new_image)
         self.statistic_button.image = new_image
+        if self.tree:
+            self.tree.place_forget()
 
         self.canvas.create_rectangle(
         220,
@@ -524,6 +524,8 @@ class AdminGUI(Tk):
         new_image = PhotoImage(file="assets/admin_gui/button_7_red.png")
         self.statistic_button.config(image=new_image)
         self.statistic_button.image = new_image
+        if self.tree:
+            self.tree.place_forget()
 
         self.canvas.create_rectangle(
         220,
@@ -535,6 +537,44 @@ class AdminGUI(Tk):
         
     def log_out(self):
         self.root.show_login_frame()
+    
+    def on_double_click(self, event):
+        # Get selected item
+        item_id = self.tree.selection()[0]
+        item = self.tree.item(item_id)
+
+        # Create a top-level window for editing
+        edit_window = tk.Toplevel(self.root)
+        edit_window.title("Edit Item")
+
+        # Create entry widgets for each column
+        tk.Label(edit_window, text="ID").grid(row=0, column=0)
+        id_entry = tk.Entry(edit_window)
+        id_entry.grid(row=0, column=1)
+        id_entry.insert(0, item["text"])
+
+        tk.Label(edit_window, text="Column 1").grid(row=1, column=0)
+        col1_entry = tk.Entry(edit_window)
+        col1_entry.grid(row=1, column=1)
+        col1_entry.insert(0, item["values"][0])
+
+        tk.Label(edit_window, text="Column 2").grid(row=2, column=0)
+        col2_entry = tk.Entry(edit_window)
+        col2_entry.grid(row=2, column=1)
+        col2_entry.insert(0, item["values"][1])
+
+        tk.Label(edit_window, text="Column 3").grid(row=3, column=0)
+        col3_entry = tk.Entry(edit_window)
+        col3_entry.grid(row=3, column=1)
+        col3_entry.insert(0, item["values"][2])
+
+        # Save button to update the item
+        def save_changes():
+            self.tree.item(item_id, text=id_entry.get(), values=(col1_entry.get(), col2_entry.get(), col3_entry.get()))
+            edit_window.destroy()
+
+        tk.Button(edit_window, text="Save", command=save_changes).grid(row=4, column=0, columnspan=2)
+
 
 
         
