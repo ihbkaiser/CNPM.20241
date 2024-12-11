@@ -2,8 +2,9 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 from backend.weather import get_address_and_weather
 class AbstractAdminGUI:
-    def __init__(self, root):
+    def __init__(self, root, user):
         self.root = root
+        self.user = user
         self.root.geometry("1012x720")
         self.root.configure(bg="#FFFFFF")
         self.root.resizable(False, False)
@@ -88,9 +89,9 @@ class AbstractAdminGUI:
         )
         self.home_button.place(
         x=18.281219482421875,
-        y=116.71875,
-        width=165,
-        height=25
+        y=111.09375,
+        width=170.859375,
+        height=42.890625
         )
 
         self.view_admin_img= PhotoImage(
@@ -104,9 +105,9 @@ class AbstractAdminGUI:
         )
         self.view_admin_button.place(
             x=18.281219482421875,
-            y=191.953125,
-            width=158.90625,
-            height=24.609375
+            y=186.328,
+            width=170.859375,
+            height=42.890625
         )
 
         self.view_user_img = PhotoImage(
@@ -120,9 +121,9 @@ class AbstractAdminGUI:
         )
         self.view_user_button.place(
             x=18.281219482421875,
-            y=267.1875,
-            width=158.90625,
-            height=24.609375
+            y=261.5625,
+            width=170.859375,
+            height=42.890625
         )
 
         self.manage_fees_img = PhotoImage(
@@ -136,9 +137,9 @@ class AbstractAdminGUI:
         )
         self.manage_fees_button.place(
             x=18.281219482421875,
-            y=342.421875,
-            width=158.90625,
-            height=24.609375
+            y=336.796875,
+            width=170.859375,
+            height=42.890625
         )
 
         self.edit_fee_img = PhotoImage(
@@ -152,9 +153,9 @@ class AbstractAdminGUI:
         )
         self.edit_fee_button.place(
             x=18.281219482421875,
-            y=417.65625,
-            width=158.90625,
-            height=24.609375
+            y=412.03125,
+            width=170.859375,
+            height=42.890625
         )
 
         self.pay_img= PhotoImage(
@@ -168,9 +169,9 @@ class AbstractAdminGUI:
         )
         self.pay_button.place(
             x=18.281219482421875,
-            y=492.8905944824219,
-            width=158.90625,
-            height=24.609375
+            y=487.265625,
+            width=170.859375,
+            height=42.890625
         )
 
         self.thong_ke_img = PhotoImage(
@@ -184,9 +185,9 @@ class AbstractAdminGUI:
         )
         self.thong_ke_button.place(
             x=18.281219482421875,
-            y=568.125,
-            width=158.90625,
-            height=24.609375
+            y=626.48431396,
+            width=170.859375,
+            height=42.890625
         )
 
         self.log_out_img = PhotoImage(
@@ -199,10 +200,11 @@ class AbstractAdminGUI:
             relief="flat"
         )
         self.log_out_button.place(
-            x=18.281219482421875,
-            y=643.359375,
-            width=158.90625,
-            height=24.609375
+            x=12.65625,
+            y=553.359375,
+            width=170.859375,
+            height=42.890625
+            
         )
 
         self.phong_bat_img = PhotoImage(
@@ -231,21 +233,21 @@ class AbstractAdminGUI:
             fill="#FFFFFF",
             font=("Inter Bold", 24 * -1)
         )
-    def show_home():
+    def show_home(self):
         pass
-    def view_admin():
+    def view_admin(self):
         pass
-    def view_user():
+    def view_user(self):
         pass
-    def manage_fee():
+    def manage_fee(self):
         pass
-    def edit_fee():
+    def edit_fee(self):
         pass
-    def pay():
+    def pay(self):
         pass
-    def thong_ke():
+    def thong_ke(self):
         pass
-    def log_out():
+    def log_out(self):
         pass
 
 

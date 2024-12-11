@@ -3,8 +3,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 from frontend.abstract_admin_gui import AbstractAdminGUI
 class AdminGUI(AbstractAdminGUI):
     def __init__(self, root, user):
-        super().__init__(root)
-        self.user = user
+        super().__init__(root, user)
         self.show_home()
     def show_home(self):
         # self.home_img = PhotoImage(
