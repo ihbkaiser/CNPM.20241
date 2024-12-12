@@ -205,10 +205,11 @@ class DBManager:
         """Lấy thống kê tổng hợp tiền gửi xe."""
         try:
             self.cursor.execute("""
-            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Parking Paid', SUM(remain) AS 'Remaining Parking Fee'
+            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total_Paid', SUM(remain) AS 'Remaining_Fee'
             FROM fees
             WHERE fee_name LIKE 'Parking%'
             GROUP BY Month_Year
+            order by Month_Year
             """)
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
@@ -218,10 +219,11 @@ class DBManager:
         """Lấy thống kê tổng hợp tiền dịch vụ."""
         try:
             self.cursor.execute("""
-            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Service Paid', SUM(remain) AS 'Remaining Service Fee'
+            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total_Paid', SUM(remain) AS 'Remaining_Fee'
             FROM fees
             WHERE fee_name LIKE 'Service%'
             GROUP BY Month_Year
+            order by Month_Year
             """)
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
@@ -231,27 +233,29 @@ class DBManager:
         """Lấy thống kê tổng hợp tiền nước."""
         try:
             self.cursor.execute("""
-            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Water Paid', SUM(remain) AS 'Remaining Water Fee'
+            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total_Paid', SUM(remain) AS 'Remaining_Fee'
             FROM fees
             WHERE fee_name LIKE 'Water%'
             GROUP BY Month_Year
+            order by Month_Year
             """)
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi lấy thống kê tiền nước: {err}")
         
     def get_electricity_fee_summary(self):
-        """Lấy thống kê tổng hợp tiền điện."""
         try:
             self.cursor.execute("""
-            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total Electricity Paid', SUM(remain) AS 'Remaining Electricity Fee'
+            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS Total_Paid, SUM(remain) AS Remaining_Fee
             FROM fees
             WHERE fee_name LIKE 'Electricity%'
             GROUP BY Month_Year
+            ORDER BY Month_Year
             """)
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
-            raise Exception(f"Lỗi khi lấy thống kê tiền điện: {err}")
+            print(f"Error fetching electricity fee summary: {err}")
+            return []
         
     def get_userfee_by_apartment_code(self, apartment_code):
         """Lấy thông tin userfee theo mã căn hộ."""

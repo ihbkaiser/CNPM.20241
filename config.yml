@@ -1,8 +1,8 @@
 db:
   host: "localhost"
   port: 3306
-  user: "root"
-  password: "IHBKaiser@04"
+  user: "haminhhieu"
+  password: "10052004"
   database: "ZZZZZZZZZZZZZ"
 weather:
-  api_key: "abcdefghijklmnopqrstuvwxyz"
+  api_key: "61004d06a9d72873c6aa39225f5a9015"
