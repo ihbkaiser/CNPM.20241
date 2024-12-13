@@ -5,6 +5,9 @@ import tkinter as tk
 from backend.weather import get_address_and_weather
 from backend.auth import AuthManager
 from frontend.root_gui import RootGUI  # Import RootGUI to extend it
+import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
+import cv2
 
 class AdminGUI(Tk):
     def __init__(self, root, user):
@@ -553,10 +556,6 @@ class AdminGUI(Tk):
         self.pay_button.config(image=new_image)
         self.pay_button.image = new_image
 
-        new_image = PhotoImage(file="assets/admin_gui/Visualization.png")
-        self.visual.config(image=new_image)
-        self.visual.image = new_image
-
 
 
         if self.tree:
@@ -1046,6 +1045,24 @@ class AdminGUI(Tk):
             height=49.0
         )
 
+        self.button_visual = PhotoImage(
+            file="assets/admin_gui/Visualization.png")
+        self.visual = Button(
+            image=self.button_visual,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.show_visualization,
+            relief="flat"
+        )
+        self.visual.place(
+            x=704.25,
+            y=86.0,
+            width=235.0,
+            height=39.0
+        )
+
+
+
 
         
     def log_out(self):
@@ -1098,6 +1115,84 @@ class AdminGUI(Tk):
                 widget_y = widget.winfo_y()
                 if x1 <= widget_x <= x2 and y1 <= widget_y <= y2:
                     widget.place_forget()
+
+
+    def generate_pie_charts(self):
+        # Fetch data for each fee type
+        electricity_data = self.db_manager.get_electricity_fee_summary()
+        water_data = self.db_manager.get_water_fee_summary()
+        service_data = self.db_manager.get_service_fee_summary()
+        parking_data = self.db_manager.get_parking_fee_summary()
+
+        # Prepare data for pie charts
+        fee_types = {
+            "Electricity": electricity_data,
+            "Water": water_data,
+            "Service": service_data,
+            "Parking": parking_data
+        }
+
+        # Define colors for the pie charts
+        colors = ["#4CAF50", "#FF9800"]  # Green and Orange
+
+        # Create a figure with GridSpec layout
+        fig = plt.figure(figsize=(12, 10))
+        gs = GridSpec(3, 2, figure=fig, height_ratios=[3, 3, 1])
+
+        # Plot each fee type in a 2x2 grid
+        for idx, (fee_type, data) in enumerate(fee_types.items()):
+            ax = fig.add_subplot(gs[idx // 2, idx % 2])
+            total_paid = sum(row["Total_Paid"] for row in data)
+            remaining_fee = sum(row["Remaining_Fee"] for row in data)
+            
+            wedges, texts, autotexts = ax.pie(
+                [total_paid, remaining_fee],
+                labels=["Total Paid", "Remaining Fee"],
+                autopct='%1.1f%%',
+                colors=colors,
+                textprops=dict(color="w")
+            )
+            
+            # Beautify pie chart
+            for text in texts:
+                text.set_fontsize(10)
+            for autotext in autotexts:
+                autotext.set_fontsize(12)
+                autotext.set_weight("bold")
+            
+            ax.set_title(fee_type, fontsize=14, weight="bold")
+
+        # Add a legend to the bottom
+        ax_legend = fig.add_subplot(gs[2, :])
+        ax_legend.axis("off")
+        labels = ["Total Paid", "Remaining Fee"]
+        handles = [plt.Line2D([0], [0], marker='o', color='w', label=label,
+                               markerfacecolor=color, markersize=10) for label, color in zip(labels, colors)]
+        ax_legend.legend(handles=handles, loc="center", fontsize=12, title="Legend")
+
+        # Set the main title
+        fig.suptitle("Fee Summary Visualization", fontsize=16, weight="bold")
+
+        # Save and close the figure
+        plt.tight_layout(rect=[0, 0, 1, 0.95])
+        plt.savefig("assets/admin_gui/fee_summary.png")
+        plt.close()
+
+    def show_visualization(self):
+        self.generate_pie_charts()
+
+        # Use OpenCV to open and display the image
+        img = cv2.imread("assets/admin_gui/fee_summary.png")
+        resized_img = cv2.resize(img, (600, 500))
+        cv2.imshow("Fee Summary Visualization", resized_img)
+        cv2.imshow("Fee Summary Visualization", resized_img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        
+        # # # Display the generated image
+        # self.visual_image = PhotoImage(file="assets/admin_gui/fee_summary.png")
+        # self.visual_label = Label(self.root, image=self.visual_image)
+        # self.visual_label.place(x=220, y=141, width=792, height=579)
 
 
 
