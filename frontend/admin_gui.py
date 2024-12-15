@@ -375,64 +375,82 @@ class AdminGUI(Tk):
         # Bind double-click event
         self.tree.bind("<Double-1>", self.on_double_click)
 
-    def view_user(self):
+    def view_user(self, editable=True):
+        # Hide buttons in the specified region
         self.hide_buttons_in_region(220, 141.32812, 1012, 720)
-        new_image = PhotoImage(file="assets/admin_gui/button_1.png")
-        self.home_button.config(image=new_image)
-        self.home_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_2.png")
-        self.view_admin_button.config(image=new_image)
-        self.view_admin_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_3_red.png")
-        self.view_user_button.config(image=new_image)
-        self.view_user_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_5.png")
-        self.edit_fee_button.config(image=new_image)
-        self.edit_fee_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_6.png")
-        self.pay_button.config(image=new_image)
-        self.pay_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_7.png")
-        self.statistic_button.config(image=new_image)
-        self.statistic_button.image = new_image
-        if self.tree:
+
+        # Update button images
+        button_images = [
+            ("assets/admin_gui/button_1.png", self.home_button),
+            ("assets/admin_gui/button_2.png", self.view_admin_button),
+            ("assets/admin_gui/button_3_red.png", self.view_user_button),
+            ("assets/admin_gui/button_4.png", self.manage_fees_button),
+            ("assets/admin_gui/button_5.png", self.edit_fee_button),
+            ("assets/admin_gui/button_6.png", self.pay_button),
+            ("assets/admin_gui/button_7.png", self.statistic_button),
+        ]
+        for image_path, button in button_images:
+            new_image = PhotoImage(file=image_path)
+            button.config(image=new_image)
+            button.image = new_image
+
+        # Remove existing tree if present
+        if hasattr(self, 'tree') and self.tree:
             self.tree.place_forget()
 
+        # Draw background rectangle for the Treeview
         self.canvas.create_rectangle(
-        220,
-        141.32812,
-        1012.5,
-        720,
-        fill="#FFFFFF",
-        outline="#000000")
+            220, 141.32812, 1012.5, 720,
+            fill="#FFFFFF", outline="#000000"
+        )
 
-        # Create a Treeview
+        # Set up Treeview style
         style = ttk.Style()
-        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
+
+        # Initialize Treeview with two columns: Full Name and Apartment Code
         self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
-        self.tree["columns"] = ("one", "two", "three")
-        self.tree.column("#0", width=100, minwidth=100)
-        self.tree.column("one", width=100, minwidth=100)
-        self.tree.column("two", width=100, minwidth=100)
-        self.tree.column("three", width=100, minwidth=100)
+        self.tree["columns"] = ("full_name", "apartment_code")
 
-        self.tree.heading("#0", text="ID", anchor=tk.W)
-        self.tree.heading("one", text="Column 1", anchor=tk.W)
-        self.tree.heading("two", text="Column 2", anchor=tk.W)
-        self.tree.heading("three", text="Column 3", anchor=tk.W)
+        # Configure columns
+        column_configs = [
+            ("#0", "", 0),  # Hide default column
+            ("full_name", "Full Name", 200),
+            ("apartment_code", "Apartment Code", 150),
+        ]
+        for col_id, col_name, width in column_configs:
+            self.tree.column(col_id, width=width, minwidth=width, anchor=tk.W)
+            self.tree.heading(col_id, text=col_name, anchor=tk.W)
 
-        # Insert some sample data
-        for i in range(10):
-            self.tree.insert("", "end", text=f"Item {i+1}", values=(f"A{i+1}", f"B{i+1}", f"C{i+1}"))
+        # Insert sample data
+        data = [
+            {"full_name": "Alice Johnson", "apartment_code": "A101"},
+            {"full_name": "Bob Smith", "apartment_code": "B202"},
+            {"full_name": "Charlie Brown", "apartment_code": "C303"},
+            {"full_name": "Diana Prince", "apartment_code": "D404"},
+        ]
+        for item in data:
+            self.tree.insert("", "end", values=(item["full_name"], item["apartment_code"]))
 
-        # Place the Treeview on top of the Canvas
+        # Place Treeview
         self.tree.place(x=220, y=141, width=792, height=579)
 
-        # Bind double-click event
+        # Bind events
         self.tree.bind("<Double-1>", self.on_double_click)
+
 
     def manage_fee(self):
         self.hide_buttons_in_region(220, 141.32812, 1012, 720)
