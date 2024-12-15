@@ -162,6 +162,7 @@ class DBManager:
 
         apt_code = row['apartment_code']
         feename = row['fee_name']
+        total = row['total']
         money_paid = row['paid']
         money_remain = row['remain']
         money_residual = row['residual']
@@ -175,6 +176,7 @@ class DBManager:
             'fullname': fullname,
             'apt_code': apt_code,
             'feename': feename,
+            'total': total,
             'money_paid': money_paid,
             'money_remain': money_remain,
             'money_residual': money_residual,
@@ -262,6 +264,16 @@ class DBManager:
         try:
             self.cursor.execute("""
             SELECT fee_name, paid, remain FROM userfee WHERE apartment_code = %s
+            """, (apartment_code,))
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi lấy thông tin userfee: {err}")
+
+    def view_fee_by_apartment_code(self, apartment_code):
+        """Lấy thông tin userfee theo mã căn hộ."""
+        try:
+            self.cursor.execute("""
+            SELECT * FROM userfee WHERE apartment_code = %s
             """, (apartment_code,))
             return self.cursor.fetchall()
         except mysql.connector.Error as err:

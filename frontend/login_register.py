@@ -8,7 +8,7 @@ from tkinter import messagebox
 import io
 from backend.auth import AuthManager
 from frontend.root_gui import RootGUI
-from frontend.normal_gui import NormalGUI
+from frontend.user_gui import UserGUI
 from frontend.admin_gui import AdminGUI
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, Label 
 from pathlib import Path
@@ -883,13 +883,10 @@ class LoginRegisterApp(Tk):
             self.login_frame.destroy()
         if user['account_type'] == 'admin':
             self.admin_gui = AdminGUI(self, user)
-            # self.admin_gui.pack(fill="both", expand=True)
         elif user['account_type'] == 'user':
-            self.user_gui = NormalGUI(self, user)  # Create an instance of UserGUI
-            self.user_gui.pack(fill="both", expand=True)
+            self.user_gui = UserGUI(self, user)  # Create an instance of UserGUI
         else:
             self.root_gui = RootGUI(self, user)  # Create an instance of RootGUI
-            self.root_gui.pack(fill="both", expand=True)
 
     def show_home(self):
         """Show the home screen of RootGUI."""
