@@ -4,3 +4,6 @@ setup.sql
 /se11_env
 /TEMP
 test.py
+backend/__pycache__
+frontend/__pycache__
+config.yml

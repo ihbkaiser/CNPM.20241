@@ -31,7 +31,6 @@ def get_address_and_weather(city="Hanoi"):
         
         # Format temperature with emoji
         temp = f"{emoji}{temp_celsius}°C"
-        print(temp)
         return city, temp
     except Exception as e:
         return "Error", str(e)
