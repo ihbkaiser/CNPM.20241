@@ -48,8 +48,7 @@ class DBManager:
             fee_name VARCHAR(50) NOT NULL,
             total int,
             paid int,
-            remain int,
-            residual int
+            remain int
         );    
         """)
         self.conn.commit()
@@ -110,12 +109,12 @@ class DBManager:
         return self.cursor.fetchall()
 
     
-    def add_userfee(self, apartment_code, fee_name, total, paid, remain, residual):
+    def add_userfee(self, apartment_code, fee_name, total, paid, remain):
         try:
             self.cursor.execute("""
-            INSERT INTO userfee ( apartment_code, fee_name, total, paid, remain, residual)
+            INSERT INTO userfee ( apartment_code, fee_name, total, paid, remain)
             VALUES (%s, %s, %s, %s, %s, %s)
-            """, (apartment_code, fee_name, total, paid, remain, residual))
+            """, (apartment_code, fee_name, total, paid, remain))
             self.conn.commit() 
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi thêm căn hộ: {err}")
@@ -124,9 +123,9 @@ class DBManager:
         self.cursor.execute("DELETE FROM userfee WHERE apartment_code = %s AND fee_name = %s", (apartment_code, fee_name))
         self.conn.commit()
     
-    def update_userfee(self, apartment_code, fee_name, total, paid, remain, residual):
-        self.cursor.execute("UPDATE userfee SET total = %s, paid = %s, remain = %s, residual = %s WHERE apartment_code = %s AND fee_name = %s",
-                            (total, paid, remain, residual, apartment_code, fee_name))
+    def update_userfee(self, apartment_code, fee_name, total, paid, remain):
+        self.cursor.execute("UPDATE userfee SET total = %s, paid = %s, remain = %s WHERE apartment_code = %s AND fee_name = %s",
+                            (total, paid, remain, apartment_code, fee_name))
         self.conn.commit()
     
     def get_all_fees(self):
@@ -165,7 +164,6 @@ class DBManager:
         total = row['total']
         money_paid = row['paid']
         money_remain = row['remain']
-        money_residual = row['residual']
         self.cursor.execute("SELECT full_name, username FROM users WHERE apartment_code = %s", (apt_code,))
         info = self.cursor.fetchone()
         fullname = info['full_name']
@@ -179,7 +177,6 @@ class DBManager:
             'total': total,
             'money_paid': money_paid,
             'money_remain': money_remain,
-            'money_residual': money_residual,
             'status' : status
         }
     def thu_fee(self, apartment_code, fee_name, pay_money):
@@ -190,14 +187,10 @@ class DBManager:
         total = row['total']
         paid = row['paid']
         remain = row['remain']
-        residual = row['residual']
         paid += pay_money
         remain = total - paid
-        if remain < 0:
-            residual = -remain
-            remain = 0
-        self.cursor.execute("UPDATE userfee SET paid = %s, remain = %s, residual = %s WHERE apartment_code = %s AND fee_name = %s",
-                            (paid, remain, residual, apartment_code, fee_name))
+        self.cursor.execute("UPDATE userfee SET paid = %s, remain = %s WHERE apartment_code = %s AND fee_name = %s",
+                            (paid, remain, apartment_code, fee_name))
         self.conn.commit()
 
     def close(self):

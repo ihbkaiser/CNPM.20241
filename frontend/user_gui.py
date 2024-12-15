@@ -480,7 +480,6 @@ class UserGUI(Tk):
         total= user_fee_info['total']
         money_paid = user_fee_info['money_paid']
         money_remain = user_fee_info['money_remain']
-        money_residual = user_fee_info['money_residual']
         status = user_fee_info['status']
         self.canvas.create_rectangle(
             220,
@@ -543,14 +542,6 @@ class UserGUI(Tk):
             anchor="nw",
             font=("Arial", 20)
         )
-        self.canvas.create_text(
-            270.25,
-            690.0,
-            text="Residual: ",
-            fill="#000000",
-            anchor="nw",
-            font=("Arial", 20)
-        )
 
         self.canvas.create_text(
             500.25,
@@ -592,14 +583,6 @@ class UserGUI(Tk):
             anchor="nw",
             font=("Arial", 20)
         )
-        self.canvas.create_text(
-            500.25,
-            690.0,
-            text=money_residual,
-            fill="#000000",
-            anchor="nw",
-            font=("Arial", 20)
-        )
         
         self.canvas.create_text(
             850.25,
@@ -616,7 +599,7 @@ class UserGUI(Tk):
             highlightthickness=0,
             background="#FFFFFF",
             activebackground="#FFFFFF",
-            command=lambda: self.pay_money(apartment_code, fee_name),
+            command=lambda: self.pay_money(apartment_code, fee_name,money_remain),
             relief="flat"
         )
         self.button_2.place(
@@ -647,9 +630,9 @@ class UserGUI(Tk):
             height=58.0
         )
 
-    def pay_money(self, apt_code, fee_name):
+    def pay_money(self, apt_code, fee_name, money_remain):
         money_paid = int(self.paid_entry.get())
-        if (money_paid<1000):
+        if (money_paid<1000 or money_paid>money_remain or money_paid%1000!=0):
             self.canvas.create_text(
                 850.25,
                 600.0,
