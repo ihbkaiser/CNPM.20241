@@ -339,16 +339,7 @@ class UserGUI(Tk):
 
         self.canvas.create_text(
             305.25,
-            230.0,
-            anchor="nw",
-            text="Apartment Code:",
-            fill="#000000",
-            font=("Inter Bold", 30 * -1)
-        )
-
-        self.canvas.create_text(
-            305.25,
-            297.0,
+            247.0,
             anchor="nw",
             text="Fee Name:",
             fill="#000000",
@@ -373,32 +364,11 @@ class UserGUI(Tk):
             height=60.0
         )
 
-        self.entry_image_1 = PhotoImage(
-            file="assets/user_gui/entry_1.png")
-        self.entry_bg_1 = self.canvas.create_image(
-            749.25,
-            250.5,
-            image=self.entry_image_1
-        )
-        self.apartment_entry = Entry(
-            bd=0,
-            bg="#D4FC79",
-            fg="#000716",
-            highlightthickness=0,
-            font=("Arial", 20)
-        )
-        self.apartment_entry.place(
-            x=610.25,
-            y=233.0,
-            width=278.0,
-            height=36.0
-        )
-
         self.entry_image_2 = PhotoImage(
             file="assets/user_gui/entry_3.png")
         self.entry_bg_2 = self.canvas.create_image(
             749.25,
-            309.5,
+            259.5,
             image=self.entry_image_2
         )
         self.fee_name_entry = Entry(
@@ -408,9 +378,10 @@ class UserGUI(Tk):
             highlightthickness=0,
             font=("Arial", 20)
         )
+
         self.fee_name_entry.place(
             x=610.25,
-            y=292.0,
+            y=242.0,
             width=278.0,
             height=36.0
         )
@@ -465,7 +436,7 @@ class UserGUI(Tk):
 
     def find_fee(self):
         fee_name= self.fee_name_entry.get()
-        apartment_code= self.apartment_entry.get()
+        apartment_code= self.user['apartment_code']
         user_fee_info = self.db_manager.user_fee_info(apartment_code, fee_name)
         try:
             apt_code = user_fee_info['apt_code']
