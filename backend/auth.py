@@ -1,5 +1,7 @@
 from backend.db import DBManager
 import yaml
+import re
+
 class AuthManager:
     def __init__(self):
         try:
@@ -11,8 +13,24 @@ class AuthManager:
 
         
 
-    def register_user(self, username, password, full_name, phone_number, apartment_code, account_type='user', email=None):
-        self.db.add_user(username, password, full_name,  phone_number , apartment_code, email=email, account_type=account_type) 
+    def register_user(self, username, password, full_name, phone_number, apartment_code, confirm_password, account_type='user', email=None):
+        """Đăng ký người dùng mới."""
+        if password != confirm_password:
+            raise Exception("Password and confirm password do not match. Please enter the same password in both fields.")
+        if not username:
+            raise Exception("Username is required. Please enter a valid username.")
+        if not password:
+            raise Exception("Password is required. Please enter a valid password.")
+        if not full_name:
+            raise Exception("Full name is required. Please enter your full name.")
+        if not phone_number:
+            raise Exception("Phone number is required. Please enter a valid phone number.")
+        if not re.match(r'^\d{10}$', phone_number):
+            raise Exception("Invalid phone number. Phone number must be 10 digits.")
+        if not apartment_code:
+            raise Exception("Apartment code is required. Please enter a valid apartment code.")
+        
+        self.db.add_user(username, password, full_name, phone_number, apartment_code, email=email, account_type=account_type)
 
     def login(self, username, password):
         user = self.db.get_user(username)

@@ -10,9 +10,10 @@ from backend.auth import AuthManager
 from frontend.root_gui import RootGUI
 from frontend.normal_gui import NormalGUI
 from frontend.admin_gui import AdminGUI
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, Label 
 from pathlib import Path
 import zxcvbn
+import re 
 class LoginFrame(Frame):
     def __init__(self,parent):
         super().__init__(parent)
@@ -769,6 +770,7 @@ class RegisterFrame(Frame):
             height=46.40625
         )
 
+
     def toggle_password(self):
         """Toggle password visibility."""
         if self.password_visible:
@@ -793,6 +795,8 @@ class RegisterFrame(Frame):
 
         self.password_strength_label.configure(text=f"Strength: {strength_text[strength_score]}", text_color=strength_color[strength_score])
 
+    
+
     def register(self):
         """Perform register action."""
         # Get input values
@@ -803,40 +807,15 @@ class RegisterFrame(Frame):
         phone_number = self.phonenumber_entry.get()
         apartment_code = self.apartment_code_entry.get()
 
-        # Clear previous warnings
-        # self.clear_warnings()
 
-        # Input validation
-        valid = True
-        if not username:
-            self.username_label.configure(text="Username is required")
-            valid = False
-        if not password:
-            self.password_label.configure(text="Password is required")
-            valid = False
-        elif password != confirm_password:
-            self.confirm_password_label.configure(text="Passwords do not match")
-            valid = False
-        if not full_name:
-            self.fullname_label.configure(text="Full name is required")
-            valid = False
-        if not phone_number:
-            self.phonenumber_label.configure(text="Phone number is required")
-            valid = False
 
-        if not apartment_code:
-            self.apartment_code_label.configure(text="Apartment code is required")
-            valid = False
 
-        if not valid:
-            return
 
-        # Attempt to register the user
         try:
             if self.is_user:
-                self.controller.auth_manager.register_user(username, password, full_name, phone_number, apartment_code)
+                self.controller.auth_manager.register_user(username, password, full_name, phone_number, apartment_code, confirm_password)
             else:
-                self.controller.auth_manager.register_user(username, password, full_name, phone_number,  apartment_code, account_type='admin')
+                self.controller.auth_manager.register_user(username, password, full_name, phone_number,  apartment_code, confirm_password, account_type='admin')
             messagebox.showinfo("Register Success", "User registered successfully")
         except Exception as e:
             messagebox.showerror("Register Error", str(e))

@@ -8,6 +8,7 @@ from frontend.root_gui import RootGUI  # Import RootGUI to extend it
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import cv2
+import pandas as pd 
 
 class AdminGUI(Tk):
     def __init__(self, root, user):
@@ -920,10 +921,42 @@ class AdminGUI(Tk):
 
         # Place the Treeview on top of the Canvas
         self.tree.place(x=220, y=141, width=792, height=579)
+        # self.generate_visualization(data)
+
+    def generate_visualization(self, data):
+        # Create a DataFrame
+        df = pd.DataFrame(data)
+
+        # Create a figure and axis
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        # Hide axes
+        ax.xaxis.set_visible(False)
+        ax.yaxis.set_visible(False)
+        ax.set_frame_on(False)
+
+        # Create a table
+        table = ax.table(
+            cellText=df.values,
+            colLabels=df.columns,
+            cellLoc='center',
+            loc='center'
+        )
+
+        table.auto_set_font_size(False)
+        table.set_fontsize(12)
+        table.scale(1.2, 1.2)
+
+        ax.set_title("Fee Summary", fontsize=14, weight="bold")
+
+        # Save the figure
+        plt.savefig("assets/admin_gui/fee_summary.png")
+        plt.close()
+        self.show_visualization()
 
 
     def statistic(self):
-        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
+        self.hide_buttons_in_region(190, 79.32812, 1012, 720)
         new_image = PhotoImage(file="assets/admin_gui/button_1.png")
         self.home_button.config(image=new_image)
         self.home_button.image = new_image
@@ -964,6 +997,7 @@ class AdminGUI(Tk):
             fill="#000000",
             font=("Inter Bold", 30 * -1)
         )
+
 
         self.button_image_9 = PhotoImage(
             file="assets/admin_gui/button_9.png")
@@ -1035,7 +1069,7 @@ class AdminGUI(Tk):
             image=self.button_image_13,
             borderwidth=0,
             highlightthickness=0,
-            command=self.show_statistic_parking,
+            command=self.show_housing_statistic,
             relief="flat"
         )
         self.button_13.place(
@@ -1060,6 +1094,150 @@ class AdminGUI(Tk):
             width=235.0,
             height=39.0
         )
+
+
+
+    def show_housing_statistic(self):
+        if self.tree:
+            self.tree.place_forget()
+        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
+        new_image = PhotoImage(file="assets/admin_gui/button_1.png")
+        self.home_button.config(image=new_image)
+        self.home_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_2.png")
+        self.view_admin_button.config(image=new_image)
+        self.view_admin_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_3.png")
+        self.view_user_button.config(image=new_image)
+        self.view_user_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_4.png")
+        self.manage_fees_button.config(image=new_image)
+        self.manage_fees_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_5.png")
+        self.edit_fee_button.config(image=new_image)
+        self.edit_fee_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_6.png")
+        self.pay_button.config(image=new_image)
+        self.pay_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_7_red.png")
+        self.statistic_button.config(image=new_image)
+        self.statistic_button.image = new_image
+        if self.tree:
+            self.tree.place_forget()
+
+        self.canvas.create_rectangle(
+        220,
+        141.32812,
+        1012.5,
+        720,
+        fill="#FFFFFF",
+        outline="#000000")
+
+
+
+        self.canvas.create_text(
+            239.25,
+            86.0 + 65,
+            anchor="nw",
+            text="Enter Apartment Code:",
+            fill="#000000",
+            font=("Inter Bold", 30 * -1)
+        )
+
+        self.entry_image_1 = PhotoImage(
+            file="assets/admin_gui/entry_1.png")
+        self.entry_bg_1 = self.canvas.create_image(
+            788.75,
+            115.0 + 65,
+            image=self.entry_image_1
+        )
+        self.entry_1 = Entry(
+            self.root,
+            bd=0,
+            bg="#ffffff",
+            fg="#000716",
+            highlightthickness=0,
+            font=("Inter", 20)
+        )
+        self.entry_1.place(
+            x=647.75,
+            y=98.0 + 65,
+            width=272.0,
+            height=33.0
+        )
+
+
+        self.button_image_9 = PhotoImage(
+            file="assets/admin_gui/Submit_button.png")
+        self.button_9 = Button(
+            self.root,
+            image=self.button_image_9,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.submit_housing_statistic,
+            relief="flat"
+        )
+        self.button_9.place(
+            x=418.25,
+            y=226.0,
+            width=160.0,
+            height=50.0
+        )
+
+        self.button_image_10 = PhotoImage(
+            file="assets/admin_gui/Back_button.png")
+        self.button_10 = Button(
+            self.root,
+            image=self.button_image_10,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.statistic,
+            relief="flat"
+        )
+        self.button_10.place(
+            x=629.25,
+            y=226.0,
+            width=160.0,
+            height=50.0
+        )
+
+        self.canvas.create_rectangle(
+            220,
+            360-65,
+            1012.5,
+            720,
+            fill="#123456",
+            outline="")
+        
+    def submit_housing_statistic(self):
+        apartment_code = self.entry_1.get()
+        # fee_name = self.entry_2.get()
+        data = self.db_manager.get_userfee_by_apartment_code(apartment_code)
+        # Create a Treeview
+
+        style = ttk.Style()
+        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
+        self.tree["columns"] = ("one", "two")
+        self.tree.column("#0", width=100, minwidth=100)
+        self.tree.column("one", width=100, minwidth=100)
+        self.tree.column("two", width=100, minwidth=100)
+
+        self.tree.heading("#0", text="Fee_name", anchor=tk.W)
+        self.tree.heading("one", text="Total_Paid", anchor=tk.W)
+        self.tree.heading("two", text="Remaining_Fee", anchor=tk.W)
+
+        # Insert some sample data
+        for i in range(len(data)):
+            self.tree.insert("", "end", text=f"{data[i]['fee_name']}", values=(f"{data[i]['paid']}", f"{data[i]['remain']}"))
+
+        # Place the Treeview on top of the Canvas
+        self.tree.place(x=220, y=360-65+10, width=792, height=360)
+        # self.generate_visualization(data)
+        
+
+
+
 
 
 
@@ -1110,11 +1288,15 @@ class AdminGUI(Tk):
     def hide_buttons_in_region(self, x1, y1, x2, y2):
         self.visual.place_forget()
         for widget in self.root.winfo_children():
-            if isinstance(widget, tk.Button):
-                widget_x = widget.winfo_x()
-                widget_y = widget.winfo_y()
-                if x1 <= widget_x <= x2 and y1 <= widget_y <= y2:
+            widget_x = widget.winfo_x()
+            widget_y = widget.winfo_y()
+            if x1 <= widget_x <= x2 and y1 <= widget_y <= y2:
+                if isinstance(widget, (tk.Button, tk.Entry, tk.Label, tk.Text)):
                     widget.place_forget()
+                elif isinstance(widget, Canvas):
+                    widget.delete("all")
+                elif isinstance(widget, PhotoImage):
+                    widget.image = None
 
 
     def generate_pie_charts(self):
@@ -1178,21 +1360,25 @@ class AdminGUI(Tk):
         plt.savefig("assets/admin_gui/fee_summary.png")
         plt.close()
 
+
     def show_visualization(self):
         self.generate_pie_charts()
-
         # Use OpenCV to open and display the image
         img = cv2.imread("assets/admin_gui/fee_summary.png")
         resized_img = cv2.resize(img, (600, 500))
         cv2.imshow("Fee Summary Visualization", resized_img)
-        cv2.imshow("Fee Summary Visualization", resized_img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+
+    # def show_visualization1(self):
+    #     self.generate_visualization()
+    #     # Use OpenCV to open and display the image
+    #     img = cv2.imread("assets/admin_gui/fee_summary.png")
+    #     resized_img = cv2.resize(img, (600, 500))
+    #     cv2.imshow("Fee Summary Visualization", resized_img)
+    #     cv2.waitKey(0)
+    #     cv2.destroyAllWindows()
         
-        # # # Display the generated image
-        # self.visual_image = PhotoImage(file="assets/admin_gui/fee_summary.png")
-        # self.visual_label = Label(self.root, image=self.visual_image)
-        # self.visual_label.place(x=220, y=141, width=792, height=579)
 
 
 
