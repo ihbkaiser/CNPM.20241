@@ -1,7 +1,9 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, Label
 from tkinter import ttk
+from PIL import Image, ImageTk
 import tkinter as tk
+from tkinter import PhotoImage, Canvas
 from backend.weather import get_address_and_weather
 from backend.auth import AuthManager
 from frontend.root_gui import RootGUI  # Import RootGUI to extend it
@@ -9,6 +11,10 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import cv2
 import pandas as pd 
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+import pygame
+# database ready
 
 class AdminGUI(Tk):
     def __init__(self, root, user):
@@ -316,7 +322,7 @@ class AdminGUI(Tk):
         )
 
         
-    def view_admin(self):
+    def view_admin(self, editable=True):
         self.hide_buttons_in_region(220, 141.32812, 1012, 720)
         new_image = PhotoImage(file="assets/admin_gui/button_1.png")
         self.home_button.config(image=new_image)
@@ -339,41 +345,62 @@ class AdminGUI(Tk):
         new_image = PhotoImage(file="assets/admin_gui/button_7.png")
         self.statistic_button.config(image=new_image)
         self.statistic_button.image = new_image
-        if self.tree:
+        if hasattr(self, 'tree') and self.tree:
             self.tree.place_forget()
 
+        # Draw background rectangle for the Treeview
         self.canvas.create_rectangle(
-        220,
-        141.32812,
-        1012.5,
-        720,
-        fill="#FFFFFF",
-        outline="#000000")
+            220, 141.32812, 1012.5, 720,
+            fill="#FFFFFF", outline="#000000"
+        )
 
-        # Create a Treeview
+        # Set up Treeview style
         style = ttk.Style()
-        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
+
+        # Initialize Treeview with two columns: Full Name and Apartment Code
         self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
-        self.tree["columns"] = ("one", "two", "three")
-        self.tree.column("#0", width=100, minwidth=100)
-        self.tree.column("one", width=100, minwidth=100)
-        self.tree.column("two", width=100, minwidth=100)
-        self.tree.column("three", width=100, minwidth=100)
+        self.tree["columns"] = ("full_name", "apartment_code")
 
-        self.tree.heading("#0", text="ID", anchor=tk.W)
-        self.tree.heading("one", text="Column 1", anchor=tk.W)
-        self.tree.heading("two", text="Column 2", anchor=tk.W)
-        self.tree.heading("three", text="Column 3", anchor=tk.W)
-
-        # Insert some sample data
-        for i in range(10):
-            self.tree.insert("", "end", text=f"Item {i+1}", values=(f"A{i+1}", f"B{i+1}", f"C{i+1}"))
-
-        # Place the Treeview on top of the Canvas
+        # Configure columns
+        column_configs = [
+            ("#0", "", 0),  # Hide default column
+            ("full_name", "Full Name", 200),
+            ("apartment_code", "Officer Code", 150),
+        ]
+        for col_id, col_name, width in column_configs:
+            self.tree.column(col_id, width=width, minwidth=width, anchor=tk.W)
+            self.tree.heading(col_id, text=col_name, anchor=tk.W)
+        
+        # Insert sample data
+        data_full = self.db_manager.get_all_users(account_type='admin')
+        data = [
+            {"full_name": entry['full_name'], "apartment_code": entry['apartment_code']}
+        for entry in data_full]
+        for item in data:
+            self.tree.insert("", "end", values=(item["full_name"], item["apartment_code"]))
+        self.vsb = ttk.Scrollbar(self.root, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=self.vsb.set)
+        # Place Treeview
         self.tree.place(x=220, y=141, width=792, height=579)
+        self.vsb.place(x=992, y=141, height=579)
 
-        # Bind double-click event
-        self.tree.bind("<Double-1>", self.on_double_click)
+        # Bind events if editable
+        if editable:
+            self.tree.bind("<Double-1>", lambda event: self.edit_double_click(event, 'admin'))
 
     def view_user(self, editable=True):
         # Hide buttons in the specified region
@@ -434,22 +461,118 @@ class AdminGUI(Tk):
         for col_id, col_name, width in column_configs:
             self.tree.column(col_id, width=width, minwidth=width, anchor=tk.W)
             self.tree.heading(col_id, text=col_name, anchor=tk.W)
-
+        
         # Insert sample data
+        data_full = self.db_manager.get_all_users(account_type='user')
         data = [
-            {"full_name": "Alice Johnson", "apartment_code": "A101"},
-            {"full_name": "Bob Smith", "apartment_code": "B202"},
-            {"full_name": "Charlie Brown", "apartment_code": "C303"},
-            {"full_name": "Diana Prince", "apartment_code": "D404"},
-        ]
+            {"full_name": entry['full_name'], "apartment_code": entry['apartment_code']}
+        for entry in data_full]
         for item in data:
             self.tree.insert("", "end", values=(item["full_name"], item["apartment_code"]))
-
+        self.vsb = ttk.Scrollbar(self.root, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=self.vsb.set)
+        # Place Treeview
+        self.tree.place(x=220, y=141, width=792, height=579)
+        self.vsb.place(x=992, y=141, height=579)
         # Place Treeview
         self.tree.place(x=220, y=141, width=792, height=579)
 
-        # Bind events
-        self.tree.bind("<Double-1>", self.on_double_click)
+        # Bind events if editable
+        if editable:
+            self.tree.bind("<Double-1>", lambda event: self.edit_double_click(event, 'user'))
+
+
+
+    from tkinter import Canvas
+
+
+    def edit_double_click(self, event, type):
+        apt_high = "Apartment Code" if type == "user" else "Officer Code"
+        pygame.mixer.init()
+        pygame.mixer.music.load("assets/fun_time/bg.mp3")  # Replace with your music file path
+        pygame.mixer.music.play(-1)
+        data = self.db_manager.get_all_users(account_type=type)
+        selected_item = self.tree.selection()[0]
+        values = self.tree.item(selected_item, 'values')
+        user_details = None
+        for item in data:
+            if item['full_name'] == values[0] and item['apartment_code'] == values[1]:
+                user_details = item
+                break
+        assert user_details is not None, f"User details not found for full_name {values[0]} - apt {values[1]}"
+        old_username = user_details['username']
+
+        # Create a top-level window for editing
+        edit_window = tk.Toplevel(self.root)
+        edit_window.title("Edit User")
+        edit_window.geometry("1400x700")
+        edit_window.protocol("WM_DELETE_WINDOW", lambda: None)
+        edit_window.attributes("-toolwindow", True)
+
+        # Use grid for the background canvas
+        canvas = Canvas(edit_window, width=1400, height=700)
+        canvas.grid(row=0, column=0, rowspan=10, columnspan=2, sticky="nsew")
+
+        # Load and display the background image
+        bg_image = Image.open("assets/fun_time/christmas2.png")
+        bg_image = bg_image.resize((1400, 700), Image.Resampling.LANCZOS)
+        bg_image_tk = ImageTk.PhotoImage(bg_image)
+        canvas.create_image(0, 0, anchor="nw", image=bg_image_tk)
+
+        font_large = ("Arial", 16)
+        labels = ["Full Name", "Username", "Password", "Role", apt_high, "Email", "Phone Number"]
+        label_lower = ['full_name', 'username', 'password', 'account_type', 'apartment_code', 'email', 'phone_number']
+        entries = {}
+
+        # Add labels and entries on top of the canvas
+        for idx, label in enumerate(labels):
+            tk.Label(edit_window, text=label + ":", font=font_large, bg='pink', fg='black').grid(
+                row=idx + 1, column=0, padx=(20, 10), pady=5, sticky="e"
+            )
+            entry = tk.Entry(edit_window, width=25, font=font_large, bg="lightgreen", fg="black", relief="flat")
+            entry_element = user_details.get(label_lower[idx], "")
+            entry.insert(0, entry_element)
+            entries[label] = entry
+            entry.grid(row=idx + 1, column=1, padx=(10, 20), pady=5, sticky="w")
+
+        def save_changes():
+            new_values = {label: entries[label].get() for label in labels}
+            for label in labels:
+                if new_values[label] == "":
+                    new_values[label] = None
+            self.db_manager.update_user(
+                old_username, new_values["Password"], new_values["Role"],
+                new_values["Full Name"], new_values["Phone Number"],
+                new_values[apt_high], new_values["Email"]
+            )
+            self.tree.item(selected_item, values=(new_values["Full Name"], new_values[apt_high]))
+            pygame.mixer.music.stop() 
+            edit_window.destroy()
+        def cancel_changes():
+            pygame.mixer.music.stop()  # Stop the music
+            edit_window.destroy()
+        def delete_record():
+            confirmation = tk.messagebox.askyesno("Delete Record", "Are you sure you want to delete this record?")
+            if confirmation:
+                self.db_manager.delete_user(old_username)  
+                self.tree.delete(selected_item)
+                pygame.mixer.music.stop()
+                edit_window.destroy()
+
+        # Add Save and Cancel buttons
+        tk.Button(edit_window, text="Save", command=save_changes, width=12, bg="lightgreen", font=("Arial", 12)).grid(
+            row=len(labels) + 2, column=0, padx=5
+        )
+        tk.Button(edit_window, text="Delete", command=delete_record, width=12, bg="lightgreen", font=("Arial", 12)).grid(
+            row=len(labels) + 3, column=0, padx=5
+        )
+        tk.Button(edit_window, text="Cancel", command=cancel_changes, width=12, bg="lightgreen", font=("Arial", 12)).grid(
+            row=len(labels) + 2, column=1, padx=5
+        )
+
+        # Keep a reference to the background image
+        edit_window.bg_image_tk = bg_image_tk
+
 
 
     def manage_fee(self):
