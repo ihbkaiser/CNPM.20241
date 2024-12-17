@@ -32,36 +32,55 @@ class DBManager:
     def create_tables(self):
         self.cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
-            username VARCHAR(255) PRIMARY KEY,
+            username VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
             account_type ENUM('root', 'admin', 'user') NOT NULL,
             full_name VARCHAR(255) NOT NULL,
             phone_number VARCHAR(20) NOT NULL,
-            apartment_code VARCHAR(50) NOT NULL,
+            apartment_code VARCHAR(50) PRIMARY KEY,
             email VARCHAR(255)
-        );              
+        );                
         """)
         self.conn.commit()
+
         self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS userfee (
-            apartment_code VARCHAR(50) NOT NULL,
-            fee_name VARCHAR(50) NOT NULL,
+        CREATE TABLE IF NOT EXISTS fees (
+            fee_name VARCHAR(50) PRIMARY KEY,
+            deadline datetime,
             total int,
             paid int,
             remain int
         );    
         """)
         self.conn.commit()
+
         self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS fees (
+        CREATE TABLE IF NOT EXISTS userfee (
+            apartment_code VARCHAR(50) NOT NULL,
             fee_name VARCHAR(50) NOT NULL,
-            deadline datetime,
             total int,
             paid int,
-            remain int
-        );  
+            remain int,
+            residual int,
+            FOREIGN KEY (apartment_code) REFERENCES users(apartment_code),
+            FOREIGN KEY (fee_name) REFERENCES fees(fee_name)
+        ); 
         """)
         self.conn.commit()
+
+        self.cursor.execute("""
+        CREATE TABLE IF NOT EXISTS noti (
+            apartment_code VARCHAR(50) NOT NULL,
+            apartment_code2 VARCHAR(50) NOT NULL,
+            title VARCHAR(100) NOT NULL,
+            content TEXT NOT NULL,
+            time DATETIME DEFAULT CURRENT_TIMESTAMP,
+            foreign key (apartment_code) references users(apartment_code),
+            foreign key (apartment_code2) references users(apartment_code)
+        ); 
+        """)
+        self.conn.commit()
+        
 
         self.cursor.execute("SELECT * FROM users WHERE username = 'root'")
         if self.cursor.fetchone() is None:
@@ -271,3 +290,41 @@ class DBManager:
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi lấy thông tin userfee: {err}")
+        
+    def send_noti(self, apartment_code, apartment_code2, title, content):
+        try:
+            self.cursor.execute("""
+            INSERT INTO noti (apartment_code, apartment_code2, title, content)
+            VALUES (%s, %s, %s, %s)
+            """, (apartment_code, apartment_code2, title, content))
+            self.conn.commit() 
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi gửi thông báo: {err}")
+    
+    def get_noti(self, apartment_code):
+        try:
+            self.cursor.execute("""
+            SELECT * FROM noti WHERE apartment_code = %s
+            """, (apartment_code,))
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi lấy thông báo: {err}")
+        
+    def get_user_by_apartment_code(self, apt_code):
+        try:
+            self.cursor.execute("""
+            SELECT * FROM users WHERE apartment_code = %s
+            """, (apt_code,))
+            return self.cursor.fetchone()
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi lấy thông tin người dùng: {err}")
+        
+    def get_noti_by_apartment_code(self, apt_code):
+        try:
+            self.cursor.execute("""
+            SELECT full_name, title, content,time FROM noti 
+            JOIN users ON users.apartment_code= noti.apartment_code WHERE apartment_code2 = %s
+            """, (apt_code,))
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi lấy thông tin thông báo: {err}")
