@@ -105,22 +105,6 @@ class LoginFrame(Frame):
         )
         self.add_placeholder(self.username_entry, "User name")
 
-
-        self.captcha_entry = Entry(
-            bd=0,
-            bg="#ffffff",
-            fg="#000716",
-            font=("Inter", 18 * -1),
-            highlightthickness=0
-        )
-        self.captcha_entry.place(
-            x=589.0,
-            y=367.0,
-            width=220.0,
-            height=43.0
-        )
-        self.add_placeholder(self.captcha_entry, "Captcha")
-
         self.username_error_label = Label(self.log_in_frame, text="", fg="red", bg="#ffffff", font=("Arial", 12))
         self.username_error_label.place(x=589.0, y=155.0)
 
@@ -164,6 +148,21 @@ class LoginFrame(Frame):
             height=43.0
         )
         self.add_placeholder(self.password_entry, "Password")
+
+        self.captcha_entry = Entry(
+            bd=0,
+            bg="#ffffff",
+            fg="#000716",
+            font=("Inter", 18 * -1),
+            highlightthickness=0
+        )
+        self.captcha_entry.place(
+            x=589.0,
+            y=367.0,
+            width=220.0,
+            height=43.0
+        )
+        self.add_placeholder(self.captcha_entry, "Captcha")
 
         button_1.place(
             x=793.0,

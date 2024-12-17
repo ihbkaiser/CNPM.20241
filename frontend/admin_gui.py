@@ -1146,6 +1146,8 @@ class AdminGUI(Tk):
             image=self.button_image_9,
             borderwidth=0,
             highlightthickness=0,
+            background="#ffffff",
+            activebackground="#ffffff",
             command=self.show_statistic_electric,
             relief="flat"
         )
@@ -1162,6 +1164,8 @@ class AdminGUI(Tk):
             image=self.button_image_10,
             borderwidth=0,
             highlightthickness=0,
+            background="#ffffff",
+            activebackground="#ffffff",
             command=self.show_statistic_water,
             relief="flat"
         )
@@ -1178,6 +1182,8 @@ class AdminGUI(Tk):
             image=self.button_image_11,
             borderwidth=0,
             highlightthickness=0,
+            background="#ffffff",
+            activebackground="#ffffff",
             command=self.show_statistic_service,
             relief="flat"
         )
@@ -1194,6 +1200,8 @@ class AdminGUI(Tk):
             image=self.button_image_12,
             borderwidth=0,
             highlightthickness=0,
+            background="#ffffff",
+            activebackground="#ffffff",
             command=self.show_statistic_parking,
             relief="flat"
         )
@@ -1210,6 +1218,8 @@ class AdminGUI(Tk):
             image=self.button_image_13,
             borderwidth=0,
             highlightthickness=0,
+            background="#ffffff",
+            activebackground="#ffffff",
             command=self.show_housing_statistic,
             relief="flat"
         )

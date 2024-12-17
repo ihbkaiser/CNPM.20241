@@ -61,7 +61,6 @@ class DBManager:
             total int,
             paid int,
             remain int,
-            residual int,
             FOREIGN KEY (apartment_code) REFERENCES users(apartment_code),
             FOREIGN KEY (fee_name) REFERENCES fees(fee_name)
         ); 
@@ -324,6 +323,7 @@ class DBManager:
             self.cursor.execute("""
             SELECT full_name, title, content,time FROM noti 
             JOIN users ON users.apartment_code= noti.apartment_code WHERE apartment_code2 = %s
+            order by time desc
             """, (apt_code,))
             return self.cursor.fetchall()
         except mysql.connector.Error as err:

@@ -149,7 +149,7 @@ class UserGUI(Tk):
         )
 
         self.profile_img = PhotoImage(
-            file="assets/user_gui/button_4.png")
+            file="assets/user_gui/button_4_red.png")
         self.profile_button = Button(
             image=self.profile_img,
             borderwidth=0,
@@ -236,7 +236,7 @@ class UserGUI(Tk):
         pass
 
     def show_profile(self):
-        new_image = PhotoImage(file="assets/user_gui/button_4.png")
+        new_image = PhotoImage(file="assets/user_gui/button_4_red.png")
         self.profile_button.config(image=new_image)
         self.profile_button.image = new_image
         new_image = PhotoImage(file="assets/user_gui/button_7.png")
@@ -280,7 +280,7 @@ class UserGUI(Tk):
         new_image = PhotoImage(file="assets/user_gui/button_4.png")
         self.profile_button.config(image=new_image)
         self.profile_button.image = new_image
-        new_image = PhotoImage(file="assets/user_gui/button_7.png")
+        new_image = PhotoImage(file="assets/user_gui/button_7_red.png")
         self.view_fee_button.config(image=new_image)
         self.view_fee_button.image = new_image
         new_image = PhotoImage(file="assets/user_gui/button_5.png")
@@ -337,7 +337,7 @@ class UserGUI(Tk):
         new_image = PhotoImage(file="assets/user_gui/button_7.png")
         self.view_fee_button.config(image=new_image)
         self.view_fee_button.image = new_image
-        new_image = PhotoImage(file="assets/user_gui/button_5.png")
+        new_image = PhotoImage(file="assets/user_gui/button_5_red.png")
         self.pay_button.config(image=new_image)
         self.pay_button.image = new_image
         new_image = PhotoImage(file="assets/user_gui/button_5.png")
@@ -672,7 +672,7 @@ class UserGUI(Tk):
                 image=self.qr_img)
 
             self.finish_img = PhotoImage(
-                file="assets/user_gui/button_1.png")
+                file="assets/user_gui/finish.png")
             self.finish_button = Button(
                 image=self.finish_img,
                 borderwidth=0,
@@ -684,9 +684,9 @@ class UserGUI(Tk):
             )
             self.finish_button.place(
                 x=750,
-                y=650,
+                y=646,
                 width=200.0,
-                height=60.0
+                height=54.0
             )
     
     def finish(self, money_paid, apt_code, fee_name):
@@ -710,7 +710,7 @@ class UserGUI(Tk):
         )
 
         self.continue_img = PhotoImage(
-            file="assets/user_gui/button_1.png")
+            file="assets/user_gui/continue.png")
         self.continue_button = Button(
             image=self.continue_img,
             borderwidth=0,
@@ -721,9 +721,9 @@ class UserGUI(Tk):
             relief="flat"
         )
         self.continue_button.place(
-            x=500,
-            y=650,
-            width=200.0,
+            x=450,
+            y=640,
+            width=300.0,
             height=60.0
         )
 
@@ -746,7 +746,7 @@ class UserGUI(Tk):
         new_image = PhotoImage(file="assets/user_gui/button_5.png")
         self.pay_button.config(image=new_image)
         self.pay_button.image = new_image
-        new_image = PhotoImage(file="assets/user_gui/button_5.png")
+        new_image = PhotoImage(file="assets/user_gui/button_5_red.png")
         self.noti_button.config(image=new_image)
         self.noti_button.image = new_image
         if self.tree:
@@ -898,7 +898,7 @@ class UserGUI(Tk):
         self.custom_text.insert("1.0", "")
 
         self.send_button_img = Image.open("assets/user_gui/send.png")
-        self.send_button_img = self.send_button_img.resize((120, 30))
+        self.send_button_img = self.send_button_img.resize((105, 35))
         self.send_button_img = ImageTk.PhotoImage(self.send_button_img)
         self.send_button = Button(
             image=self.send_button_img,
@@ -912,8 +912,8 @@ class UserGUI(Tk):
         self.send_button.place(
             x=850.0,
             y=205.0,
-            width=123.0,
-            height=33.0
+            width=108.0,
+            height=38.0
         )
     
     def try_send(self, apt_code):
@@ -954,13 +954,52 @@ class UserGUI(Tk):
                 font=("Arial", 20))
         else:
             self.db_manager.send_noti(apt_code, to, title, content)
-            self.canvas.create_text(
-                350,
-                290.0,
-                anchor="nw",
-                text="Notification sent",
-                fill="green",
-                font=("Arial", 20))
+            self.send_success()
+
+    def send_success(self):
+        self.hide_buttons_in_region(220, 141, 1012.5, 720)
+        self.canvas.create_rectangle(
+            220,
+            141,
+            1012.5,
+            720,
+            fill="#FFFFFF",
+            outline="#000000")
+        self.canvas.create_text(
+            380.25,
+            158.0,
+            anchor="nw",
+            text="Notification Sent Successfully",
+            fill="#000000",
+            font=("Inter Bold", 36 * -1)
+        )
+
+        self.continue_img = Image.open("assets/user_gui/finish.png")
+        self.continue_img = self.continue_img.resize((200, 60))
+        self.continue_img = ImageTk.PhotoImage(self.continue_img)
+        self.continue_button = Button(
+            image=self.continue_img,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.my_noti,
+            relief="flat"
+        )
+        self.continue_button.place(
+            x=500,
+            y=650,
+            width=200.0,
+            height=60.0
+        )
+
+        self.success_img = Image.open("assets/user_gui/send_success.png")
+        self.success_img = self.success_img.resize((400, 350))
+        self.success_img = ImageTk.PhotoImage(self.success_img)
+        self.canvas.create_image(
+            600.75,
+            400.0,
+            image=self.success_img)
 
     def my_noti(self):
         new_image = PhotoImage(file="assets/user_gui/button_4.png")
@@ -972,7 +1011,7 @@ class UserGUI(Tk):
         new_image = PhotoImage(file="assets/user_gui/button_5.png")
         self.pay_button.config(image=new_image)
         self.pay_button.image = new_image
-        new_image = PhotoImage(file="assets/user_gui/button_5.png")
+        new_image = PhotoImage(file="assets/user_gui/button_5_red.png")
         self.noti_button.config(image=new_image)
         self.noti_button.image = new_image
         if self.tree:
@@ -1061,6 +1100,23 @@ class UserGUI(Tk):
         720,
         fill="#FFFFFF",
         outline="#000000")
+
+        self.back_img = Image.open("assets/user_gui/back.png")
+        self.back_img = self.back_img.resize((40, 40))
+        self.back_img = ImageTk.PhotoImage(self.back_img)
+        self.back_button = Button(
+            image=self.back_img,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.my_noti,
+            relief="solid"
+        )
+        self.back_button.place(
+            x=230,
+            y=215,
+            width=40,
+            height=40
+        )
 
         self.canvas.create_text(
             630.25,
