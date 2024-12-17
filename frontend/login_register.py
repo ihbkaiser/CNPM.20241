@@ -178,6 +178,8 @@ class LoginFrame(Frame):
             image=self.button_image_2,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.refresh_captcha,
             relief="flat"
         )
@@ -195,6 +197,8 @@ class LoginFrame(Frame):
             image=self.button_image_3,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.login,
             relief="flat"
         )
@@ -211,6 +215,8 @@ class LoginFrame(Frame):
             image=self.button_image_4,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.controller.show_forget_frame,
             relief="flat"
         )
@@ -227,6 +233,8 @@ class LoginFrame(Frame):
             image=self.button_image_5,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.controller.show_register_frame,
             relief="flat"
         )
@@ -243,6 +251,8 @@ class LoginFrame(Frame):
             image=self.button_image_6,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.open_password_prompt,
             relief="flat"
         )
@@ -769,7 +779,7 @@ class ForgetFrame(Frame):
             image=self.button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            bg="#FFFFFF",
+            background="#FFFFFF",
             activebackground="#FFFFFF",
             command=self.change,
             relief="flat"
@@ -1025,7 +1035,7 @@ class RegisterFrame(Frame):
             bg="#ffffff",
             fg="#000716",
             font=("Inter", 18 * -1),
-            # show='*',
+            #show='*',
             highlightthickness=0
         )
         self.confirm_password_entry.place(
