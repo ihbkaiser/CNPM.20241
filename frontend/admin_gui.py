@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import cv2
 import pandas as pd 
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 # database ready
 
@@ -390,9 +392,11 @@ class AdminGUI(Tk):
         for entry in data_full]
         for item in data:
             self.tree.insert("", "end", values=(item["full_name"], item["apartment_code"]))
-
+        self.vsb = ttk.Scrollbar(self.root, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=self.vsb.set)
         # Place Treeview
         self.tree.place(x=220, y=141, width=792, height=579)
+        self.vsb.place(x=992, y=141, height=579)
 
         # Bind events if editable
         if editable:
@@ -465,7 +469,11 @@ class AdminGUI(Tk):
         for entry in data_full]
         for item in data:
             self.tree.insert("", "end", values=(item["full_name"], item["apartment_code"]))
-
+        self.vsb = ttk.Scrollbar(self.root, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=self.vsb.set)
+        # Place Treeview
+        self.tree.place(x=220, y=141, width=792, height=579)
+        self.vsb.place(x=992, y=141, height=579)
         # Place Treeview
         self.tree.place(x=220, y=141, width=792, height=579)
 
@@ -498,13 +506,15 @@ class AdminGUI(Tk):
         edit_window = tk.Toplevel(self.root)
         edit_window.title("Edit User")
         edit_window.geometry("1400x700")
+        edit_window.protocol("WM_DELETE_WINDOW", lambda: None)
+        edit_window.attributes("-toolwindow", True)
 
         # Use grid for the background canvas
         canvas = Canvas(edit_window, width=1400, height=700)
         canvas.grid(row=0, column=0, rowspan=10, columnspan=2, sticky="nsew")
 
         # Load and display the background image
-        bg_image = Image.open("assets/fun_time/christmas.jpg")
+        bg_image = Image.open("assets/fun_time/christmas2.png")
         bg_image = bg_image.resize((1400, 700), Image.Resampling.LANCZOS)
         bg_image_tk = ImageTk.PhotoImage(bg_image)
         canvas.create_image(0, 0, anchor="nw", image=bg_image_tk)
