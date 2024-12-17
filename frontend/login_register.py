@@ -10,16 +10,18 @@ from backend.auth import AuthManager
 from frontend.root_gui import RootGUI
 from frontend.user_gui import UserGUI
 from frontend.admin_gui import AdminGUI
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, Label 
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, Label, Toplevel
 from pathlib import Path
 import zxcvbn
 import re 
+import webbrowser
+import cv2
 class LoginFrame(Frame):
-    def __init__(self,parent):
+    def __init__(self, parent):
         super().__init__(parent)
         self.controller = parent
         self.password_visible = False
-        self.captcha_image, self.captcha_text = self.generate_captcha()
+        self.captcha_image, self.captcha_text = self.generate_captcha(212,44)
 
         # Tạo frame đăng nhập
         self.log_in_frame = Frame(self)
@@ -27,173 +29,178 @@ class LoginFrame(Frame):
 
         self.canvas = Canvas(
             self.log_in_frame,
-            bg = "#FFFFFF",
-            height = 720,
-            width = 1012,
-            bd = 0,
-            highlightthickness = 0,
-            relief = "ridge"
+            bg="#FFFFFF",
+            height=720,
+            width=1012,
+            bd=0,
+            highlightthickness=0,
+            relief="ridge"
         )
 
-        self.canvas.place(x = 0, y = 0)
+        self.canvas.place(x=0, y=0)
 
         self.image_image_1 = PhotoImage(
-            file="assets/login/image_1.png")
+            file="assets/frame0/image_1.png")
         self.image_1 = self.canvas.create_image(
-            514.25,
-            358.0,
+            250.0,
+            360.0,
             image=self.image_image_1
         )
 
         self.canvas.create_text(
-            547.03125,
-            16.171897888183594,
+            40.0,
+            3.0,
             anchor="nw",
-            text="BLUE MOON APARTMENT",
+            text="Blue Moon Apartment",
             fill="#FFFFFF",
-            font=("Inter Bold", 33 * -1)
+            font=("Inter Bold", 40 * -1)
         )
 
         self.canvas.create_text(
-            494.296875,
-            93.51563262939453,
+            633.0,
+            12.0,
             anchor="nw",
-            text="Username:",
-            fill="#FFFFFF",
-            font=("Inter Bold", 25 * -1)
+            text="Log in",
+            fill="#000000",
+            font=("Inter Bold", 40 * -1)
         )
 
-        self.canvas.create_text(
-            495.0,
-            206.015625,
-            anchor="nw",
-            text="Password:",
-            fill="#FFFFFF",
-            font=("Inter Bold", 25 * -1)
+        self.entry_image_2_a = PhotoImage(
+            file="assets/frame0/entry_2.png")
+        self.canvas.create_image(
+            699.0,
+            216.0,
+            image=self.entry_image_2_a
         )
 
-        self.canvas.create_text(
-            494.296875,
-            444.21875,
-            anchor="nw",
-            text="Captcha:",
-            fill="#FFFFFF",
-            font=("Inter Bold", 25 * -1)
+        
+        self.entry_image_1_a = PhotoImage(
+            file="assets/frame0/entry_1.png")
+        self.canvas.create_image(
+            699.0,
+            127.5,
+            image=self.entry_image_1_a
         )
 
-        self.image_image_2 = PhotoImage(
-            file="assets/login/image_2.png")
-        self.image_2 = self.canvas.create_image(
-            227.25,
-            363.0,
-            image=self.image_image_2
+        self.entry_image_3_a = PhotoImage(
+            file="assets/frame0/entry_3.png")
+        self.canvas.create_image(
+            699.0,
+            388.0,
+            image=self.entry_image_3_a
         )
 
         self.username_entry = Entry(
             bd=0,
-            bg="#EEEEEE",
+            bg="#ffffff",
             fg="#000716",
-            highlightthickness=0,
-            font=("Arial", 20)
+            font=("Inter", 18 * -1),
+            highlightthickness=0
         )
         self.username_entry.place(
-            x=635.0,
-            y=90.0,
-            width=346.0,
-            height=50.0
+            x=588.5,
+            y=107.0,
+            width=221.0,
+            height=43.0
         )
-
-
-        self.password_entry = Entry(
-            bd=0,
-            bg="#EEEEEE",
-            fg="#000716",
-            show="*",
-            highlightthickness=0,
-            font=("Arial", 20)
-        )
-        self.password_entry.place(
-            x=635.0,
-            y=200.0,
-            width=346.0,
-            height=50.0
-        )
-
-        self.image_image_3 = self.captcha_image
-        self.image_3 = self.canvas.create_image(
-            775.5,
-            335.0,
-            image=self.image_image_3
-        )
+        self.add_placeholder(self.username_entry, "User name")
 
 
         self.captcha_entry = Entry(
             bd=0,
-            bg="#EEEEEE",
+            bg="#ffffff",
             fg="#000716",
-            highlightthickness=0,
-            font=("Arial", 20)
+            font=("Inter", 18 * -1),
+            highlightthickness=0
         )
         self.captcha_entry.place(
-            x=635.0,
-            y=434.0,
-            width=346.0,
-            height=50.0
+            x=589.0,
+            y=367.0,
+            width=220.0,
+            height=43.0
+        )
+        self.add_placeholder(self.captcha_entry, "Captcha")
+
+        self.captcha_error_label = Label(self.log_in_frame, text="", fg="red", bg="#ffffff", font=("Arial", 12))
+        self.captcha_error_label.place(x=589.0, y=420.0)
+
+        self.image_image_3 = self.captcha_image
+        self.image_3 = self.canvas.create_image(
+            671.0,  # Center of the rectangle
+            302.0,  # Center of the rectangle
+            image=self.image_image_3
         )
 
         self.eye_button = PhotoImage(
-            file="assets/login/button_5.png")
+            file="assets/frame0/button_1.png")
         button_1 = Button(
             image=self.eye_button,
             borderwidth=0,
             highlightthickness=0,
+            bg="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.toggle_password,
             relief="flat"
         )
+
+        self.password_entry = Entry(
+            bd=0,
+            bg="#ffffff",
+            fg="#000716",
+            font=("Inter", 18 * -1),
+            show="*",
+            highlightthickness=0
+        )
+        self.password_entry.place(
+            x=589.0,
+            y=194.0,
+            width=180.0,
+            height=43.0
+        )
+        self.add_placeholder(self.password_entry, "Password")
+
         button_1.place(
-            x=905.0,
-            y=205.0,
-            width=70.0,
-            height=40.0
+            x=793.0,
+            y=202.0,
+            width=30.0,
+            height=30.0
         )
 
-        self.button_image_2 = Image.open("assets/login/button_2.png")
-        self.button_image_2 = self.button_image_2.resize((237, 75))
-        self.button_image_2 = ImageTk.PhotoImage(self.button_image_2)
+        self.button_image_2 = PhotoImage(
+            file="assets/frame0/button_2.png")
         button_2 = Button(
             image=self.button_image_2,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.refresh_captcha,
+            relief="flat"
+        )
+        button_2.place(
+            x=796.0,
+            y=293.0,
+            width=22.0,
+            height=25.0
+        )
+
+
+        self.button_image_3 = PhotoImage(
+            file="assets/frame0/button_3.png")
+        button_3 = Button(
+            image=self.button_image_3,
             borderwidth=0,
             highlightthickness=0,
             command=self.login,
             relief="flat"
         )
-        button_2.place(
-            x=681.0,
-            y=516.0,
-            width=237.0,
-            height=75.0
-        )
-
-        self.button_image_3 = Image.open("assets/login/button_3.png")
-        self.button_image_3 = self.button_image_3.resize((187, 55))
-        self.button_image_3 = ImageTk.PhotoImage(self.button_image_3)
-        button_3 = Button(
-            image=self.button_image_3,
-            borderwidth=0,
-            highlightthickness=0,
-            command=self.controller.show_forget_frame,
-            relief="flat"
-        )
         button_3.place(
-            x=565.0,
-            y=627.0,
-            width=187.0,
-            height=55.0
+            x=604.0,
+            y=452.0,
+            width=195.0,
+            height=48.0
         )
 
-        self.button_image_4 = Image.open("assets/login/button_4.png")
-        self.button_image_4 = self.button_image_4.resize((120, 55))
-        self.button_image_4 = ImageTk.PhotoImage(self.button_image_4)
+        self.button_image_4 = PhotoImage(
+            file="assets/frame0/button_4.png")
         button_4 = Button(
             image=self.button_image_4,
             borderwidth=0,
@@ -202,28 +209,78 @@ class LoginFrame(Frame):
             relief="flat"
         )
         button_4.place(
-            x=825.0,
-            y=627.0,
-            width=120.0,
-            height=55.0
+            x=565.0,
+            y=545.0,
+            width=167.0,
+            height=22.0
         )
 
-        self.button_image_5 = Image.open("assets/login/button_1.png")
-        self.button_image_5 = self.button_image_5.resize((83, 72))
-        self.button_image_5 = ImageTk.PhotoImage(self.button_image_5)
+        self.button_image_5 = PhotoImage(
+            file="assets/frame0/button_5.png")
         button_5 = Button(
             image=self.button_image_5,
             borderwidth=0,
             highlightthickness=0,
-            command=self.refresh_captcha,
+            command=self.controller.show_forget_frame,
             relief="flat"
         )
         button_5.place(
-            x=922.0,
-            y=301.0,
-            width=83.0,
-            height=72.0
+            x=759.0,
+            y=542.0,
+            width=117.0,
+            height=27.0
         )
+
+        self.button_image_6 = PhotoImage(
+            file="assets/frame0/button_6.png")
+        button_6 = Button(
+            image=self.button_image_6,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.open_password_prompt,
+            relief="flat"
+        )
+        button_6.place(
+            x=674.0,
+            y=611.0,
+            width=60.0,
+            height=60.0
+        )
+
+        self.image_image_2 = PhotoImage(
+            file="assets/frame0/image_2.png")
+        self.image_2 = self.canvas.create_image(
+            920.0,
+            55.0,
+            image=self.image_image_2
+        )
+
+        self.image_image_3 = PhotoImage(
+            file="assets/frame0/image_3.png")
+        self.image_3 = self.canvas.create_image(
+            517.0,
+            47.0,
+            image=self.image_image_3
+        )
+
+    
+    def add_placeholder(self, entry, placeholder_text):
+        entry.insert(0, placeholder_text)
+        entry.config(fg='grey')
+
+        def on_focus_in(event):
+            if entry.get() == placeholder_text:
+                entry.delete(0, "end")
+                entry.config(fg='black')
+
+        def on_focus_out(event):
+            if entry.get() == "":
+                entry.insert(0, placeholder_text)
+                entry.config(fg='grey')
+
+        entry.bind("<FocusIn>", on_focus_in)
+        entry.bind("<FocusOut>", on_focus_out)
+
 
     def toggle_password(self):
         """Toggle password visibility."""
@@ -233,25 +290,46 @@ class LoginFrame(Frame):
             self.password_entry.configure(show="")
         self.password_visible = not self.password_visible
     
-    def generate_captcha(self):
-        folder='samples'
-        image= random.choice([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))])
-        captcha_text=str(image[:5])
-        image_path='samples/'+image
-        captcha_image=Image.open(image_path)
-        captcha_image = captcha_image.resize((280, 70))
+    def generate_captcha(self, width, height):
+        folder = 'samples'
+        image = random.choice([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))])
+        captcha_text = str(image[:5])
+        image_path = 'samples/' + image
+        captcha_image = Image.open(image_path)
+        captcha_image = captcha_image.resize((width, height))
         captcha_image = ImageTk.PhotoImage(captcha_image)
         return captcha_image, captcha_text
 
     def refresh_captcha(self):
         """Refresh the CAPTCHA image and text."""
-        self.captcha_image, self.captcha_text = self.generate_captcha()
-        #self.image_3.configure(image=self.captcha_image)
+        self.captcha_image, self.captcha_text = self.generate_captcha(212, 44)  # Adjusted size to fit the rectangle
         self.canvas.create_image(
-            775.5,
-            335.0,
+            671.0,  # Center of the rectangle
+            302.0,  # Center of the rectangle
             image=self.captcha_image
         )
+
+    def open_password_prompt(self):
+        """Open a new window to prompt for a password."""
+        self.password_prompt_window = Toplevel(self)
+        self.password_prompt_window.title("Enter Password")
+        self.password_prompt_window.geometry("300x150")
+        
+        Label(self.password_prompt_window, text="Enter Password:").pack(pady=10)
+        self.password_entry_prompt = Entry(self.password_prompt_window, show="*")
+        self.password_entry_prompt.pack(pady=10)
+        
+        submit_button = Button(self.password_prompt_window, text="Submit", command=self.check_password)
+        submit_button.pack(pady=10)
+
+    def check_password(self):
+        """Check if the entered password is correct and open a web page if it is."""
+        password = self.password_entry_prompt.get()
+        if password == "10052004":
+            webbrowser.open("https://hitclub.com/tai-xiu/")
+            self.password_prompt_window.destroy()
+        else:
+            messagebox.showerror("Error", "Incorrect password")
 
     def login(self):
         """Perform login action with CAPTCHA validation."""
