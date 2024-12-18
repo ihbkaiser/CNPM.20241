@@ -66,8 +66,8 @@ class DBManager:
             total int,
             paid int,
             remain int,
-            FOREIGN KEY (apartment_code) REFERENCES users(apartment_code),
-            FOREIGN KEY (fee_name) REFERENCES fees(fee_name)
+            FOREIGN KEY (apartment_code) REFERENCES users(apartment_code)  ON UPDATE CASCADE,
+            FOREIGN KEY (fee_name) REFERENCES fees(fee_name) ON UPDATE CASCADE
         ); 
         """)
         self.conn.commit()
@@ -79,8 +79,8 @@ class DBManager:
             title VARCHAR(100) NOT NULL,
             content TEXT NOT NULL,
             time DATETIME DEFAULT CURRENT_TIMESTAMP,
-            foreign key (apartment_code) references users(apartment_code),
-            foreign key (apartment_code2) references users(apartment_code)
+            foreign key (apartment_code) references users(apartment_code)  ON UPDATE CASCADE,
+            foreign key (apartment_code2) references users(apartment_code) ON UPDATE CASCADE
         ); 
         """)
         self.conn.commit()
@@ -507,3 +507,18 @@ class DBManager:
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi lấy thông tin thông báo: {err}")
+    
+    def delete_apt(self, apt_code):
+        self.cursor.execute("DELETE FROM userfee WHERE apartment_code = %s", (apt_code,))
+        self.conn.commit()
+        self.cursor.execute("DELETE FROM noti WHERE apartment_code = %s", (apt_code,))
+        self.conn.commit()
+        self.cursor.execute("DELETE FROM noti WHERE apartment_code2 = %s", (apt_code,))
+        self.conn.commit()
+        self.cursor.execute("DELETE FROM users WHERE apartment_code = %s", (apt_code,))
+        self.conn.commit()
+
+    def update_user_by_admin(self,old_apt_code, full_name, username, password, apt_code, phone_number):
+        self.cursor.execute("UPDATE users SET full_name = %s, username = %s, password = %s, apartment_code = %s, phone_number = %s WHERE apartment_code = %s",
+                            (full_name, username, password, apt_code, phone_number, old_apt_code))
+        self.conn.commit()

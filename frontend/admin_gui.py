@@ -520,79 +520,384 @@ class AdminGUI(Tk):
                 user_details = item
                 break
         assert user_details is not None, f"User details not found for full_name {values[0]} - apt {values[1]}"
-        old_username = user_details['username']
+        old_apt_code = user_details['apartment_code']
+        self.hide_buttons_in_region(190, 79.32812, 1012, 720)
+        if self.tree:
+            self.tree.place_forget()
 
-        # Create a top-level window for editing
-        edit_window = tk.Toplevel(self.root)
-        edit_window.title("Edit User")
-        edit_window.geometry("1400x700")
-        edit_window.protocol("WM_DELETE_WINDOW", lambda: None)
-        edit_window.attributes("-toolwindow", True)
+        self.canvas.create_rectangle(
+        220,
+        141.32812,
+        1012.5,
+        720,
+        fill="#FFFFFF",
+        outline="#000000")
 
-        # Use grid for the background canvas
-        canvas = Canvas(edit_window, width=1400, height=700)
-        canvas.grid(row=0, column=0, rowspan=10, columnspan=2, sticky="nsew")
-
-        # Load and display the background image
-        bg_image = Image.open("assets/fun_time/christmas2.png")
-        bg_image = bg_image.resize((1400, 700), Image.Resampling.LANCZOS)
-        bg_image_tk = ImageTk.PhotoImage(bg_image)
-        canvas.create_image(0, 0, anchor="nw", image=bg_image_tk)
-
-        font_large = ("Arial", 16)
-        labels = ["Full Name", "Username", "Password", "Role", apt_high, "Email", "Phone Number"]
-        label_lower = ['full_name', 'username', 'password', 'account_type', 'apartment_code', 'email', 'phone_number']
-        entries = {}
-
-        # Add labels and entries on top of the canvas
-        for idx, label in enumerate(labels):
-            tk.Label(edit_window, text=label + ":", font=font_large, bg='pink', fg='black').grid(
-                row=idx + 1, column=0, padx=(20, 10), pady=5, sticky="e"
-            )
-            entry = tk.Entry(edit_window, width=25, font=font_large, bg="lightgreen", fg="black", relief="flat")
-            entry_element = user_details.get(label_lower[idx], "")
-            entry.insert(0, entry_element)
-            entries[label] = entry
-            entry.grid(row=idx + 1, column=1, padx=(10, 20), pady=5, sticky="w")
-
-        def save_changes():
-            new_values = {label: entries[label].get() for label in labels}
-            for label in labels:
-                if new_values[label] == "":
-                    new_values[label] = None
-            self.db_manager.update_user(
-                old_username, new_values["Password"], new_values["Role"],
-                new_values["Full Name"], new_values["Phone Number"],
-                new_values[apt_high], new_values["Email"]
-            )
-            self.tree.item(selected_item, values=(new_values["Full Name"], new_values[apt_high]))
-            pygame.mixer.music.stop() 
-            edit_window.destroy()
-        def cancel_changes():
-            pygame.mixer.music.stop()  # Stop the music
-            edit_window.destroy()
-        def delete_record():
-            confirmation = tk.messagebox.askyesno("Delete Record", "Are you sure you want to delete this record?")
-            if confirmation:
-                self.db_manager.delete_user(old_username)  
-                self.tree.delete(selected_item)
-                pygame.mixer.music.stop()
-                edit_window.destroy()
-
-        # Add Save and Cancel buttons
-        tk.Button(edit_window, text="Save", command=save_changes, width=12, bg="lightgreen", font=("Arial", 12)).grid(
-            row=len(labels) + 2, column=0, padx=5
+        self.image_img = Image.open("assets/edit_user/image_1.png")
+        self.image_img = self.image_img.resize((792, 579))
+        self.image_img = ImageTk.PhotoImage(self.image_img)
+        self.image_1 = self.canvas.create_image(
+            220,
+            141.32812,
+            anchor="nw",
+            image=self.image_img
         )
-        tk.Button(edit_window, text="Delete", command=delete_record, width=12, bg="lightgreen", font=("Arial", 12)).grid(
-            row=len(labels) + 3, column=0, padx=5
-        )
-        tk.Button(edit_window, text="Cancel", command=cancel_changes, width=12, bg="lightgreen", font=("Arial", 12)).grid(
-            row=len(labels) + 2, column=1, padx=5
+        self.canvas.create_rectangle(
+            220 - 1, 141.32812 - 1, 220 + 792 + 1, 141.32812 + 579 + 1,  # Adjust the coordinates to fit the border
+            outline="#000000",  # Border color
+            width=2  # Border width
         )
 
-        # Keep a reference to the background image
-        edit_window.bg_image_tk = bg_image_tk
+        self.canvas.create_text(
+            558.0,
+            160.0,
+            anchor="nw",
+            text="Edit information",
+            fill="#000000",
+            font=("Inter Bold", 30 * -1)
+        )
 
+        self.canvas.create_text(
+            330,
+            240,
+            anchor="nw",
+            text="Full Name:",
+            fill="#000000",
+            font=("Inter", 24 * -1)
+        )
+
+        self.entry_image_1 = PhotoImage(
+            file="assets/edit_user/entry_1.png")
+        self.entry_bg_1 = self.canvas.create_image(
+            626.5+30+50,
+            220.0+30,
+            image=self.entry_image_1
+        )
+        self.entry_1 = Entry(
+            bd=0,
+            bg="#FFFFFF",
+            fg="#000716",
+            font=("Inter", 24 * -1),
+            highlightthickness=0
+        )
+        self.entry_1.place(
+            x=485.0+30+50,
+            y=203.0+30,
+            width=283.0,
+            height=34.0
+        )
+
+        self.canvas.create_text(
+            330,
+            310,
+            anchor="nw",
+            text="User Name:",
+            fill="#000000",
+            font=("Inter", 24 * -1)
+        )
+
+        self.entry_image_2 = PhotoImage(
+            file="assets/edit_user/entry_1.png")
+        self.entry_bg_2 = self.canvas.create_image(
+            626.5+30+50,
+            290.0+30,
+            image=self.entry_image_2
+        )
+        self.entry_2 = Entry(
+            bd=0,
+            bg="#FFFFFF",
+            fg="#000716",
+            font=("Inter", 24 * -1),
+            highlightthickness=0
+        )
+        self.entry_2.place(
+            x=485.0+30+50,
+            y=273.0+30,
+            width=283.0,
+            height=34.0
+        )
+
+        self.canvas.create_text(
+            330,
+            380,
+            anchor="nw",
+            text="Password:",
+            fill="#000000",
+            font=("Inter", 24 * -1)
+        )
+
+        self.entry_image_3 = PhotoImage(
+            file="assets/edit_user/entry_1.png")
+        self.entry_bg_3 = self.canvas.create_image(
+            626.5+30+50,
+            360.0+30,
+            image=self.entry_image_3
+        )
+        self.entry_3 = Entry(
+            bd=0,
+            bg="#FFFFFF",
+            fg="#000716",
+            font=("Inter", 24 * -1),
+            highlightthickness=0
+        )
+        self.entry_3.place(
+            x=485.0+30+50,
+            y=343.0+30,
+            width=283.0,
+            height=34.0
+        )
+
+        self.canvas.create_text(
+            330,
+            450,
+            anchor="nw",
+            text=apt_high + ":",
+            fill="#000000",
+            font=("Inter", 24 * -1)
+        )
+
+        self.entry_image_4 = PhotoImage(
+            file="assets/edit_user/entry_1.png")
+        self.entry_bg_4 = self.canvas.create_image(
+            626.5+30+50,
+            430.0+30,
+            image=self.entry_image_4
+        )
+        self.entry_4 = Entry(
+            bd=0,
+            bg="#FFFFFF",
+            fg="#000716",
+            font=("Inter", 24 * -1),
+            highlightthickness=0
+        )
+        self.entry_4.place(
+            x=485.0+30+50,
+            y=413.0+30,
+            width=283.0,
+            height=34.0
+        )
+
+        self.canvas.create_text(
+            330,
+            520,
+            anchor="nw",
+            text="Phone Number:",
+            fill="#000000",
+            font=("Inter", 24 * -1)
+        )
+
+        self.entry_image_5 = PhotoImage(
+            file="assets/edit_user/entry_1.png")
+        self.entry_bg_5 = self.canvas.create_image(
+            626.5+30+50,
+            500.0+30,
+            image=self.entry_image_5
+        )
+        self.entry_5 = Entry(
+            bd=0,
+            bg="#FFFFFF",
+            fg="#000716",
+            font=("Inter", 24 * -1),
+            highlightthickness=0
+        )
+        self.entry_5.place(
+            x=485.0+30+50,
+            y=483.0+30,
+            width=283.0,
+            height=34.0
+        )
+
+        self.entry_1.insert(0, user_details['full_name'])
+        self.entry_2.insert(0, user_details['username'])
+        self.entry_3.insert(0, user_details['password'])
+        self.entry_4.insert(0, user_details['apartment_code'])
+        self.entry_5.insert(0, user_details['phone_number'])
+
+        def cancel_edit():
+            pygame.mixer.music.stop()
+            self.view_user()
+
+        def delete_user():
+            self.db_manager.delete_apt(old_apt_code)
+            self.tree.delete(selected_item)
+            pygame.mixer.music.stop()
+            self.view_user()
+        
+        def save_edit():
+            self.canvas.create_rectangle(
+                500,
+                600,
+                1000,
+                630,
+                fill="#E1F3FD",
+                outline="")
+            full_name = self.entry_1.get()
+            username = self.entry_2.get()
+            password = self.entry_3.get()
+            apt_code = self.entry_4.get()
+            phone_number = self.entry_5.get()
+            if not full_name or not username or not password or not apt_code or not phone_number:
+                self.canvas.create_text(
+                    500,
+                    600,
+                    anchor="nw",
+                    text="Please fill in all fields",
+                    fill="red",
+                    font=("Inter", 20 * -1)
+                )
+                return
+            if self.db_manager.get_user_by_apartment_code(apt_code):
+                self.canvas.create_text(
+                    500,
+                    600,
+                    anchor="nw",
+                    text="Apartment code already exists",
+                    fill="red",
+                    font=("Inter", 20 * -1)
+                )
+                return
+            self.db_manager.update_user_by_admin(old_apt_code, full_name, username, password, apt_code, phone_number)
+            pygame.mixer.music.stop()
+            self.view_user()
+
+        self.button_image_1 = PhotoImage(
+            file="assets/edit_user/button_1.png")
+        self.button_1 = Button(
+            image=self.button_image_1,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#E1F3FD",
+            activebackground="#E1F3FD",
+            command=save_edit, 
+            relief="flat"
+        )
+        self.button_1.place(
+            x=270.0,
+            y=650.0,
+            width=176.0,
+            height=38.232208251953125
+        )
+
+        self.button_image_2 = PhotoImage(
+            file="assets/edit_user/button_3.png")
+        self.button_2 = Button(
+            image=self.button_image_2, 
+            borderwidth=0,
+            highlightthickness=0,
+            background="#E1F3FD",
+            activebackground="#E1F3FD",
+            command=cancel_edit,
+            relief="flat"
+        )
+        self.button_2.place(
+            x=520.0,
+            y=650.0,
+            width=176.0,
+            height=38.232208251953125
+        )
+
+        self.button_image_3 = PhotoImage(
+            file="assets/edit_user/button_2.png")
+        self.button_3 = Button(
+            image=self.button_image_3,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#E1F3FD",
+            activebackground="#E1F3FD",
+            command=delete_user,
+            relief="flat"
+        )
+        self.button_3.place(
+            x=770.0,
+            y=650.0,
+            width=176.0,
+            height=38.232208251953125
+        )
+
+        self.edit_img_2 = PhotoImage(
+            file="assets/edit_user/image_2.png")
+        self.edit_image_2 = self.canvas.create_image(
+            309.0,
+            255.0,
+            image=self.edit_img_2
+        )
+
+        self.edit_img_3 = PhotoImage(
+            file="assets/edit_user/image_3.png")
+        self.edit_image_3 = self.canvas.create_image(
+            309.0,
+            322.0,
+            image=self.edit_img_3
+        )
+
+        self.edit_img_4 = PhotoImage(
+            file="assets/edit_user/image_4.png")
+        self.edit_image_4 = self.canvas.create_image(
+            309.0,
+            391.0,
+            image=self.edit_img_4
+        )
+
+        self.edit_img_6 = PhotoImage(
+            file="assets/edit_user/image_6.png")
+        self.edit_image_6 = self.canvas.create_image(
+            308.0,
+            466.0,
+            image=self.edit_img_6
+        )
+
+        self.edit_img_7 = PhotoImage(
+            file="assets/edit_user/image_7.png")
+        self.edit_image_7 = self.canvas.create_image(
+            311.0,
+            532.0,
+            image=self.edit_img_7
+        )
+
+        self.image_image_8 = PhotoImage(
+            file="assets/edit_user/image_8.png")
+        self.image_8 = self.canvas.create_image(
+            535.0,
+            175.0,
+            image=self.image_image_8
+        )
+
+        self.image_image_9 = PhotoImage(
+            file="assets/edit_user/image_9.png") 
+        self.image_9 = self.canvas.create_image(
+            790.0,
+            175.0,
+            image=self.image_image_9
+        )
+
+        self.image_image_10 = PhotoImage(
+            file="assets/edit_user/image_10.png")
+        self.image_10 = self.canvas.create_image(
+            980.0,
+            180.0,
+            image=self.image_image_10
+        )
+
+        self.image_image_11 = PhotoImage(
+            file="assets/edit_user/image_11.png")
+        self.image_11 = self.canvas.create_image(
+            250.0,
+            680.0,
+            image=self.image_image_11
+        )
+
+        self.image_image_12 = PhotoImage(
+            file="assets/edit_user/image_12.png")
+        self.image_12 = self.canvas.create_image(
+            255.0,
+            180.0,
+            image=self.image_image_12
+        )
+
+
+
+
+                        
 
     def edit_fee(self):
         self.hide_buttons_in_region(190, 79.32812, 1012, 720)
