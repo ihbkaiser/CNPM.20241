@@ -296,7 +296,6 @@ class AdminGUI(Tk):
         self.show_home()
 
     def show_home(self):
-        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
         new_image = PhotoImage(file="assets/admin_gui/button_1_red.png")
         self.home_button.config(image=new_image)
         self.home_button.image = new_image
@@ -320,7 +319,13 @@ class AdminGUI(Tk):
         self.statistic_button.image = new_image
         if self.tree:
             self.tree.place_forget()
-        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
+        self.hide_buttons_in_region(190, 79.32812, 1012, 720)
+
+        self.canvas.create_rectangle(
+            220, 141.32812, 1012.5, 720,
+            fill="#FFFFFF", outline="#000000"
+        )
+
 
         self.canvas.create_text(
             424.25,
@@ -339,8 +344,8 @@ class AdminGUI(Tk):
         )
 
         
-    def view_admin(self, editable=True):
-        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
+    def view_admin(self, editable=False):
+        self.hide_buttons_in_region(190, 79.32812, 1012, 720)
         new_image = PhotoImage(file="assets/admin_gui/button_1.png")
         self.home_button.config(image=new_image)
         self.home_button.image = new_image
@@ -362,14 +367,17 @@ class AdminGUI(Tk):
         new_image = PhotoImage(file="assets/admin_gui/button_7.png")
         self.statistic_button.config(image=new_image)
         self.statistic_button.image = new_image
-        if hasattr(self, 'tree') and self.tree:
+        if self.tree:
             self.tree.place_forget()
 
         # Draw background rectangle for the Treeview
         self.canvas.create_rectangle(
-            220, 141.32812, 1012.5, 720,
-            fill="#FFFFFF", outline="#000000"
-        )
+        220,
+        141.32812,
+        1012.5,
+        720,
+        fill="#FFFFFF",
+        outline="#000000")
 
         # Set up Treeview style
         style = ttk.Style()
@@ -421,7 +429,7 @@ class AdminGUI(Tk):
 
     def view_user(self, editable=True):
         # Hide buttons in the specified region
-        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
+        self.hide_buttons_in_region(190, 79.32812, 1012, 720)
 
         # Update button images
         button_images = [
@@ -497,11 +505,6 @@ class AdminGUI(Tk):
         # Bind events if editable
         if editable:
             self.tree.bind("<Double-1>", lambda event: self.edit_double_click(event, 'user'))
-
-
-
-    from tkinter import Canvas
-
 
     def edit_double_click(self, event, type):
         apt_high = "Apartment Code" if type == "user" else "Officer Code"
@@ -592,7 +595,7 @@ class AdminGUI(Tk):
 
 
     def edit_fee(self):
-        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
+        self.hide_buttons_in_region(190, 79.32812, 1012, 720)
         new_image = PhotoImage(file="assets/admin_gui/button_1.png")
         self.home_button.config(image=new_image)
         self.home_button.image = new_image
@@ -626,7 +629,7 @@ class AdminGUI(Tk):
         outline="#000000")
 
     def pay(self):
-        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
+        self.hide_buttons_in_region(190, 79.32812, 1012, 720)
         new_image = PhotoImage(file="assets/admin_gui/button_1.png")
         self.home_button.config(image=new_image)
         self.home_button.image = new_image
@@ -1517,7 +1520,7 @@ class AdminGUI(Tk):
                 widget.place_forget()
 
         for widget in self.root.winfo_children():
-            if isinstance(widget, (tk.Button, tk.Entry, tk.Text)):
+            if isinstance(widget, (tk.Button, tk.Entry, tk.Text,ttk.Scrollbar)):
                 hide_widget(widget)
             elif isinstance(widget, tk.Canvas):
                 for canvas_widget in widget.winfo_children():
@@ -1922,7 +1925,7 @@ class AdminGUI(Tk):
         )
 
         self.send_noti_img = Image.open("assets/user_gui/send_white.png")
-        self.send_noti_img = self.send_noti_img.resize((397, 60))
+        self.send_noti_img = self.send_noti_img.resize((396, 60))
         self.send_noti_img = ImageTk.PhotoImage(self.send_noti_img)
         self.send_noti_button = Button(
             image=self.send_noti_img,
@@ -1934,7 +1937,7 @@ class AdminGUI(Tk):
         self.send_noti_button.place(
             x=616.5,
             y=141.32812,
-            width=396.5,
+            width=395,
             height=60
         )
 

@@ -203,7 +203,7 @@ class UserGUI(Tk):
         )
 
         self.noti_img = PhotoImage(
-            file="assets/user_gui/button_5.png")
+            file="assets/user_gui/button_3.png")
         self.noti_button= Button(
             image=self.noti_img,
             borderwidth=0,
@@ -255,7 +255,7 @@ class UserGUI(Tk):
         new_image = PhotoImage(file="assets/user_gui/button_5.png")
         self.pay_button.config(image=new_image)
         self.pay_button.image = new_image
-        new_image = PhotoImage(file="assets/user_gui/button_5.png")
+        new_image = PhotoImage(file="assets/user_gui/button_3.png")
         self.noti_button.config(image=new_image)
         self.noti_button.image = new_image
         if self.tree:
@@ -654,7 +654,7 @@ class UserGUI(Tk):
         new_image = PhotoImage(file="assets/user_gui/button_5.png")
         self.pay_button.config(image=new_image)
         self.pay_button.image = new_image
-        new_image = PhotoImage(file="assets/user_gui/button_5.png")
+        new_image = PhotoImage(file="assets/user_gui/button_3.png")
         self.noti_button.config(image=new_image)
         self.noti_button.image = new_image
         if self.tree:
@@ -723,7 +723,7 @@ class UserGUI(Tk):
         new_image = PhotoImage(file="assets/user_gui/button_5_red.png")
         self.pay_button.config(image=new_image)
         self.pay_button.image = new_image
-        new_image = PhotoImage(file="assets/user_gui/button_5.png")
+        new_image = PhotoImage(file="assets/user_gui/button_3.png")
         self.noti_button.config(image=new_image)
         self.noti_button.image = new_image
         if self.tree:
@@ -1129,7 +1129,7 @@ class UserGUI(Tk):
         new_image = PhotoImage(file="assets/user_gui/button_5.png")
         self.pay_button.config(image=new_image)
         self.pay_button.image = new_image
-        new_image = PhotoImage(file="assets/user_gui/button_5_red.png")
+        new_image = PhotoImage(file="assets/user_gui/button_3_red.png")
         self.noti_button.config(image=new_image)
         self.noti_button.image = new_image
         if self.tree:
@@ -1394,7 +1394,7 @@ class UserGUI(Tk):
         new_image = PhotoImage(file="assets/user_gui/button_5.png")
         self.pay_button.config(image=new_image)
         self.pay_button.image = new_image
-        new_image = PhotoImage(file="assets/user_gui/button_5_red.png")
+        new_image = PhotoImage(file="assets/user_gui/button_3_red.png")
         self.noti_button.config(image=new_image)
         self.noti_button.image = new_image
         if self.tree:
