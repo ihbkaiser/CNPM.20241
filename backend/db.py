@@ -461,7 +461,9 @@ class DBManager:
         """Lấy thông tin userfee theo mã căn hộ."""
         try:
             self.cursor.execute("""
-            SELECT * FROM userfee WHERE apartment_code = %s
+            SELECT userfee.fee_name,userfee.total,userfee.paid,userfee.remain,deadline FROM userfee 
+            JOIN fees ON userfee.fee_name = fees.fee_name
+            WHERE apartment_code = %s
             """, (apartment_code,))
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
@@ -499,7 +501,7 @@ class DBManager:
         try:
             self.cursor.execute("""
             SELECT full_name, title, content,time FROM noti 
-            JOIN users ON users.apartment_code= noti.apartment_code WHERE apartment_code2 = %s
+            JOIN users ON users.apartment_code= noti.apartment_code WHERE apartment_code2 = %s or apartment_code = %s
             order by time desc
             """, (apt_code,))
             return self.cursor.fetchall()
