@@ -234,7 +234,7 @@ class UserGUI(Tk):
         )
         self.log_out_button.place(
             x=18.281219482421875,
-            y=411.796875,
+            y=401.796875,
             width=170.859375,
             height=42.890625
             
@@ -267,24 +267,382 @@ class UserGUI(Tk):
             1012.5,
             720,
             fill="#FFFFFF",
-
             outline="#000000")
+        
+        self.image_img = Image.open("assets/profile/image_1.png")
+        self.image_img = self.image_img.resize((817, 589))
+        self.image_img = ImageTk.PhotoImage(self.image_img)
+        self.image_1 = self.canvas.create_image(
+            613.25,
+            432.5,
+            image=self.image_img
+        )
+        self.canvas.create_text(
+            576.25,
+            180.0,
+            anchor="nw",
+            text="User information",
+            fill="#000000",
+            font=("Inter Black", 30 * -1)
+        )
 
         self.canvas.create_text(
-            424.25,
-            147.0,
+            207.25,
+            103.0,
             anchor="nw",
-            text="This is just an example.  \nAbsolutely don’t deploy!",
-            fill="#2E0DEB",
-            font=("Inter", 32 * -1)
+            text="Profile",
+            fill="#000000",
+            font=("Inter Bold", 33 * -1)
         )
-        self.sample_img = PhotoImage(
-            file="assets/admin_gui/image_3.png")
-        self.sample_image_element = self.canvas.create_image(
-            609.25,
-            451.0,
-            image=self.sample_img
+
+        self.image_image_2 = PhotoImage(
+            file="assets/profile/image_2.png")
+        self.image_2 = self.canvas.create_image(
+            98.25,
+            33.0,
+            image=self.image_image_2
         )
+
+        self.image_image_4 = PhotoImage(
+            file="assets/profile/image_4.png")
+        self.image_4 = self.canvas.create_image(
+            98.25,
+            580.0,
+            image=self.image_image_4
+        )
+
+        self.image_image_5 = PhotoImage(
+            file="assets/profile/image_5.png")
+        self.image_5 = self.canvas.create_image(
+            495.25,
+            18.0,
+            image=self.image_image_5
+        )
+
+        self.image_image_6 = PhotoImage(
+            file="assets/profile/image_6.png")
+        self.image_6 = self.canvas.create_image(
+            667.25,
+            231.0,
+            image=self.image_image_6
+        )
+
+        self.image_image_7 = PhotoImage(
+            file="assets/profile/image_7.png")
+        self.image_7 = self.canvas.create_image(
+            939.25,
+            595.0,
+            image=self.image_image_7
+        )
+
+        self.image_image_8 = PhotoImage(
+            file="assets/profile/image_8.png")
+        self.image_8 = self.canvas.create_image(
+            373.25,
+            74.0,
+            image=self.image_image_8
+        )
+
+        self.image_image_9 = PhotoImage(
+            file="assets/profile/image_9.png")
+        self.image_9 = self.canvas.create_image(
+            607.25,
+            55.0,
+            image=self.image_image_9
+        )
+
+        self.image_image_10 = PhotoImage(
+            file="assets/profile/image_10.png")
+        self.image_10 = self.canvas.create_image(
+            431.25,
+            183.0,
+            image=self.image_image_10
+        )
+
+        self.image_image_11 = PhotoImage(
+            file="assets/profile/image_11.png")
+        self.image_11 = self.canvas.create_image(
+            415.25,
+            490.0,
+            image=self.image_image_11
+        )
+
+        self.image_image_12 = PhotoImage(
+            file="assets/profile/image_12.png")
+        self.image_12 = self.canvas.create_image(
+            811.25,
+            443.0,
+            image=self.image_image_12
+        )
+
+        self.image_image_13 = PhotoImage(
+            file="assets/profile/image_13.png")
+        self.image_13 = self.canvas.create_image(
+            760.25,
+            666.0,
+            image=self.image_image_13
+        )
+
+        self.image_image_14 = PhotoImage(
+            file="assets/profile/image_14.png")
+        self.image_14 = self.canvas.create_image(
+            276.25,
+            354.0,
+            image=self.image_image_14
+        )
+
+        self.image_image_15 = PhotoImage(
+            file="assets/profile/image_15.png")
+        self.image_15 = self.canvas.create_image(
+            932.25,
+            319.0,
+            image=self.image_image_15
+        )
+
+        self.image_image_16 = PhotoImage(
+            file="assets/profile/image_16.png")
+        self.image_16 = self.canvas.create_image(
+            330.25,
+            610.0,
+            image=self.image_image_16
+        )
+
+        self.image_image_17 = PhotoImage(
+            file="assets/profile/image_17.png")
+        self.image_17 = self.canvas.create_image(
+            639.25,
+            134.0,
+            image=self.image_image_17
+        )
+
+        self.image_image_18 = PhotoImage(
+            file="assets/profile/image_18.png")
+        self.image_18 = self.canvas.create_image(
+            103.25,
+            235.0,
+            image=self.image_image_18
+        )
+
+        self.image_image_19 = PhotoImage(
+            file="assets/profile/image_19.png")
+        self.image_19 = self.canvas.create_image(
+            180.25,
+            473.0,
+            image=self.image_image_19
+        )
+
+        self.image_image_20 = PhotoImage(
+            file="assets/profile/image_20.png")
+        self.image_20 = self.canvas.create_image(
+            36.25,
+            447.0,
+            image=self.image_image_20
+        )
+
+        self.canvas.create_oval(
+            229.25,
+            214.0,
+            363.25,
+            348.0,
+            fill="blue",
+            outline="")
+
+        self.image_image_21 = PhotoImage(
+            file="assets/profile/image_21.png")
+        self.image_21 = self.canvas.create_image(
+            66.25,
+            89.0,
+            image=self.image_image_21
+        )
+
+        self.image_image_22 = PhotoImage(
+            file="assets/profile/image_22.png")
+        self.image_22 = self.canvas.create_image(
+            822.25,
+            199.0,
+            image=self.image_image_22
+        )
+
+        self.image_image_23 = PhotoImage(
+            file="assets/profile/image_23.png")
+        self.image_23 = self.canvas.create_image(
+            544.25,
+            198.0,
+            image=self.image_image_23
+        )
+        self.canvas.create_text(
+            409.25,
+            232.0,
+            anchor="nw",
+            text="Full Name:",
+            fill="#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.image_image_24 = PhotoImage(
+            file="assets/profile/image_24.png")
+        self.image_24 = self.canvas.create_image(
+            391.25,
+            245.0,
+            image=self.image_image_24
+        )
+
+        self.canvas.create_text(
+            682.25,
+            295.0,
+            anchor="nw",
+            text="Date of birth:",
+            fill="#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.canvas.create_text(
+            406.25,
+            356.0,
+            anchor="nw",
+            text="Phone Number:",
+            fill="#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+
+        self.canvas.create_text(
+            405.25,
+            293.0,
+            anchor="nw",
+            text="Gender:",
+            fill="#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.image_image_25 = PhotoImage(
+            file="assets/profile/image_25.png")
+        self.image_25 = self.canvas.create_image(
+            388.25,
+            307.0,
+            image=self.image_image_25
+        )
+
+        self.image_image_26 = PhotoImage(
+            file="assets/profile/image_26.png")
+        self.image_26 = self.canvas.create_image(
+            664.25,
+            309.0,
+            image=self.image_image_26
+        )
+        self.image_image_27 = PhotoImage(
+            file="assets/profile/image_27.png")
+        self.image_27 = self.canvas.create_image(
+            388.25,
+            368.0,
+            image=self.image_image_27
+        )
+
+        self.canvas.create_text(
+            406.25,
+            417.0,
+            anchor="nw",
+            text=" Apartment Code:",
+            fill="#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.image_image_28 = PhotoImage(
+            file="assets/profile/image_28.png")
+        self.image_28 = self.canvas.create_image(
+            391.25,
+            430.0,
+            image=self.image_image_28
+        )
+
+        self.canvas.create_text(
+            406.25,
+            478.0,
+            anchor="nw",
+            text="Hometown:",
+            fill="#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.image_image_29 = PhotoImage(
+            file="assets/profile/image_29.png")
+        self.image_29 = self.canvas.create_image(
+            388.25,
+            493.0,
+            image=self.image_image_29
+        )
+
+        self.canvas.create_text(
+            406.25,
+            540.0,
+            anchor="nw",
+            text="ID Card:",
+            fill="#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.image_image_30 = PhotoImage(
+            file="assets/profile/image_30.png")
+        self.image_30 = self.canvas.create_image(
+            388.25,
+            555.0,
+            image=self.image_image_30
+        )
+
+        self.button_image_5 = PhotoImage(
+            file="assets/profile/button_5.png")
+        self.button_5 = Button(
+            image=self.button_image_5,
+            borderwidth=0,
+            highlightthickness=0,
+            bg="#ffffff",
+            activebackground="#ffffff",
+            command=lambda: print("button_5 clicked"),
+            relief="flat"
+        )
+        self.button_5.place(
+            x=376.25,
+            y=616.0,
+            width=176.0,
+            height=38.232208251953125
+        )
+
+        self.button_image_6 = PhotoImage(
+            file="assets/profile/button_6.png")
+        self.button_6 = Button(
+            image=self.button_image_6,
+            borderwidth=0,
+            highlightthickness=0,
+            bg="#ffffff",
+            activebackground="#ffffff",
+            command=lambda: print("button_6 clicked"),
+            relief="flat"
+        )
+        self.button_6.place(
+            x=612.25,
+            y=616.0,
+            width=267.0,
+            height=38.22999954223633
+        )
+
+        self.image_image_31 = PhotoImage(
+            file="assets/profile/image_31.png")
+        self.image_31 = self.canvas.create_image(
+            855.25,
+            524.0,
+            image=self.image_image_31
+        )
+
+        self.image_image_32 = PhotoImage(
+            file="assets/profile/image_32.png")
+        self.image_32 = self.canvas.create_image(
+            306.25,
+            202.0,
+            image=self.image_image_32
+        )
+
+
+        
         
     def view_fee(self):
         new_image = PhotoImage(file="assets/user_gui/button_4.png")

@@ -51,9 +51,10 @@ class DBManager:
         CREATE TABLE IF NOT EXISTS fees (
             fee_name VARCHAR(50) PRIMARY KEY,
             deadline datetime,
-            total int,
-            paid int,
-            remain int
+            total int DEFAULT 0,
+            paid int DEFAULT 0,
+            remain int DEFAULT 0,
+            type ENUM('required', 'unrequired') NOT NULL
         );    
         """)
         self.conn.commit()
@@ -81,6 +82,178 @@ class DBManager:
             foreign key (apartment_code) references users(apartment_code),
             foreign key (apartment_code2) references users(apartment_code)
         ); 
+        """)
+        self.conn.commit()
+
+        self.cursor.execute("DROP TRIGGER IF EXISTS update_fees_paid")
+        self.conn.commit()
+        
+        trigger_sql = """
+        CREATE TRIGGER update_fees_paid
+        AFTER INSERT ON userfee
+        FOR EACH ROW
+        BEGIN
+            UPDATE fees f
+            SET f.paid = (
+                SELECT COALESCE(SUM(uf.paid), 0)
+                FROM userfee uf
+                WHERE uf.fee_name = f.fee_name
+            )
+            WHERE f.fee_name = NEW.fee_name;
+        END
+        """
+        self.cursor.execute(trigger_sql)
+        self.conn.commit()
+
+        self.cursor.execute("""
+        DROP TRIGGER IF EXISTS update_fees_paid2
+        """)
+        self.cursor.execute("""
+        CREATE TRIGGER update_fees_paid2
+        AFTER DELETE ON userfee
+        FOR EACH ROW
+        BEGIN
+            UPDATE fees f
+            SET f.paid = (
+                SELECT COALESCE(SUM(uf.paid), 0)
+                FROM userfee uf
+                WHERE uf.fee_name = f.fee_name
+            )
+            WHERE f.fee_name = OLD.fee_name;
+        END
+        """)
+        self.conn.commit()
+
+        self.cursor.execute("""
+        DROP TRIGGER IF EXISTS update_fees_paid3
+        """)
+        self.cursor.execute("""
+        CREATE TRIGGER update_fees_paid3
+        AFTER UPDATE ON userfee
+        FOR EACH ROW
+        BEGIN
+            UPDATE fees f
+            SET f.paid = (
+                SELECT COALESCE(SUM(uf.paid), 0)
+                FROM userfee uf
+                WHERE uf.fee_name = f.fee_name
+            )
+            WHERE f.fee_name = NEW.fee_name;
+        END
+        """)
+        self.conn.commit()
+
+        self.cursor.execute("""
+        DROP TRIGGER IF EXISTS update_fees_total
+        """)
+        self.cursor.execute("""
+        CREATE TRIGGER update_fees_total
+        AFTER INSERT ON userfee
+        FOR EACH ROW
+        BEGIN
+            UPDATE fees f
+            SET f.total = (
+                SELECT COALESCE(SUM(uf.total), 0)
+                FROM userfee uf
+                WHERE uf.fee_name = f.fee_name
+            )
+            WHERE f.fee_name = NEW.fee_name;
+        END
+        """)
+        self.conn.commit()
+
+        self.cursor.execute("""
+        DROP TRIGGER IF EXISTS update_fees_total2
+        """)
+        self.cursor.execute("""
+        CREATE TRIGGER update_fees_total2
+        AFTER DELETE ON userfee
+        FOR EACH ROW
+        BEGIN
+            UPDATE fees f
+            SET f.total = (
+                SELECT COALESCE(SUM(uf.total), 0)
+                FROM userfee uf
+                WHERE uf.fee_name = f.fee_name
+            )
+            WHERE f.fee_name = OLD.fee_name;
+        END
+        """)
+        self.conn.commit()
+
+        self.cursor.execute("""
+        DROP TRIGGER IF EXISTS update_fees_total3
+        """)
+        self.cursor.execute("""
+        CREATE TRIGGER update_fees_total3
+        AFTER UPDATE ON userfee
+        FOR EACH ROW
+        BEGIN
+            UPDATE fees f
+            SET f.total = (
+                SELECT COALESCE(SUM(uf.total), 0)
+                FROM userfee uf
+                WHERE uf.fee_name = f.fee_name
+            )
+            WHERE f.fee_name = NEW.fee_name;
+        END
+        """)
+        self.conn.commit()
+
+        self.cursor.execute("""
+        DROP TRIGGER IF EXISTS update_fees_remain
+        """)
+        self.cursor.execute("""
+        CREATE TRIGGER update_fees_remain
+        AFTER INSERT ON userfee
+        FOR EACH ROW
+        BEGIN
+            UPDATE fees f
+            SET f.remain = (
+                SELECT COALESCE(SUM(uf.remain), 0)
+                FROM userfee uf
+                WHERE uf.fee_name = f.fee_name
+            )
+            WHERE f.fee_name = NEW.fee_name;
+        END
+        """)
+        self.conn.commit()
+
+        self.cursor.execute("""
+        DROP TRIGGER IF EXISTS update_fees_remain2
+        """)
+        self.cursor.execute("""
+        CREATE TRIGGER update_fees_remain2
+        AFTER DELETE ON userfee
+        FOR EACH ROW
+        BEGIN
+            UPDATE fees f
+            SET f.remain = (
+                SELECT COALESCE(SUM(uf.remain), 0)
+                FROM userfee uf
+                WHERE uf.fee_name = f.fee_name
+            )
+            WHERE f.fee_name = OLD.fee_name;
+        END
+        """)
+        self.conn.commit()
+
+        self.cursor.execute("""
+        DROP TRIGGER IF EXISTS update_fees_remain3
+        """)
+        self.cursor.execute("""
+        CREATE TRIGGER update_fees_remain3
+        AFTER UPDATE ON userfee
+        FOR EACH ROW
+        BEGIN
+            UPDATE fees f
+            SET f.remain = (
+                SELECT COALESCE(SUM(uf.remain), 0)
+                FROM userfee uf
+                WHERE uf.fee_name = f.fee_name
+            )
+            WHERE f.fee_name = NEW.fee_name;
+        END
         """)
         self.conn.commit()
         
