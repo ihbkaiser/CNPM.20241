@@ -501,9 +501,9 @@ class DBManager:
         try:
             self.cursor.execute("""
             SELECT full_name, title, content,time FROM noti 
-            JOIN users ON users.apartment_code= noti.apartment_code WHERE apartment_code2 = %s or apartment_code = %s
+            JOIN users ON users.apartment_code= noti.apartment_code WHERE apartment_code2 = %s or users.apartment_code = %s
             order by time desc
-            """, (apt_code,))
+            """, (apt_code,apt_code))
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi lấy thông tin thông báo: {err}")
