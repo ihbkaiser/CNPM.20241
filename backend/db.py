@@ -66,8 +66,8 @@ class DBManager:
             total int,
             paid int,
             remain int,
-            FOREIGN KEY (apartment_code) REFERENCES users(apartment_code),
-            FOREIGN KEY (fee_name) REFERENCES fees(fee_name)
+            FOREIGN KEY (apartment_code) REFERENCES users(apartment_code)  ON UPDATE CASCADE,
+            FOREIGN KEY (fee_name) REFERENCES fees(fee_name) ON UPDATE CASCADE
         ); 
         """)
         self.conn.commit()
@@ -79,8 +79,8 @@ class DBManager:
             title VARCHAR(100) NOT NULL,
             content TEXT NOT NULL,
             time DATETIME DEFAULT CURRENT_TIMESTAMP,
-            foreign key (apartment_code) references users(apartment_code),
-            foreign key (apartment_code2) references users(apartment_code)
+            foreign key (apartment_code) references users(apartment_code)  ON UPDATE CASCADE,
+            foreign key (apartment_code2) references users(apartment_code) ON UPDATE CASCADE
         ); 
         """)
         self.conn.commit()
@@ -473,7 +473,9 @@ class DBManager:
         """Lấy thông tin userfee theo mã căn hộ."""
         try:
             self.cursor.execute("""
-            SELECT * FROM userfee WHERE apartment_code = %s
+            SELECT userfee.fee_name,userfee.total,userfee.paid,userfee.remain,deadline FROM userfee 
+            JOIN fees ON userfee.fee_name = fees.fee_name
+            WHERE apartment_code = %s
             """, (apartment_code,))
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
@@ -511,9 +513,24 @@ class DBManager:
         try:
             self.cursor.execute("""
             SELECT full_name, title, content,time FROM noti 
-            JOIN users ON users.apartment_code= noti.apartment_code WHERE apartment_code2 = %s
+            JOIN users ON users.apartment_code= noti.apartment_code WHERE apartment_code2 = %s or users.apartment_code = %s
             order by time desc
-            """, (apt_code,))
+            """, (apt_code,apt_code))
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi lấy thông tin thông báo: {err}")
+    
+    def delete_apt(self, apt_code):
+        self.cursor.execute("DELETE FROM userfee WHERE apartment_code = %s", (apt_code,))
+        self.conn.commit()
+        self.cursor.execute("DELETE FROM noti WHERE apartment_code = %s", (apt_code,))
+        self.conn.commit()
+        self.cursor.execute("DELETE FROM noti WHERE apartment_code2 = %s", (apt_code,))
+        self.conn.commit()
+        self.cursor.execute("DELETE FROM users WHERE apartment_code = %s", (apt_code,))
+        self.conn.commit()
+
+    def update_user_by_admin(self,old_apt_code, full_name, username, password, apt_code, phone_number):
+        self.cursor.execute("UPDATE users SET full_name = %s, username = %s, password = %s, apartment_code = %s, phone_number = %s WHERE apartment_code = %s",
+                            (full_name, username, password, apt_code, phone_number, old_apt_code))
+        self.conn.commit()
