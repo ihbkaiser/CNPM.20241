@@ -275,27 +275,14 @@ class AdminGUI(Tk):
             
         )
 
-        self.button_visual = PhotoImage(
-            file="assets/admin_gui/Visualization.png")
-        self.visual = Button(
-            image=self.button_visual,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_9 clicked"),
-            relief="flat"
-        )
-        self.visual.place(
-            x=704.25,
-            y=86.0,
-            width=235.0,
-            height=39.0
-        )
+
         self.hide_buttons_in_region(1,1,1,1)
 
         self.tree = None
         self.show_home()
 
     def show_home(self):
+        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
         self.hide_buttons_in_region(220, 141.32812, 1012, 720)
         new_image = PhotoImage(file="assets/admin_gui/button_1_red.png")
         self.home_button.config(image=new_image)
@@ -1191,8 +1178,8 @@ class AdminGUI(Tk):
         outline="#000000")
 
         self.canvas.create_text(
-            376.25,
-            188.0,
+            316.25 + 70 + 70,
+            188.0 - 30,
             anchor="nw",
             text="Choose a statistics option",
             fill="#000000",
@@ -1201,7 +1188,7 @@ class AdminGUI(Tk):
 
 
         self.button_image_9 = PhotoImage(
-            file="assets/admin_gui/button_9.png")
+            file="assets/frame4/button_9.png")
         self.button_9 = Button(
             image=self.button_image_9,
             borderwidth=0,
@@ -1212,14 +1199,16 @@ class AdminGUI(Tk):
             relief="flat"
         )
         self.button_9.place(
-            x=432.25,
-            y=238.0,
-            width=272.0,
-            height=49.0
+            x=429.25 + 70,
+            y=204.0,
+            width=245.0,
+            height=52.0
         )
 
+
+
         self.button_image_10 = PhotoImage(
-            file="assets/admin_gui/button_10.png")
+            file="assets/frame4/button_10.png")
         self.button_10 = Button(
             image=self.button_image_10,
             borderwidth=0,
@@ -1230,14 +1219,14 @@ class AdminGUI(Tk):
             relief="flat"
         )
         self.button_10.place(
-            x=432.25,
-            y=311.0,
-            width=272.0,
-            height=49.0
+            x=429.25 + 70,
+            y=269.0,
+            width=245.0,
+            height=52.0
         )
 
         self.button_image_11 = PhotoImage(
-            file="assets/admin_gui/button_11.png")
+            file="assets/frame4/button_11.png")
         self.button_11 = Button(
             image=self.button_image_11,
             borderwidth=0,
@@ -1248,14 +1237,14 @@ class AdminGUI(Tk):
             relief="flat"
         )
         self.button_11.place(
-            x=432.25,
-            y=390.0,
-            width=272.0,
-            height=49.0
+            x=430.25 + 70,
+            y=335.0,
+            width=245.0,
+            height=52.0
         )
 
         self.button_image_12 = PhotoImage(
-            file="assets/admin_gui/button_12.png")
+            file="assets/frame4/button_12.png")
         self.button_12 = Button(
             image=self.button_image_12,
             borderwidth=0,
@@ -1266,47 +1255,131 @@ class AdminGUI(Tk):
             relief="flat"
         )
         self.button_12.place(
-            x=432.25,
-            y=468.0,
-            width=272.0,
-            height=49.0
+            x=430.25 + 70,
+            y=408.0,
+            width=245.0,
+            height=52.0
         )
 
         self.button_image_13 = PhotoImage(
-            file="assets/admin_gui/button_13.png")
+            file="assets/frame4/button_14.png")
         self.button_13 = Button(
             image=self.button_image_13,
             borderwidth=0,
             highlightthickness=0,
-            background="#ffffff",
-            activebackground="#ffffff",
-            command=self.show_housing_statistic,
+            command=self.show_voluntary_statistic,
             relief="flat"
         )
         self.button_13.place(
-            x=432.25,
-            y=547.0,
-            width=272.0,
-            height=49.0
+            x=429.25 + 70,
+            y=550.0,
+            width=245.0,
+            height=52.0
         )
 
-        self.button_visual = PhotoImage(
-            file="assets/admin_gui/Visualization.png")
-        self.visual = Button(
-            image=self.button_visual,
+        self.button_image_14 = PhotoImage(
+            file="assets/frame4/button_13.png")
+        self.button_14 = Button(
+            image=self.button_image_14,
             borderwidth=0,
             highlightthickness=0,
+            command=self.show_housing_statistic,
+            relief="flat"
+        )
+        self.button_14.place(
+            x=429.25 + 70,
+            y=479.0,
+            width=245.0,
+            height=52.0
+        )
+
+
+        self.button_image_15 = PhotoImage(
+            file="assets/frame4/button_15.png")
+        self.button_15 = Button(
+            image=self.button_image_15,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#ffffff",
+            activebackground="#ffffff",
             command=self.show_visualization,
             relief="flat"
         )
-        self.visual.place(
-            x=704.25,
-            y=86.0,
-            width=235.0,
-            height=39.0
+        self.button_15.place(
+            x=429.25 + 70,
+            y=625.0,
+            width=245.0,
+            height=52.0
         )
 
+    def show_voluntary_statistic(self, mode="Service"):
+        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
+        new_image = PhotoImage(file="assets/admin_gui/button_1.png")
+        self.home_button.config(image=new_image)
+        self.home_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_2.png")
+        self.view_admin_button.config(image=new_image)
+        self.view_admin_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_3.png")
+        self.view_user_button.config(image=new_image)
+        self.view_user_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_4.png")
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_5.png")
+        self.edit_fee_button.config(image=new_image)
+        self.edit_fee_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_6.png")
+        self.pay_button.config(image=new_image)
+        self.pay_button.image = new_image
+        if self.tree:
+            self.tree.place_forget()
 
+        self.canvas.create_rectangle(
+            220,
+            141.32812,
+            1012.5,
+            720,
+            fill="#FFFFFF",
+            outline="#000000")
+
+        data = self.db_manager.get_voluntary_fee_summary()
+
+
+        # Create a Treeview
+        style = ttk.Style()
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
+        self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
+        self.tree["columns"] = ("one", "two")
+        self.tree.column("#0", width=25, minwidth=25)
+        self.tree.column("one", width=225, minwidth=225)
+        self.tree.column("two", width=50, minwidth=50)
+
+        self.tree.heading("#0", text="Month_Year", anchor=tk.W)
+        self.tree.heading("one", text="Voluntary_Fee", anchor=tk.W)
+        self.tree.heading("two", text="Total_paid", anchor=tk.W)
+                          
+        # Insert some sample data
+        for i in range(len(data)):
+            self.tree.insert("", "end", text=f"{data[i]['Month_Year']}", values=(f"{data[i]['Volutary_fee']}", f"{data[i]['Total_Paid']}"))
+
+        # Place the Treeview on top of the Canvas
+        self.tree.place(x=220, y=141, width=792, height=579)
+        # self.generate_visualization(data)
+        
 
     def show_housing_statistic(self):
         if self.tree:

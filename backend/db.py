@@ -280,9 +280,9 @@ class DBManager:
         self.cursor.execute("DELETE FROM users WHERE username = %s", (username,))
         self.conn.commit()
 
-    def update_user(self, username, password, account_type, full_name, phone_number,  apartment_code, email):
-        self.cursor.execute("UPDATE users SET password = %s, account_type = %s, full_name = %s, phone_number = %s, apartment_code = %s, email = %s WHERE username = %s",
-                            (password, account_type, full_name, phone_number, apartment_code, email, username))
+    def update_user(self, username, password, account_type, full_name, phone_number,  apartment_code, email, dob, gender, id_card, hometown):
+        self.cursor.execute("UPDATE users SET password = %s, account_type = %s, full_name = %s, phone_number = %s, apartment_code = %s, email = %s, dob = %s, gender = %s, id_card = %s, hometown = %s WHERE username = %s",
+                            (password, account_type, full_name, phone_number, apartment_code, email, dob, gender, id_card, hometown, username))
         self.conn.commit()
 
     def get_all_users(self, account_type=None):
@@ -411,7 +411,7 @@ class DBManager:
             self.cursor.execute("""
             SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, SUM(paid) AS 'Total_Paid', SUM(remain) AS 'Remaining_Fee'
             FROM fees
-            WHERE fee_name LIKE 'Service%'
+            WHERE fee_name LIKE 'Maintenance%'
             GROUP BY Month_Year
             order by Month_Year
             """)
@@ -445,6 +445,18 @@ class DBManager:
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
             print(f"Error fetching electricity fee summary: {err}")
+            return []
+        
+    def get_voluntary_fee_summary(self):    
+        try:
+            self.cursor.execute("""
+            SELECT DATE_FORMAT(deadline, '%Y-%m') AS Month_Year, fee_name AS Volutary_fee, paid as Total_Paid
+            FROM fees
+            WHERE type LIKE 'unrequired%'
+            """)
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            print(f"Error fetching voluntary fee summary: {err}")
             return []
         
     def get_userfee_by_apartment_code(self, apartment_code):

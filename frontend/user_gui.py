@@ -7,6 +7,7 @@ from backend.db import DBManager
 from backend.auth import AuthManager
 from PIL import Image, ImageDraw, ImageFont
 from PIL import ImageTk
+from tkinter import messagebox, Toplevel
 
 class UserGUI(Tk):
     def __init__(self, root, user):
@@ -277,6 +278,16 @@ class UserGUI(Tk):
             432.5,
             image=self.image_img
         )
+        full_name = self.user.get('full_name', 'NULL')
+        date_of_birth = self.user.get('dob', 'NULL')
+        phone_number = self.user.get('phone_number', 'NULL')
+        gender = self.user.get('gender', 'NULL')
+        apartment_code = self.user.get('apartment_code', 'NULL')
+        hometown = self.user.get('hometown', 'NULL')
+        id_card = self.user.get('id_card', 'NULL')
+
+        highlight_color = "#FF0000"  # Red color for highlighting
+
         self.canvas.create_text(
             576.25,
             180.0,
@@ -471,11 +482,11 @@ class UserGUI(Tk):
             image=self.image_image_23
         )
         self.canvas.create_text(
-            409.25,
-            232.0,
+            406.25,
+            236.0,
             anchor="nw",
-            text="Full Name:",
-            fill="#000000",
+            text=f"Full Name: {full_name}",
+            fill=highlight_color if full_name == 'NULL' else "#000000",
             font=("Inter Bold", 24 * -1)
         )
 
@@ -491,8 +502,8 @@ class UserGUI(Tk):
             682.25,
             295.0,
             anchor="nw",
-            text="Date of birth:",
-            fill="#000000",
+            text=f"Date of birth: {date_of_birth}",
+            fill=highlight_color if date_of_birth == 'NULL' else "#000000",
             font=("Inter Bold", 24 * -1)
         )
 
@@ -500,18 +511,17 @@ class UserGUI(Tk):
             406.25,
             356.0,
             anchor="nw",
-            text="Phone Number:",
-            fill="#000000",
+            text=f"Phone Number: {phone_number}",
+            fill=highlight_color if phone_number == 'NULL' else "#000000",
             font=("Inter Bold", 24 * -1)
         )
-
 
         self.canvas.create_text(
             405.25,
             293.0,
             anchor="nw",
-            text="Gender:",
-            fill="#000000",
+            text=f"Gender: {gender}",
+            fill=highlight_color if gender == 'NULL' else "#000000",
             font=("Inter Bold", 24 * -1)
         )
 
@@ -542,8 +552,8 @@ class UserGUI(Tk):
             406.25,
             417.0,
             anchor="nw",
-            text=" Apartment Code:",
-            fill="#000000",
+            text=f"Apartment Code: {apartment_code}",
+            fill=highlight_color if apartment_code == 'NULL' else "#000000",
             font=("Inter Bold", 24 * -1)
         )
 
@@ -559,8 +569,8 @@ class UserGUI(Tk):
             406.25,
             478.0,
             anchor="nw",
-            text="Hometown:",
-            fill="#000000",
+            text=f"Hometown: {hometown}",
+            fill=highlight_color if hometown == 'NULL' else "#000000",
             font=("Inter Bold", 24 * -1)
         )
 
@@ -576,8 +586,8 @@ class UserGUI(Tk):
             406.25,
             540.0,
             anchor="nw",
-            text="ID Card:",
-            fill="#000000",
+            text=f"ID Card: {id_card}",
+            fill=highlight_color if id_card == 'NULL' else "#000000",
             font=("Inter Bold", 24 * -1)
         )
 
@@ -597,7 +607,7 @@ class UserGUI(Tk):
             highlightthickness=0,
             bg="#ffffff",
             activebackground="#ffffff",
-            command=lambda: print("button_5 clicked"),
+            command=self.button_5_click,
             relief="flat"
         )
         self.button_5.place(
@@ -615,7 +625,7 @@ class UserGUI(Tk):
             highlightthickness=0,
             bg="#ffffff",
             activebackground="#ffffff",
-            command=lambda: print("button_6 clicked"),
+            command=self.button_6_click,
             relief="flat"
         )
         self.button_6.place(
@@ -640,6 +650,156 @@ class UserGUI(Tk):
             202.0,
             image=self.image_image_32
         )
+
+    def button_5_click(self):
+        self.update_window = Toplevel(self.root)
+        self.update_window.title("Update Information")
+        self.update_window.geometry("400x300")
+        self.update_window.resizable(False, False)
+        
+        # Thêm canvas làm nền
+        canvas = Canvas(self.update_window, width=400, height=300)
+        canvas.pack(fill="both", expand=True)
+        
+        # Thêm ảnh nền (ảnh phải cùng thư mục hoặc cung cấp đường dẫn đầy đủ)
+        bg_image = Image.open("assets/User_update.png")
+        bg_image = bg_image.resize((400, 300))  # Điều chỉnh kích thước ảnh
+        bg_photo = ImageTk.PhotoImage(bg_image)
+        canvas.create_image(0, 0, image=bg_photo, anchor="nw")
+
+        # Thêm nội dung vào cửa sổ
+        label_font = ("Arial", 11, "bold")  # Đặt phông chữ cho các nhãn
+        entry_font = ("Arial", 11)  # Đặt phông chữ cho ô nhập liệu
+
+        # Full Name
+        Label(self.update_window, text="Full Name:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=20)
+        self.full_name_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.full_name_entry.place(x=180, y=20)
+        self.full_name_entry.insert(0, self.user.get('full_name', ''))
+
+        # Date of Birth
+        Label(self.update_window, text="Date of Birth:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=60)
+        self.dob_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.dob_entry.place(x=180, y=60)
+        self.dob_entry.insert(0, self.user.get('dob', ''))
+
+        # Phone Number
+        Label(self.update_window, text="Phone Number:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=100)
+        self.phone_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.phone_entry.place(x=180, y=100)
+        self.phone_entry.insert(0, self.user.get('phone_number', ''))
+
+        # Gender
+        Label(self.update_window, text="Gender:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=140)
+        self.gender_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.gender_entry.place(x=180, y=140)
+        self.gender_entry.insert(0, self.user.get('gender', ''))
+
+        # Hometown
+        Label(self.update_window, text="Hometown:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=180)
+        self.hometown_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.hometown_entry.place(x=180, y=180)
+        self.hometown_entry.insert(0, self.user.get('hometown', ''))
+
+        # ID Card
+        Label(self.update_window, text="ID Card:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=220)
+        self.id_card_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.id_card_entry.place(x=180, y=220)
+        self.id_card_entry.insert(0, self.user.get('id_card', ''))
+
+        # Save Button
+        save_button = Button(self.update_window, text="Save", font=("Arial", 12, "bold"), bg="#FFB6C1", fg="#FFFFFF", command=self.save_changes)
+        save_button.place(x=120, y=260)
+
+        # Để giữ ảnh trong bộ nhớ
+        self.update_window.bg_photo = bg_photo
+
+    def save_changes(self):
+        if messagebox.askyesno("Confirm", "Bạn có chắc chắn muốn thay đổi không?"):
+            self.user['full_name'] = self.full_name_entry.get()
+            self.user['dob'] = self.dob_entry.get()
+            self.user['phone_number'] = self.phone_entry.get()
+            self.user['gender'] = self.gender_entry.get()
+            self.user['hometown'] = self.hometown_entry.get()
+            self.user['id_card'] = self.id_card_entry.get()
+
+            # Update the user information in the database
+            self.db_manager.update_user(**self.user)
+
+            messagebox.showinfo("Success", "Information updated successfully")
+            self.update_window.destroy()
+            self.show_profile()
+
+    def button_6_click(self):
+        self.change_password_window = Toplevel(self.root)
+        self.change_password_window.title("Change Password")
+        self.change_password_window.geometry("350x150")
+        self.change_password_window.resizable(False, False)
+
+        # Add canvas as background
+        canvas = Canvas(self.change_password_window, width=350, height=150)
+        canvas.pack(fill="both", expand=True)
+
+        # Add background image
+        bg_image = Image.open("assets/User_change.png")
+        bg_image = bg_image.resize((350, 150))  # Adjust the image size
+        bg_photo = ImageTk.PhotoImage(bg_image)
+        canvas.create_image(0, 0, image=bg_photo, anchor="nw")
+
+        # Add content to the window
+        label_font = ("Arial", 10, "bold")  # Set font for labels
+        entry_font = ("Arial", 10)  # Set font for entry fields
+
+        # Adjusted coordinates
+        x_label = 20  # x position for labels
+        x_entry = 160  # x position for entry fields
+        y_start = 20  # Starting y position
+        y_gap = 30  # Gap between rows
+
+        # Current Password
+        Label(self.change_password_window, text="Current Password:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=x_label, y=y_start)
+        self.current_password_entry = Entry(self.change_password_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat", show="*")
+        self.current_password_entry.place(x=x_entry, y=y_start)
+
+        # New Password
+        Label(self.change_password_window, text="New Password:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=x_label, y=y_start + y_gap)
+        self.new_password_entry = Entry(self.change_password_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.new_password_entry.place(x=x_entry, y=y_start + y_gap)
+
+        # Confirm Password
+        Label(self.change_password_window, text="Confirm Password:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=x_label, y=y_start + 2 * y_gap)
+        self.confirm_password_entry = Entry(self.change_password_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.confirm_password_entry.place(x=x_entry, y=y_start + 2 * y_gap)
+
+        # Save Button
+        button_width = 80  # Approximate button width in pixels
+        x_center = (300 - button_width) / 2  # Centering the button horizontally
+        save_button = Button(self.change_password_window, text="Save", font=("Arial", 10, "bold"), bg="#FFB6C1", fg="#FFFFFF", command=self.save_password)
+        save_button.place(x=x_center+40, y=105)  # Place Save button centered vertically near the bottoms
+
+        # Keep the background image in memory
+        self.change_password_window.bg_photo = bg_photo
+
+
+    def save_password(self):
+        current_password = self.current_password_entry.get()
+        new_password = self.new_password_entry.get()
+        confirm_password = self.confirm_password_entry.get()
+
+        if not current_password or not new_password or not confirm_password:
+            messagebox.showerror("Error", "All fields are required")
+            return
+
+        if new_password != confirm_password:
+            messagebox.showerror("Error", "New password and confirm password do not match")
+            return
+
+        try:
+            self.db_manager.update_user_password(self.user['username'], new_password)
+            messagebox.showinfo("Success", "Password updated successfully")
+            self.change_password_window.destroy()
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
 
         
