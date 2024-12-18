@@ -184,18 +184,18 @@ class AdminGUI(Tk):
             height=42.890625
         )
 
-        self.manage_fees_img = PhotoImage(
+        self.noti_img = PhotoImage(
             file="assets/admin_gui/button_4.png")
-        self.manage_fees_button = Button(
-            image=self.manage_fees_img,
+        self.noti_button = Button(
+            image=self.noti_img,
             borderwidth=0,
             highlightthickness=0,
             background="#FFFFFF",
             activebackground="#FFFFFF",
-            command=self.manage_fee,
+            command=self.my_noti,
             relief="flat"
         )
-        self.manage_fees_button.place(
+        self.noti_button.place(
             x=18.281219482421875,
             y=336.796875,
             width=170.859375,
@@ -307,8 +307,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -320,6 +320,7 @@ class AdminGUI(Tk):
         self.statistic_button.image = new_image
         if self.tree:
             self.tree.place_forget()
+        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
 
         self.canvas.create_text(
             424.25,
@@ -350,8 +351,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -427,7 +428,7 @@ class AdminGUI(Tk):
             ("assets/admin_gui/button_1.png", self.home_button),
             ("assets/admin_gui/button_2.png", self.view_admin_button),
             ("assets/admin_gui/button_3_red.png", self.view_user_button),
-            ("assets/admin_gui/button_4.png", self.manage_fees_button),
+            ("assets/admin_gui/button_4.png", self.noti_button),
             ("assets/admin_gui/button_5.png", self.edit_fee_button),
             ("assets/admin_gui/button_6.png", self.pay_button),
             ("assets/admin_gui/button_7.png", self.statistic_button),
@@ -590,41 +591,6 @@ class AdminGUI(Tk):
         edit_window.bg_image_tk = bg_image_tk
 
 
-
-    def manage_fee(self):
-        self.hide_buttons_in_region(220, 141.32812, 1012, 720)
-        new_image = PhotoImage(file="assets/admin_gui/button_1.png")
-        self.home_button.config(image=new_image)
-        self.home_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_2.png")
-        self.view_admin_button.config(image=new_image)
-        self.view_admin_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_3.png")
-        self.view_user_button.config(image=new_image)
-        self.view_user_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_4_red.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_5.png")
-        self.edit_fee_button.config(image=new_image)
-        self.edit_fee_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_6.png")
-        self.pay_button.config(image=new_image)
-        self.pay_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_7.png")
-        self.statistic_button.config(image=new_image)
-        self.statistic_button.image = new_image
-        if self.tree:
-            self.tree.place_forget()
-
-        self.canvas.create_rectangle(
-        220,
-        141.32812,
-        1012.5,
-        720,
-        fill="#FFFFFF",
-        outline="#000000")
-
     def edit_fee(self):
         self.hide_buttons_in_region(220, 141.32812, 1012, 720)
         new_image = PhotoImage(file="assets/admin_gui/button_1.png")
@@ -637,8 +603,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5_red.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -671,8 +637,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -705,8 +671,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -741,7 +707,20 @@ class AdminGUI(Tk):
 
         # Create a Treeview
         style = ttk.Style()
-        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
         self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
         self.tree["columns"] = ("one", "two")
         self.tree.column("#0", width=100, minwidth=100)
@@ -772,8 +751,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -805,7 +784,20 @@ class AdminGUI(Tk):
 
         # Create a Treeview
         style = ttk.Style()
-        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
         self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
         self.tree["columns"] = ("one", "two")
         self.tree.column("#0", width=100, minwidth=100)
@@ -836,8 +828,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -869,7 +861,20 @@ class AdminGUI(Tk):
 
         # Create a Treeview
         style = ttk.Style()
-        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
         self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
         self.tree["columns"] = ("one", "two")
         self.tree.column("#0", width=100, minwidth=100)
@@ -899,8 +904,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -933,7 +938,20 @@ class AdminGUI(Tk):
 
         # Create a Treeview
         style = ttk.Style()
-        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
         self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
         self.tree["columns"] = ("one", "two")
         self.tree.column("#0", width=100, minwidth=100)
@@ -964,8 +982,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -997,7 +1015,20 @@ class AdminGUI(Tk):
 
         # Create a Treeview
         style = ttk.Style()
-        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
         self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
         self.tree["columns"] = ("one", "two")
         self.tree.column("#0", width=100, minwidth=100)
@@ -1028,8 +1059,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -1061,7 +1092,20 @@ class AdminGUI(Tk):
 
         # Create a Treeview
         style = ttk.Style()
-        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
         self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
         self.tree["columns"] = ("one", "two")
         self.tree.column("#0", width=100, minwidth=100)
@@ -1124,8 +1168,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -1278,8 +1322,8 @@ class AdminGUI(Tk):
         self.view_user_button.config(image=new_image)
         self.view_user_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_4.png")
-        self.manage_fees_button.config(image=new_image)
-        self.manage_fees_button.image = new_image
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_5.png")
         self.edit_fee_button.config(image=new_image)
         self.edit_fee_button.image = new_image
@@ -1383,7 +1427,20 @@ class AdminGUI(Tk):
         # Create a Treeview
 
         style = ttk.Style()
-        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
         self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
         self.tree["columns"] = ("one", "two")
         self.tree.column("#0", width=100, minwidth=100)
@@ -1453,17 +1510,19 @@ class AdminGUI(Tk):
         tk.Button(edit_window, text="Save", command=save_changes).grid(row=4, column=0, columnspan=2)
 
     def hide_buttons_in_region(self, x1, y1, x2, y2):
-        self.visual.place_forget()
-        for widget in self.root.winfo_children():
+        def hide_widget(widget):
             widget_x = widget.winfo_x()
             widget_y = widget.winfo_y()
             if x1 <= widget_x <= x2 and y1 <= widget_y <= y2:
-                if isinstance(widget, (tk.Button, tk.Entry, tk.Label, tk.Text)):
-                    widget.place_forget()
-                elif isinstance(widget, Canvas):
-                    widget.delete("all")
-                elif isinstance(widget, PhotoImage):
-                    widget.image = None
+                widget.place_forget()
+
+        for widget in self.root.winfo_children():
+            if isinstance(widget, (tk.Button, tk.Entry, tk.Text)):
+                hide_widget(widget)
+            elif isinstance(widget, tk.Canvas):
+                for canvas_widget in widget.winfo_children():
+                    if isinstance(canvas_widget, (tk.Button, tk.Entry, tk.Text)):
+                        hide_widget(canvas_widget)
 
 
     def generate_pie_charts(self):
@@ -1537,14 +1596,497 @@ class AdminGUI(Tk):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    # def show_visualization1(self):
-    #     self.generate_visualization()
-    #     # Use OpenCV to open and display the image
-    #     img = cv2.imread("assets/admin_gui/fee_summary.png")
-    #     resized_img = cv2.resize(img, (600, 500))
-    #     cv2.imshow("Fee Summary Visualization", resized_img)
-    #     cv2.waitKey(0)
-    #     cv2.destroyAllWindows()
+    def send_noti(self):
+        self.hide_buttons_in_region(190, 79.32812, 1012, 720)
+        new_image = PhotoImage(file="assets/admin_gui/button_1.png")
+        self.home_button.config(image=new_image)
+        self.home_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_2.png")
+        self.view_admin_button.config(image=new_image)
+        self.view_admin_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_3.png")
+        self.view_user_button.config(image=new_image)
+        self.view_user_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_4_red.png")
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_5.png")
+        self.edit_fee_button.config(image=new_image)
+        self.edit_fee_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_6.png")
+        self.pay_button.config(image=new_image)
+        self.pay_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_7.png")
+        self.statistic_button.config(image=new_image)
+        self.statistic_button.image = new_image
+        if self.tree:
+            self.tree.place_forget()
+
+        self.canvas.create_rectangle(
+        220,
+        141.32812,
+        1012.5,
+        720,
+        fill="#FFFFFF",
+        outline="#000000")
+
+        self.my_noti_img = Image.open("assets/user_gui/my_white.png")
+        self.my_noti_img = self.my_noti_img.resize((397, 60))
+        self.my_noti_img = ImageTk.PhotoImage(self.my_noti_img)
+        self.my_noti_button = Button(
+            image=self.my_noti_img,
+            borderwidth=1,
+            highlightthickness=0,
+            command=self.my_noti,
+            relief="solid"
+        )
+        self.my_noti_button.place(
+            x=220,
+            y=141.32812,
+            width=396.5,
+            height=60
+        )
+
+        self.send_noti_img = Image.open("assets/user_gui/send_noti.png")
+        self.send_noti_img = self.send_noti_img.resize((397, 60))
+        self.send_noti_img = ImageTk.PhotoImage(self.send_noti_img)
+        self.send_noti_button = Button(
+            image=self.send_noti_img,
+            borderwidth=1,
+            highlightthickness=0,
+            command=self.send_noti,
+            relief="solid"
+        )
+        self.send_noti_button.place(
+            x=616.5,
+            y=141.32812,
+            width=396.5,
+            height=60
+        )
+
+        self.canvas.create_text(
+            225,
+            210,
+            text="To:",
+            anchor="nw",
+            fill="#000000",
+            font=("Arial", 20)
+        )
+
+        self.canvas.create_text(
+            225,
+            250,
+            text="Title:",
+            anchor="nw",
+            fill="#000000",
+            font=("Arial", 20)
+        )
+
+        self.canvas.create_text(
+            225,
+            290,
+            text="Content:",
+            anchor="nw",
+            fill="#000000",
+            font=("Arial", 20)
+        )
+
+        self.to_entry_img = Image.open("assets/user_gui/entry_7.png")
+        self.to_entry_img = self.to_entry_img.resize((230, 40))
+        self.to_entry_img = ImageTk.PhotoImage(self.to_entry_img)
+        self.canvas.create_image(
+            285,
+            205.0,
+            anchor="nw",
+            image=self.to_entry_img
+        )
+
+        self.to_entry = Entry(
+            bd=0,
+            bg="#FFFFFF",
+            highlightthickness=0,
+            font = ("Arial", 20)
+        )
+        self.to_entry.place(
+            x=293.0,
+            y=212.0,
+            anchor="nw",
+            width=200.0,
+            height=30.0
+        )
+
+        self.title_entry_img = Image.open("assets/user_gui/entry_4.png")
+        self.title_entry_img = self.title_entry_img.resize((700, 40))
+        self.title_entry_img = ImageTk.PhotoImage(self.title_entry_img)
+        self.canvas.create_image(
+            287,
+            245.0,
+            anchor="nw",
+            image=self.title_entry_img
+        )
+
+        self.title_entry = Entry(
+            bd=0,
+            bg="#FFFFFF",
+            highlightthickness=0,
+            font = ("Arial", 20),
+            validate="key",
+            validatecommand=(self.canvas.register(self.validate_entry), "%P")
+        )
+        self.title_entry.place(
+            x=297.0,
+            y=252.0,
+            anchor="nw",
+            width=660.0,
+            height=30.0
+        )
+
+        self.content_entry_img = Image.open("assets/user_gui/entry_5.png")
+        self.content_entry_img = self.content_entry_img.resize((730, 380))
+        self.content_entry_img = ImageTk.PhotoImage(self.content_entry_img)
+        self.canvas.create_image(
+            257,
+            325.0,
+            anchor="nw",
+            image=self.content_entry_img
+        )
+
+        self.custom_text = Text(
+            borderwidth=0,  # Set border width
+            relief="solid",  # Set relief to solid to show the border
+            font=("Arial", 20),  # Set font size
+            wrap="word"  # Enable word wrapping
+        )
+        self.custom_text.place(
+            x=277,  # Adjust x position
+            y=335,  # Adjust y position
+            anchor="nw",
+            width=700,  # Adjust width
+            height=350  # Adjust height
+        )
+        self.custom_text.insert("1.0", "")
+
+        self.send_button_img = Image.open("assets/user_gui/send.png")
+        self.send_button_img = self.send_button_img.resize((105, 35))
+        self.send_button_img = ImageTk.PhotoImage(self.send_button_img)
+        self.send_button = Button(
+            image=self.send_button_img,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=lambda: self.try_send(self.user['apartment_code']),
+            relief="flat"
+        )
+        self.send_button.place(
+            x=850.0,
+            y=205.0,
+            width=108.0,
+            height=38.0
+        )
+    
+    def try_send(self, apt_code):
+        self.canvas.create_rectangle(
+        340.0,
+        290.0,
+        600.0,
+        315,
+        fill="#FFFFFF",
+        outline="#FFFFFF")
+        to= self.to_entry.get()
+        title= self.title_entry.get()
+        content= self.custom_text.get("1.0", "end-1c")
+        if (to=="" or title=="" or content==""):
+            self.canvas.create_text(
+                350,
+                290.0,
+                anchor="nw",
+                text="Please fill all fields",
+                fill="red",
+                font=("Arial", 20)
+            )
+        elif (to==self.user['apartment_code']):
+            self.canvas.create_text(
+                350,
+                290.0,
+                anchor="nw",
+                text="Cannot send to yourself",
+                fill="red",
+                font=("Arial", 20))
+        elif (self.db_manager.get_user_by_apartment_code(to)==None):
+            self.canvas.create_text(
+                350,
+                290.0,
+                anchor="nw",
+                text="Apartment code not found",
+                fill="red",
+                font=("Arial", 20))
+        else:
+            self.db_manager.send_noti(apt_code, to, title, content)
+            self.send_success()
+
+    def send_success(self):
+        self.hide_buttons_in_region(220, 141, 1012.5, 720)
+        self.canvas.create_rectangle(
+            220,
+            141,
+            1012.5,
+            720,
+            fill="#FFFFFF",
+            outline="#000000")
+        self.canvas.create_text(
+            380.25,
+            158.0,
+            anchor="nw",
+            text="Notification Sent Successfully",
+            fill="#000000",
+            font=("Inter Bold", 36 * -1)
+        )
+
+        self.continue_img = Image.open("assets/user_gui/finish.png")
+        self.continue_img = self.continue_img.resize((200, 60))
+        self.continue_img = ImageTk.PhotoImage(self.continue_img)
+        self.continue_button = Button(
+            image=self.continue_img,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.my_noti,
+            relief="flat"
+        )
+        self.continue_button.place(
+            x=500,
+            y=650,
+            width=200.0,
+            height=60.0
+        )
+
+        self.success_img = Image.open("assets/user_gui/send_success.png")
+        self.success_img = self.success_img.resize((400, 350))
+        self.success_img = ImageTk.PhotoImage(self.success_img)
+        self.canvas.create_image(
+            600.75,
+            400.0,
+            image=self.success_img)
+
+    def my_noti(self):
+        self.hide_buttons_in_region(190, 79.32812, 1012, 720)
+        new_image = PhotoImage(file="assets/admin_gui/button_1.png")
+        self.home_button.config(image=new_image)
+        self.home_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_2.png")
+        self.view_admin_button.config(image=new_image)
+        self.view_admin_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_3.png")
+        self.view_user_button.config(image=new_image)
+        self.view_user_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_4_red.png")
+        self.noti_button.config(image=new_image)
+        self.noti_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_5.png")
+        self.edit_fee_button.config(image=new_image)
+        self.edit_fee_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_6.png")
+        self.pay_button.config(image=new_image)
+        self.pay_button.image = new_image
+        new_image = PhotoImage(file="assets/admin_gui/button_7.png")
+        self.statistic_button.config(image=new_image)
+        self.statistic_button.image = new_image
+        if self.tree:
+            self.tree.place_forget()
+
+        self.canvas.create_rectangle(
+        220,
+        141.32812,
+        1012.5,
+        720,
+        fill="#FFFFFF",
+        outline="#000000")
+
+        self.my_noti_img = Image.open("assets/user_gui/my_noti.png")
+        self.my_noti_img = self.my_noti_img.resize((397, 60))
+        self.my_noti_img = ImageTk.PhotoImage(self.my_noti_img)
+        self.my_noti_button = Button(
+            image=self.my_noti_img,
+            borderwidth=1,
+            highlightthickness=0,
+            command=self.my_noti,
+            relief="solid"
+        )
+        self.my_noti_button.place(
+            x=220,
+            y=141.32812,
+            width=396.5,
+            height=60
+        )
+
+        self.send_noti_img = Image.open("assets/user_gui/send_white.png")
+        self.send_noti_img = self.send_noti_img.resize((397, 60))
+        self.send_noti_img = ImageTk.PhotoImage(self.send_noti_img)
+        self.send_noti_button = Button(
+            image=self.send_noti_img,
+            borderwidth=1,
+            highlightthickness=0,
+            command=self.send_noti,
+            relief="solid"
+        )
+        self.send_noti_button.place(
+            x=616.5,
+            y=141.32812,
+            width=396.5,
+            height=60
+        )
+
+        notis = self.db_manager.get_noti_by_apartment_code(self.user['apartment_code'])
+        style = ttk.Style()
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
+        self.tree = ttk.Treeview(self.canvas, style="Custom.Treeview")
+        self.tree["columns"] = ( "one", "two", "three")
+        self.tree.column("#0", width=100, minwidth=100)
+        self.tree.column("one", width=240, minwidth=100)
+        self.tree.column("two", width=0, minwidth=0,stretch=tk.NO)
+        self.tree.column("three", width=80, minwidth=100)
+
+        self.tree.heading("#0", text="Sender", anchor=tk.W)
+        self.tree.heading("one", text="Title", anchor=tk.W)
+        self.tree.heading("two", text="Content", anchor=tk.W)
+        self.tree.heading("three", text="Time", anchor=tk.W)
+
+        # Insert some sample data
+        for noti in notis:
+            self.tree.insert("", "end", text=noti['full_name'], values=(noti['title'], noti['content'], noti['time']))
+
+        # Place the Treeview on top of the Canvas
+        self.tree.place(x=220, y=201.32812, width=792, height=520)
+
+        # Bind double-click event
+        self.tree.bind("<Double-1>", self.show_noti_detail)
+
+    def show_noti_detail(self, event):
+        # Get selected item
+        item_id = self.tree.selection()[0]
+        noti = self.tree.item(item_id)
+        if self.tree:
+            self.tree.place_forget()
+        self.hide_buttons_in_region(220, 201.32812, 1012.5, 720)
+
+        self.canvas.create_rectangle(
+        220,
+        201.32812,
+        1012.5,
+        720,
+        fill="#FFFFFF",
+        outline="#000000")
+
+        self.back_img = Image.open("assets/user_gui/back.png")
+        self.back_img = self.back_img.resize((40, 40))
+        self.back_img = ImageTk.PhotoImage(self.back_img)
+        self.back_button = Button(
+            image=self.back_img,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.my_noti,
+            relief="solid"
+        )
+        self.back_button.place(
+            x=230,
+            y=215,
+            width=40,
+            height=40
+        )
+
+        self.canvas.create_text(
+            630.25,
+            220.0,
+            text="Notification Detail",
+            fill="#000000",
+            font=("Arial", 24)
+        )
+        self.canvas.create_text(
+            270.25,
+            250.0,
+            text="Sender: ",
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20)
+        )
+        self.canvas.create_text(
+            270.25,
+            290.0,
+            text="Title: ",
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20)
+        )
+        self.canvas.create_text(
+            270.25,
+            330.0,
+            text="Content: ",
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20)
+        )
+
+        self.canvas.create_text(
+            400.25,
+            250.0,
+            text=noti['text'],
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20)
+        )
+        self.canvas.create_text(
+            350.25,
+            290.0,
+            text=noti['values'][0],
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20)
+        )
+
+        self.noti_text = Text(
+            self.canvas,
+            borderwidth=1,
+            relief="solid",
+            font=("Arial", 20),
+            wrap="word"  # Enable word wrapping
+        )
+        self.noti_text.place(
+            x=240.25,
+            y=360.0,
+            width=750,  # Adjust width to fit your layout
+            height=350  # Adjust height to fit your layout
+        )
+        self.noti_text.insert("end", f"{noti['values'][1]}\n")
+        self.noti_text.config(state="disabled")
+
+        self.canvas.create_text(
+            800.25,
+            210.0,
+            text=noti['values'][2],
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 16)
+        )
+    def validate_entry(self, new_value):
+        words = new_value.split()
+        if len(words) > 15:
+            return False
+        return True
         
 
 
