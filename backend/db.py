@@ -35,10 +35,13 @@ class DBManager:
             username VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
             account_type ENUM('root', 'admin', 'user') NOT NULL,
-            full_name VARCHAR(255) NOT NULL,
+            full_name NVARCHAR(255) NOT NULL,
             phone_number VARCHAR(20) NOT NULL,
             apartment_code VARCHAR(50) PRIMARY KEY,
-            email VARCHAR(255)
+            email VARCHAR(255) DEFAULT NULL,
+            dob DATE DEFAULT NULL,
+            gender ENUM('male','female','undefined') DEFAULT NULL,
+            id_card VARCHAR(20) DEFAULT NULL
         );                
         """)
         self.conn.commit()

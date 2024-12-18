@@ -111,7 +111,7 @@ class AdminGUI(Tk):
             71.71875,
             1012.5,
             141.328125,
-            fill="#D9D9D9",
+            fill="#F2EDF3",
             outline="")
         
         self.canvas.create_rectangle(
@@ -119,7 +119,7 @@ class AdminGUI(Tk):
             71.71875,
             220,
             720,
-            fill="#D9D9D9",
+            fill="#F2EDF3",
             outline="")
 
         self.canvas.create_rectangle(
@@ -136,6 +136,8 @@ class AdminGUI(Tk):
             image=self.home_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.show_home,
             relief="flat"
         )
@@ -152,6 +154,8 @@ class AdminGUI(Tk):
             image=self.view_admin_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.view_admin,
             relief="flat"
         )
@@ -168,6 +172,8 @@ class AdminGUI(Tk):
             image=self.view_user_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.view_user,
             relief="flat"
         )
@@ -184,6 +190,8 @@ class AdminGUI(Tk):
             image=self.manage_fees_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.manage_fee,
             relief="flat"
         )
@@ -200,6 +208,8 @@ class AdminGUI(Tk):
             image=self.edit_fee_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.edit_fee,
             relief="flat"
         )
@@ -216,6 +226,8 @@ class AdminGUI(Tk):
             image=self.pay_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.pay,
             relief="flat"
         )
@@ -232,6 +244,8 @@ class AdminGUI(Tk):
             image=self.thong_ke_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.statistic,
             relief="flat"
         )
@@ -248,6 +262,8 @@ class AdminGUI(Tk):
             image=self.log_out_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.log_out,
             relief="flat"
         )

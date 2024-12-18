@@ -154,6 +154,8 @@ class UserGUI(Tk):
             image=self.profile_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.show_profile,
             relief="flat"
         )
@@ -170,6 +172,8 @@ class UserGUI(Tk):
             image=self.view_fee_img,
             borderwidth=0,
             highlightthickness=0,
+            background= "#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.view_fee,
             relief="flat"
         )
@@ -186,6 +190,8 @@ class UserGUI(Tk):
             image=self.pay_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.pay,
             relief="flat"
         )
@@ -202,6 +208,8 @@ class UserGUI(Tk):
             image=self.noti_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.my_noti,
             relief="flat"
         )
@@ -219,6 +227,8 @@ class UserGUI(Tk):
             image=self.log_out_img,
             borderwidth=0,
             highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
             command=self.log_out,
             relief="flat"
         )
@@ -1062,13 +1072,13 @@ class UserGUI(Tk):
 
         notis = self.db_manager.get_noti_by_apartment_code(self.user['apartment_code'])
         style = ttk.Style()
-        style.configure("Custom.Treeview", bordercolor="black", borderwidth=2)
-        self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
+        style.configure("Custom.Treeview", bordercolor="black", borderwidth=1, relief="solid")
+        self.tree = ttk.Treeview(self.canvas, style="Custom.Treeview")
         self.tree["columns"] = ( "one", "two", "three")
-        self.tree.column("#0", width=50, minwidth=100)
-        self.tree.column("one", width=100, minwidth=100)
-        self.tree.column("two", width=150, minwidth=100)
-        self.tree.column("three", width=100, minwidth=100)
+        self.tree.column("#0", width=100, minwidth=100)
+        self.tree.column("one", width=250, minwidth=100)
+        self.tree.column("two", width=0, minwidth=0,stretch=tk.NO)
+        self.tree.column("three", width=70, minwidth=100)
 
         self.tree.heading("#0", text="Sender", anchor=tk.W)
         self.tree.heading("one", text="Title", anchor=tk.W)

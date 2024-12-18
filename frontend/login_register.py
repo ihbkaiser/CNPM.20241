@@ -475,7 +475,7 @@ class LoginFrame(Frame):
         self.image_image_27 = PhotoImage(
             file="assets/frame0/image_27.png")
         self.image_27 = self.canvas.create_image(
-            361.0,
+            341.0,
             68.0,
             image=self.image_image_27
         )
@@ -622,10 +622,10 @@ class ForgetFrame(Frame):
         )
 
         self.canvas.create_text(
-            25.0,
-            8.0,
+            40.0,
+            3.0,
             anchor="nw",
-            text="Blue Moon Aparment",
+            text="Blue Moon Apartment",
             fill="#FFFFFF",
             font=("Inter Bold", 40 * -1)
         )
@@ -639,8 +639,190 @@ class ForgetFrame(Frame):
             font=("Inter Bold", 40 * -1)
         )
 
+        self.image_image_7 = PhotoImage(
+            file="assets/frame0/image_7.png")
+        self.image_7 = self.canvas.create_image(
+            38.0,
+            142.0,
+            image=self.image_image_7
+        )
 
+        self.image_image_8 = PhotoImage(
+            file="assets/frame0/image_8.png")
+        self.image_8 = self.canvas.create_image(
+            344.0,
+            209.0,
+            image=self.image_image_8
+        )
 
+        self.image_image_9 = PhotoImage(
+            file="assets/frame0/image_9.png")
+        self.image_9 = self.canvas.create_image(
+            89.0,
+            361.0,
+            image=self.image_image_9
+        )
+
+        self.image_image_10 = PhotoImage(
+            file="assets/frame0/image_10.png")
+        self.image_10 = self.canvas.create_image(
+            196.0,
+            418.0,
+            image=self.image_image_10
+        )
+
+        self.image_image_11 = PhotoImage(
+            file="assets/frame0/image_11.png")
+        self.image_11 = self.canvas.create_image(
+            99.0,
+            483.0,
+            image=self.image_image_11
+        )
+
+        self.image_image_12 = PhotoImage(
+            file="assets/frame0/image_12.png")
+        self.image_12 = self.canvas.create_image(
+            112.0,
+            561.0,
+            image=self.image_image_12
+        )
+
+        self.image_image_13 = PhotoImage(
+            file="assets/frame0/image_13.png")
+        self.image_13 = self.canvas.create_image(
+            283.0,
+            555.0,
+            image=self.image_image_13
+        )
+
+        self.image_image_14 = PhotoImage(
+            file="assets/frame0/image_14.png")
+        self.image_14 = self.canvas.create_image(
+            283.0,
+            616.0,
+            image=self.image_image_14
+        )
+
+        self.image_image_6 = PhotoImage(
+            file="assets/frame0/image_6.png")
+        self.image_6 = self.canvas.create_image(
+            303.0,
+            112.0,
+            image=self.image_image_6
+        )
+
+        self.image_image_15 = PhotoImage(
+            file="assets/frame0/image_15.png")
+        self.image_15 = self.canvas.create_image(
+            371.0,
+            424.0,
+            image=self.image_image_15
+        )
+
+        self.image_image_16 = PhotoImage(
+            file="assets/frame0/image_16.png")
+        self.image_16 = self.canvas.create_image(
+            905.0,
+            512.0,
+            image=self.image_image_16
+        )
+
+        self.image_image_17 = PhotoImage(
+            file="assets/frame0/image_17.png")
+        self.image_17 = self.canvas.create_image(
+            493.0,
+            336.0,
+            image=self.image_image_17
+        )
+
+        self.image_image_18 = PhotoImage(
+            file="assets/frame0/image_18.png")
+        self.image_18 = self.canvas.create_image(
+            971.0,
+            551.0,
+            image=self.image_image_18
+        )
+
+        self.image_image_19 = PhotoImage(
+            file="assets/frame0/image_19.png")
+        self.image_19 = self.canvas.create_image(
+            603.0,
+            25.0,
+            image=self.image_image_19
+        )
+
+        self.image_image_20 = PhotoImage(
+            file="assets/frame0/image_20.png")
+        self.image_20 = self.canvas.create_image(
+            566.0,
+            653.0,
+            image=self.image_image_20
+        )
+
+        self.image_image_21 = PhotoImage(
+            file="assets/frame0/image_21.png")
+        self.image_21 = self.canvas.create_image(
+            930.0,
+            213.0,
+            image=self.image_image_21
+        )
+
+        self.image_image_22 = PhotoImage(
+            file="assets/frame0/image_22.png")
+        self.image_22 = self.canvas.create_image(
+            731.0,
+            257.0,
+            image=self.image_image_22
+        )
+
+        self.image_image_23 = PhotoImage(
+            file="assets/frame0/image_23.png")
+        self.image_23 = self.canvas.create_image(
+            591.0,
+            449.0,
+            image=self.image_image_23
+        )
+
+        self.image_image_24 = PhotoImage(
+            file="assets/frame0/image_24.png")
+        self.image_24 = self.canvas.create_image(
+            448.0,
+            154.0,
+            image=self.image_image_24
+        )
+
+        self.image_image_25 = PhotoImage(
+            file="assets/frame0/image_25.png")
+        self.image_25 = self.canvas.create_image(
+            773.0,
+            55.0,
+            image=self.image_image_25
+        )
+
+        self.canvas.create_text(
+            62.0,
+            47.0,
+            anchor="nw",
+            text=" Merry Christmas",
+            fill="#D72638",
+            font=("Inter Bold", 32 * -1)
+        )
+
+        self.image_image_26 = PhotoImage(
+            file="assets/frame0/image_26.png")
+        self.image_26 = self.canvas.create_image(
+            44.0,
+            64.0,
+            image=self.image_image_26
+        )
+
+        self.image_image_27 = PhotoImage(
+            file="assets/frame0/image_27.png")
+        self.image_27 = self.canvas.create_image(
+            341.0,
+            68.0,
+            image=self.image_image_27
+        )
 
         self.entry_image_1 = PhotoImage(
             file="assets/frame2/entry_1.png")
@@ -939,8 +1121,8 @@ class RegisterFrame(Frame):
         )
 
         self.canvas.create_text(
-            25.0,
-            8.0,
+            40.0,
+            3.0,
             anchor="nw",
             text="Blue Moon Apartment",
             fill="#FFFFFF",
@@ -956,15 +1138,190 @@ class RegisterFrame(Frame):
             font=("Inter Bold", 40 * -1)
         )
 
+        self.image_image_6 = PhotoImage(
+            file="assets/frame0/image_6.png")
+        self.image_6 = self.canvas.create_image(
+            303.0,
+            112.0,
+            image=self.image_image_6
+        )
 
+        self.image_image_7 = PhotoImage(
+            file="assets/frame0/image_7.png")
+        self.image_7 = self.canvas.create_image(
+            38.0,
+            142.0,
+            image=self.image_image_7
+        )
 
+        self.image_image_8 = PhotoImage(
+            file="assets/frame0/image_8.png")
+        self.image_8 = self.canvas.create_image(
+            344.0,
+            209.0,
+            image=self.image_image_8
+        )
 
+        self.image_image_9 = PhotoImage(
+            file="assets/frame0/image_9.png")
+        self.image_9 = self.canvas.create_image(
+            89.0,
+            361.0,
+            image=self.image_image_9
+        )
 
+        self.image_image_10 = PhotoImage(
+            file="assets/frame0/image_10.png")
+        self.image_10 = self.canvas.create_image(
+            196.0,
+            418.0,
+            image=self.image_image_10
+        )
 
+        self.image_image_11 = PhotoImage(
+            file="assets/frame0/image_11.png")
+        self.image_11 = self.canvas.create_image(
+            99.0,
+            483.0,
+            image=self.image_image_11
+        )
 
+        self.image_image_12 = PhotoImage(
+            file="assets/frame0/image_12.png")
+        self.image_12 = self.canvas.create_image(
+            112.0,
+            561.0,
+            image=self.image_image_12
+        )
 
+        self.image_image_13 = PhotoImage(
+            file="assets/frame0/image_13.png")
+        self.image_13 = self.canvas.create_image(
+            283.0,
+            555.0,
+            image=self.image_image_13
+        )
 
+        self.image_image_14 = PhotoImage(
+            file="assets/frame0/image_14.png")
+        self.image_14 = self.canvas.create_image(
+            283.0,
+            616.0,
+            image=self.image_image_14
+        )
 
+        self.image_image_15 = PhotoImage(
+            file="assets/frame0/image_15.png")
+        self.image_15 = self.canvas.create_image(
+            371.0,
+            424.0,
+            image=self.image_image_15
+        )
+
+        self.image_image_16 = PhotoImage(
+            file="assets/frame0/image_16.png")
+        self.image_16 = self.canvas.create_image(
+            905.0,
+            512.0,
+            image=self.image_image_16
+        )
+
+        self.image_image_17 = PhotoImage(
+            file="assets/frame0/image_17.png")
+        self.image_17 = self.canvas.create_image(
+            493.0,
+            336.0,
+            image=self.image_image_17
+        )
+
+        self.image_image_18 = PhotoImage(
+            file="assets/frame0/image_18.png")
+        self.image_18 = self.canvas.create_image(
+            971.0,
+            551.0,
+            image=self.image_image_18
+        )
+
+        self.image_image_19 = PhotoImage(
+            file="assets/frame0/image_19.png")
+        self.image_19 = self.canvas.create_image(
+            603.0,
+            25.0,
+            image=self.image_image_19
+        )
+
+        self.image_image_20 = PhotoImage(
+            file="assets/frame0/image_20.png")
+        self.image_20 = self.canvas.create_image(
+            566.0,
+            653.0,
+            image=self.image_image_20
+        )
+
+        self.image_image_21 = PhotoImage(
+            file="assets/frame0/image_21.png")
+        self.image_21 = self.canvas.create_image(
+            930.0,
+            213.0,
+            image=self.image_image_21
+        )
+
+        self.image_image_22 = PhotoImage(
+            file="assets/frame0/image_22.png")
+        self.image_22 = self.canvas.create_image(
+            731.0,
+            257.0,
+            image=self.image_image_22
+        )
+
+        self.image_image_23 = PhotoImage(
+            file="assets/frame0/image_23.png")
+        self.image_23 = self.canvas.create_image(
+            591.0,
+            449.0,
+            image=self.image_image_23
+        )
+
+        self.image_image_24 = PhotoImage(
+            file="assets/frame0/image_24.png")
+        self.image_24 = self.canvas.create_image(
+            448.0,
+            154.0,
+            image=self.image_image_24
+        )
+
+        self.image_image_25 = PhotoImage(
+            file="assets/frame0/image_25.png")
+        self.image_25 = self.canvas.create_image(
+            773.0,
+            55.0,
+            image=self.image_image_25
+        )
+
+        self.canvas.create_text(
+            62.0,
+            47.0,
+            anchor="nw",
+            text=" Merry Christmas",
+            fill="#D72638",
+            font=("Inter Bold", 32 * -1)
+        )
+
+        self.image_image_26 = PhotoImage(
+            file="assets/frame0/image_26.png")
+        self.image_26 = self.canvas.create_image(
+            44.0,
+            64.0,
+            image=self.image_image_26
+        )
+
+        self.image_image_27 = PhotoImage(
+            file="assets/frame0/image_27.png")
+        self.image_27 = self.canvas.create_image(
+            341.0,
+            68.0,
+            image=self.image_image_27
+        )
 
         self.entry_image_1 = PhotoImage(
             file="assets/frame1/entry_1.png")
