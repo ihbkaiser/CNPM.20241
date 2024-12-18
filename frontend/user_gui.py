@@ -121,7 +121,7 @@ class UserGUI(Tk):
             71.71875,
             1012.5,
             141.328125,
-            fill="#D9D9D9",
+            fill="#F2EDF3",
             outline="")
         
         self.canvas.create_rectangle(
@@ -129,7 +129,7 @@ class UserGUI(Tk):
             71.71875,
             220,
             720,
-            fill="#D9D9D9",
+            fill="#F2EDF3",
             outline="")
 
         self.canvas.create_rectangle(

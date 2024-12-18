@@ -41,7 +41,8 @@ class DBManager:
             email VARCHAR(255) DEFAULT NULL,
             dob DATE DEFAULT NULL,
             gender ENUM('male','female','undefined') DEFAULT NULL,
-            id_card VARCHAR(20) DEFAULT NULL
+            id_card VARCHAR(20) DEFAULT NULL,
+            hometown NVARCHAR(255) DEFAULT NULL
         );                
         """)
         self.conn.commit()
