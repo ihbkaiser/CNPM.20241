@@ -300,7 +300,7 @@ class DBManager:
             raise Exception(f"Lỗi khi cập nhật mật khẩu: {err}")
     
     def get_all_userfee(self):
-        self.cursor.execute("SELECT * FROM userfee")
+        self.cursor.execute("SELECT userfee.fee_name,userfee.apartment_code, userfee.total, userfee.paid, userfee.remain, deadline FROM userfee JOIN fees ON userfee.fee_name = fees.fee_name")
         return self.cursor.fetchall()
 
     
@@ -533,4 +533,15 @@ class DBManager:
     def update_user_by_admin(self,old_apt_code, full_name, username, password, apt_code, phone_number):
         self.cursor.execute("UPDATE users SET full_name = %s, username = %s, password = %s, apartment_code = %s, phone_number = %s WHERE apartment_code = %s",
                             (full_name, username, password, apt_code, phone_number, old_apt_code))
+        self.conn.commit()
+
+    def add_userfee_all(self, fee_name,type, total,  deadline):
+        self.cursor.execute("INSERT INTO fees VALUES (%s, %s,0,0,0, %s)", (fee_name, deadline, type))
+        self.conn.commit()
+        self.cursor.execute("""
+            INSERT INTO userfee (apartment_code, fee_name, total, paid, remain)
+            SELECT apartment_code, %s, %s, 0, 0
+            FROM users
+            WHERE users.account_type = 'user'
+        """, (fee_name, total))
         self.conn.commit()
