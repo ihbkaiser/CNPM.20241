@@ -273,7 +273,7 @@ class LoginFrame(Frame):
         self.image_image_3 = PhotoImage(
             file="assets/frame0/image_3.png")
         self.image_3 = self.canvas.create_image(
-            517.0,
+            522.0,
             47.0,
             image=self.image_image_3
         )
@@ -976,7 +976,7 @@ class ForgetFrame(Frame):
         self.image_image_2 = PhotoImage(
             file="assets/frame2/image_2.png")
         self.image_2 = self.canvas.create_image(
-            517.0,
+            522.0,
             47.0,
             image=self.image_image_2
         )
@@ -1537,7 +1537,7 @@ class RegisterFrame(Frame):
         self.image_image_2 = PhotoImage(
             file="assets/frame1/image_2.png")
         self.image_2 = self.canvas.create_image(
-            517.0,
+            522.0,
             47.0,
             image=self.image_image_2
         )

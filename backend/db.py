@@ -308,7 +308,7 @@ class DBManager:
         try:
             self.cursor.execute("""
             INSERT INTO userfee ( apartment_code, fee_name, total, paid, remain)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s)
             """, (apartment_code, fee_name, total, paid, remain))
             self.conn.commit() 
         except mysql.connector.Error as err:
@@ -545,3 +545,11 @@ class DBManager:
             WHERE users.account_type = 'user'
         """, (fee_name, total))
         self.conn.commit()
+
+    def get_all_apts(self):
+        self.cursor.execute("SELECT apartment_code FROM users WHERE account_type = 'user'")
+        return self.cursor.fetchall()
+    
+    def get_fee_by_name(self, fee_name):
+        self.cursor.execute("SELECT * FROM fees WHERE fee_name = %s", (fee_name,))
+        return self.cursor.fetchone()

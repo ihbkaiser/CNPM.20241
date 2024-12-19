@@ -988,6 +988,26 @@ class AdminGUI(Tk):
             height=45
         )
 
+        self.add_img=Image.open("assets/admin_gui/add1.png")
+        self.add_img = self.add_img.resize((220, 45))
+        self.add_img = ImageTk.PhotoImage(self.add_img)
+        self.add_button = Button(
+            image=self.add_img, 
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.add1,
+            relief="flat"
+        )
+        self.add_button.place(
+            x=600.0,
+            y=665.0,
+            anchor="nw",
+            width=420,
+            height=45
+        )
+
     def add_all(self):
         popup = Toplevel(self.canvas)
         popup.title("Add Fee to All Apartments")
@@ -1058,6 +1078,84 @@ class AdminGUI(Tk):
             popup.after(2000, popup.destroy)
 
         Button(popup, text="Add",  command=submit_entries, font=("Arial",20)).place(x=170, y=320)
+    
+    def add1(self):
+        popup = Toplevel(self.canvas)
+        popup.title("Add Fee to Apartment")
+        popup.geometry("400x300")
+        popup.resizable(False, False)
+        Label(popup, text="Apartment:", font=("Arial",20)).place(x=20, y=20)
+        apt_list = []
+        for apt in self.db_manager.get_all_apts():
+            apt_list.append(apt['apartment_code'])
+        self.apt_entry = ttk.Combobox(popup, values=apt_list,  font=("Arial",18) )
+        self.apt_entry.place(x=170, y=20, height=30, width=200)
+        Label(popup, text="Fee Name:", font=("Arial",20)).place(x=20, y=80)
+        fees_list = []
+        selected_apt = None
+        def on_apt_selected(*args):
+            nonlocal selected_apt
+            selected_apt = self.apt_entry.get()
+            # Get fees this apartment doesn't have yet
+            existing_fees = self.db_manager.get_userfee_by_apartment_code(selected_apt)
+            existing_fee_names = [fee['fee_name'] for fee in existing_fees]
+            all_fees = self.db_manager.get_all_fees()
+            fees_list.clear()
+            for fee in all_fees:
+                if fee['fee_name'] not in existing_fee_names:
+                    fees_list.append(fee['fee_name'])
+            self.fee_entry['values'] = fees_list
+
+        self.apt_entry.bind("<<ComboboxSelected>>", on_apt_selected)
+        
+        self.fee_entry = ttk.Combobox(popup, values=fees_list, font=("Arial",18))
+        self.fee_entry.place(x=170, y=80, height=30, width=200)
+
+        def on_fee_selected(*args):
+            selected_fee = self.fee_entry.get()
+            fee_data = self.db_manager.get_fee_by_name(selected_fee)
+            if fee_data and fee_data['type'] == 'unrequired':
+                self.amount_entry.config(state="disabled")
+                self.amount_entry.delete(0, 'end')
+                self.amount_entry.insert(0, '0')
+            else:
+                self.amount_entry.config(state="normal")
+                self.amount_entry.delete(0, 'end')
+
+        self.fee_entry.bind("<<ComboboxSelected>>", on_fee_selected)
+
+        Label(popup, text="Total:", font=("Arial",20)).place(x=20, y=140)
+        self.amount_entry = Entry(popup, font=("Arial",20))
+        self.amount_entry.place(x=170, y=140,height=30, width=200)
+
+        self.success_label = Label(popup, text="", font=("Arial",20), fg="red")
+        self.success_label.place(x=50, y=260)
+
+        def submit_entries():
+            if not selected_apt or not self.fee_entry.get():
+                self.success_label.config(text="Please fill in all fields!")
+                return
+            apt_name = self.apt_entry.get()
+            fee_name = self.fee_entry.get()
+            fee_data = self.db_manager.get_fee_by_name(fee_name)
+            if fee_data and fee_data['type'] == 'unrequired':
+                self.db_manager.add_userfee(apt_name, fee_name, 0, 0, 0)
+            if fee_data and fee_data['type'] == 'required':
+                total = self.amount_entry.get()
+                if not total:
+                    self.success_label.config(text="Please fill in all fields!")
+                    return
+                if total == '0':
+                    self.success_label.config(text="Total cannot be 0!")
+                    return
+                self.db_manager.add_userfee(apt_name, fee_name, total, 0, total)
+            
+            self.success_label.config(text="Fee added successfully!", fg="green")
+            popup.after(2000, popup.destroy)
+
+        Button(popup, text="Add", command=submit_entries, font=("Arial",20)).place(x=170, y=200)
+
+
 
 
     def pay(self):
