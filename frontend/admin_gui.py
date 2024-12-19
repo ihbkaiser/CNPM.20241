@@ -1,5 +1,6 @@
 from pathlib import Path
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, Label
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, Label, messagebox, Toplevel
+from tkcalendar import Calendar, DateEntry
 from tkinter import ttk
 from PIL import Image, ImageTk
 import tkinter as tk
@@ -1386,10 +1387,6 @@ class AdminGUI(Tk):
         )
 
 
-
-
-                        
-
     def edit_fee(self):
         self.hide_buttons_in_region(190, 79.32812, 1012, 720)
         new_image = PhotoImage(file="assets/admin_gui/button_1.png")
@@ -1423,6 +1420,351 @@ class AdminGUI(Tk):
         720,
         fill="#FFFFFF",
         outline="#000000")
+
+        fee_list = self.db_manager.get_all_userfee()
+
+        # Create a Treeview
+        style = ttk.Style()
+        style.configure(
+        "Custom.Treeview",
+        font=("Arial", 14),  # Font set to Arial, size 14
+        background="pink",  # Pink background
+        foreground="black",  # Black text
+        fieldbackground="pink",  # Pink table field background
+        rowheight=30  # Adjust row height for better readability
+    )
+        style.configure(
+        "Custom.Treeview.Heading",
+        font=("Arial", 14, "bold"),  # Bold font for headings
+        background="pink",  # Pink header background
+        foreground="black"  # Black text for headers
+    )
+        self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
+        self.tree["columns"] = ("zero", "one", "three","four")
+        self.tree.column("#0", width=200, minwidth=100)
+        self.tree.column("zero", width=100, minwidth=100)
+        self.tree.column("one", width=70, minwidth=100)
+        # self.tree.column("two", width=70, minwidth=100)
+        self.tree.column("three", width=70, minwidth=100)
+        self.tree.column("four", width=150, minwidth=100)
+
+        self.tree.heading("#0", text="Fee Name", anchor=tk.W)
+        self.tree.heading("zero", text="Apartment", anchor=tk.W)
+        self.tree.heading("one", text="Total", anchor=tk.W)
+        # self.tree.heading("two", text="Paid", anchor=tk.W)
+        self.tree.heading("three", text="Remain", anchor=tk.W)
+        self.tree.heading("four", text="Deadline", anchor=tk.W)
+
+        # Insert some sample data
+        for i in range(len(fee_list)):
+            self.tree.insert("", "end", text=f"{fee_list[i]['fee_name']}", values=(f"{fee_list[i]['apartment_code']}",f"{fee_list[i]['total']}",  f"{fee_list[i]['remain']}", f"{fee_list[i]['deadline']}"))
+
+        # Place the Treeview on top of the Canvas
+        self.tree.place(x=220, y=141, width=792, height=506)
+
+        def confirm_delete_fee(event):
+            selected_item = self.tree.selection()[0]
+            values = self.tree.item(selected_item, 'values')
+            fee_name = self.tree.item(selected_item, 'text')
+            if messagebox.askokcancel("Delete Fee", f"Are you sure you want to delete {fee_name} for apartment {values[0]}?"):
+                self.db_manager.delete_userfee(fee_name, values[0])
+                self.tree.delete(selected_item)
+
+        self.tree.bind("<Double-1>", confirm_delete_fee)
+
+        self.addall_img=Image.open("assets/admin_gui/add_all.png")
+        self.addall_img = self.addall_img.resize((220, 45))
+        self.addall_img = ImageTk.PhotoImage(self.addall_img)
+        self.add_all_button = Button(
+            image=self.addall_img, 
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.add_all,
+            relief="flat"
+        )
+        self.add_all_button.place(
+            x=230.0,
+            y=665.0,
+            anchor="nw",
+            width=220,
+            height=45
+        )
+
+        self.add_img=Image.open("assets/admin_gui/add1.png")
+        self.add_img = self.add_img.resize((320, 45))
+        self.add_img = ImageTk.PhotoImage(self.add_img)
+        self.add_button = Button(
+            image=self.add_img, 
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.add1,
+            relief="flat"
+        )
+        self.add_button.place(
+            x=660.0,
+            y=665.0,
+            anchor="nw",
+            width=320,
+            height=45
+        )
+
+        self.new_img=Image.open("assets/admin_gui/new_fee.png")
+        self.new_img = self.new_img.resize((150, 45))
+        self.new_img = ImageTk.PhotoImage(self.new_img)
+        self.new_fee_button = Button(
+            image=self.new_img, 
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.new_fee,
+            relief="flat"
+        )
+        self.new_fee_button.place(
+            x=480.0,
+            y=665.0,
+            anchor="nw",
+            width=150,
+            height=45
+        )
+
+    def add_all(self):
+        popup = Toplevel(self.canvas)
+        popup.title("Add Fee to All Apartments")
+        popup.geometry("400x420")
+        popup.resizable(False, False)
+        # Create canvas to hold background image
+        bg_canvas = Canvas(popup, width=400, height=420, highlightthickness=0)
+        bg_canvas.pack(fill="both", expand=True)
+
+        # Load and display background image
+        bg_image = Image.open("assets/admin_gui/bg.png")
+        bg_image = bg_image.resize((400, 420))
+        self.bg_photo = ImageTk.PhotoImage(bg_image) # Save as instance var to prevent garbage collection
+        bg_canvas.create_image(0, 0, image=self.bg_photo, anchor="nw")
+
+        # Create frame to hold other widgets
+        content_frame = Frame(popup, bg='#FFFFFF')
+        content_frame.place(relx=0.5, rely=0.5, anchor="center")
+        Label(popup, text="Fee Name:",font=("Arial",20), bg="#E1F3FD").place(x=20, y=20)
+        self.fee_name_entry = Entry(popup,  font=("Arial",20))
+        self.fee_name_entry.place(x=170, y=20,height=30, width=200)
+
+        def on_type_selected(*args):
+            selected_type = self.type_entry.get()
+            if selected_type == "Unrequired":
+                self.amount_entry.config(state="disabled")
+            else:
+                self.amount_entry.config(state="normal")
+
+        Label(popup, text="Type:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=80)
+        self.type_entry = ttk.Combobox(popup, values=["Required", "Unrequired"],  font=("Arial",18) )
+        self.type_entry.place(x=170, y=80, height=30, width=200)
+        self.type_entry.bind("<<ComboboxSelected>>", on_type_selected)
+
+        Label(popup, text="Total:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=140)
+        self.amount_entry = Entry(popup,  font=("Arial",20))
+        self.amount_entry.place(x=170, y=140,height=30, width=200)
+
+        Label(popup, text="Deadline:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=200)
+        self.deadline_entry = DateEntry(popup,  font=("Arial",20), date_pattern='y-mm-dd')
+        self.deadline_entry.place(x=170, y=200,height=30, width=200)
+
+        Label(popup, text="Time:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=260)
+        self.hour_entry = ttk.Combobox(popup, values=[f"{i:02d}" for i in range(24)], font=("Arial",18), width=3)
+        self.hour_entry.place(x=170, y=260, height=30, width=60)
+        self.minute_entry = ttk.Combobox(popup, values=[f"{i:02d}" for i in range(60)], font=("Arial",18), width=3)
+        self.minute_entry.place(x=240, y=260, height=30, width=60)
+        self.success_label = Label(popup, text="", font=("Arial",20), fg="red", bg="#E1F3FD")
+        self.success_label.place(x=50, y=385)
+
+        def submit_entries():
+            fee_name = self.fee_name_entry.get()
+            fee_type = self.type_entry.get()
+            fee_type=fee_type.lower()
+            if not fee_name or not fee_type:
+                self.success_label.config(text="Please fill in all fields!")
+            if fee_type == "unrequired":
+                deadline_date = self.deadline_entry.get()
+                deadline_time = f"{self.hour_entry.get()}:{self.minute_entry.get()}:00"
+                if not deadline_date or not self.hour_entry.get() or not self.minute_entry.get(): 
+                    self.success_label.config(text="Please fill in all fields!")
+                    return
+                deadline = f"{deadline_date} {deadline_time}"
+                self.db_manager.add_userfee_all(fee_name, fee_type,"0", deadline)
+            else:
+                total = self.amount_entry.get()
+                if not total:
+                    self.success_label.config(text="Please fill in all fields!")
+                    return
+                if total == '0':
+                    self.success_label.config(text="Total cannot be 0!")
+                    return
+                deadline_date = self.deadline_entry.get()
+                deadline_time = f"{self.hour_entry.get()}:{self.minute_entry.get()}:00"
+                if not deadline_date or not self.hour_entry.get() or not self.minute_entry.get(): 
+                    self.success_label.config(text="Please fill in all fields!")
+                    return
+                deadline = f"{deadline_date} {deadline_time}"
+                self.db_manager.add_userfee_all(fee_name, fee_type, total, deadline)
+            self.success_label.config(text="Fee added successfully!", fg="green")
+            popup.after(2000, popup.destroy)
+
+        Button(popup, text="Add",  command=submit_entries, font=("Arial",20)).place(x=170, y=320)
+    
+    def add1(self):
+        popup = Toplevel(self.canvas)
+        popup.title("Add Fee to Apartment")
+        popup.geometry("400x300")
+        popup.resizable(False, False)
+         # Create canvas to hold background image
+        bg_canvas = Canvas(popup, width=400, height=300, highlightthickness=0)
+        bg_canvas.pack(fill="both", expand=True)
+
+        # Load and display background image
+        bg_image = Image.open("assets/admin_gui/bg.png")
+        bg_image = bg_image.resize((400, 300))
+        self.bg_photo = ImageTk.PhotoImage(bg_image) # Save as instance var to prevent garbage collection
+        bg_canvas.create_image(0, 0, image=self.bg_photo, anchor="nw")
+
+        # Create frame to hold other widgets
+        content_frame = Frame(popup, bg='#FFFFFF')
+        content_frame.place(relx=0.5, rely=0.5, anchor="center")
+        Label(popup, text="Apartment:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=20)
+        apt_list = []
+        for apt in self.db_manager.get_all_apts():
+            apt_list.append(apt['apartment_code'])
+        self.apt_entry = ttk.Combobox(popup, values=apt_list,  font=("Arial",18) )
+        self.apt_entry.place(x=170, y=20, height=30, width=200)
+        Label(popup, text="Fee Name:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=80)
+        fees_list = []
+        selected_apt = None
+        def on_apt_selected(*args):
+            nonlocal selected_apt
+            selected_apt = self.apt_entry.get()
+            # Get fees this apartment doesn't have yet
+            existing_fees = self.db_manager.get_userfee_by_apartment_code(selected_apt)
+            existing_fee_names = [fee['fee_name'] for fee in existing_fees]
+            all_fees = self.db_manager.get_all_fees()
+            fees_list.clear()
+            for fee in all_fees:
+                if fee['fee_name'] not in existing_fee_names:
+                    fees_list.append(fee['fee_name'])
+            self.fee_entry['values'] = fees_list
+
+        self.apt_entry.bind("<<ComboboxSelected>>", on_apt_selected)
+        
+        self.fee_entry = ttk.Combobox(popup, values=fees_list, font=("Arial",18))
+        self.fee_entry.place(x=170, y=80, height=30, width=200)
+
+        def on_fee_selected(*args):
+            selected_fee = self.fee_entry.get()
+            fee_data = self.db_manager.get_fee_by_name(selected_fee)
+            if fee_data and fee_data['type'] == 'unrequired':
+                self.amount_entry.config(state="disabled")
+                self.amount_entry.delete(0, 'end')
+                self.amount_entry.insert(0, '0')
+            else:
+                self.amount_entry.config(state="normal")
+                self.amount_entry.delete(0, 'end')
+
+        self.fee_entry.bind("<<ComboboxSelected>>", on_fee_selected)
+
+        Label(popup, text="Total:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=140)
+        self.amount_entry = Entry(popup, font=("Arial",20))
+        self.amount_entry.place(x=170, y=140,height=30, width=200)
+
+        self.success_label = Label(popup, text="", font=("Arial",20), fg="red", bg="#E1F3FD")
+        self.success_label.place(x=50, y=260)
+
+        def submit_entries():
+            if not selected_apt or not self.fee_entry.get():
+                self.success_label.config(text="Please fill in all fields!")
+                return
+            apt_name = self.apt_entry.get()
+            fee_name = self.fee_entry.get()
+            fee_data = self.db_manager.get_fee_by_name(fee_name)
+            if fee_data and fee_data['type'] == 'unrequired':
+                self.db_manager.add_userfee(apt_name, fee_name, 0, 0, 0)
+            if fee_data and fee_data['type'] == 'required':
+                total = self.amount_entry.get()
+                if not total:
+                    self.success_label.config(text="Please fill in all fields!")
+                    return
+                if total == '0':
+                    self.success_label.config(text="Total cannot be 0!")
+                    return
+                self.db_manager.add_userfee(apt_name, fee_name, total, 0, total)
+            
+            self.success_label.config(text="Fee added successfully!", fg="green")
+            popup.after(2000, popup.destroy)
+
+        Button(popup, text="Add", command=submit_entries, font=("Arial",20)).place(x=170, y=200)
+
+    def new_fee(self):
+        popup = Toplevel(self.canvas)
+        popup.title("Create New Fee") 
+        popup.geometry("400x380")
+        popup.resizable(False, False)
+
+        # Create canvas to hold background image
+        bg_canvas = Canvas(popup, width=400, height=380, highlightthickness=0)
+        bg_canvas.pack(fill="both", expand=True)
+
+        # Load and display background image
+        bg_image = Image.open("assets/admin_gui/bg.png")
+        bg_image = bg_image.resize((400, 380))
+        self.bg_photo = ImageTk.PhotoImage(bg_image) # Save as instance var to prevent garbage collection
+        bg_canvas.create_image(0, 0, image=self.bg_photo, anchor="nw")
+
+        # Create frame to hold other widgets
+        content_frame = Frame(popup, bg='#FFFFFF')
+        content_frame.place(relx=0.5, rely=0.5, anchor="center")
+        Label(popup, text="Fee Name:",font=("Arial",20),bg="#E1F3FD").place(x=20, y=20)
+        self.fee_name_entry = Entry(popup,  font=("Arial",20))
+        self.fee_name_entry.place(x=170, y=20,height=30, width=200)
+
+        Label(popup, text="Type:", font=("Arial",20),bg="#E1F3FD").place(x=20, y=80)
+        self.type_entry = ttk.Combobox(popup, values=["Required", "Unrequired"],  font=("Arial",18) )
+        self.type_entry.place(x=170, y=80, height=30, width=200)
+
+        Label(popup, text="Deadline:", font=("Arial",20),bg="#E1F3FD").place(x=20, y=140)
+        self.deadline_entry = DateEntry(popup,  font=("Arial",20), date_pattern='y-mm-dd')
+        self.deadline_entry.place(x=170, y=140,height=30, width=200)
+
+        Label(popup, text="Time:", font=("Arial",20),bg="#E1F3FD").place(x=20, y=200)
+        self.hour_entry = ttk.Combobox(popup, values=[f"{i:02d}" for i in range(24)], font=("Arial",18), width=3)
+        self.hour_entry.place(x=170, y=200, height=30, width=60)
+        self.minute_entry = ttk.Combobox(popup, values=[f"{i:02d}" for i in range(60)], font=("Arial",18), width=3)
+        self.minute_entry.place(x=240, y=200, height=30, width=60)
+        self.success_label = Label(popup, text="", font=("Arial",20), fg="red",bg="#E1F3FD")
+        self.success_label.place(x=50, y=325)
+
+        def submit_entries():
+            fee_name = self.fee_name_entry.get()
+            fee_type = self.type_entry.get()
+            fee_type=fee_type.lower()
+            if not fee_name or not fee_type:
+                self.success_label.config(text="Please fill in all fields!")
+            deadline_date = self.deadline_entry.get()
+            deadline_time = f"{self.hour_entry.get()}:{self.minute_entry.get()}:00"
+            if not deadline_date or not self.hour_entry.get() or not self.minute_entry.get(): 
+                self.success_label.config(text="Please fill in all fields!")
+                return
+            deadline = f"{deadline_date} {deadline_time}"
+            self.db_manager.add_fee(fee_name, deadline, 0, 0, 0, fee_type)
+            self.success_label.config(text="Fee added successfully!", fg="green")
+            popup.after(2000, popup.destroy)
+
+        Button(popup, text="Add",  command=submit_entries, font=("Arial",20)).place(x=170, y=260)
+        
+
+
+
 
     def pay(self):
         self.hide_buttons_in_region(190, 79.32812, 1012, 720)

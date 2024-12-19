@@ -300,7 +300,7 @@ class DBManager:
             raise Exception(f"Lỗi khi cập nhật mật khẩu: {err}")
     
     def get_all_userfee(self):
-        self.cursor.execute("SELECT * FROM userfee")
+        self.cursor.execute("SELECT userfee.fee_name,userfee.apartment_code, userfee.total, userfee.paid, userfee.remain, deadline FROM userfee JOIN fees ON userfee.fee_name = fees.fee_name")
         return self.cursor.fetchall()
 
     
@@ -308,7 +308,7 @@ class DBManager:
         try:
             self.cursor.execute("""
             INSERT INTO userfee ( apartment_code, fee_name, total, paid, remain)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s)
             """, (apartment_code, fee_name, total, paid, remain))
             self.conn.commit() 
         except mysql.connector.Error as err:
@@ -330,12 +330,12 @@ class DBManager:
         self.cursor.execute("SELECT fee_name FROM fees")
         return [row['fee_name'] for row in self.cursor.fetchall()]
 
-    def add_fee(self, fee_name, deadline, total, paid, remain):
+    def add_fee(self, fee_name, deadline, total, paid, remain, type):
         try:
             self.cursor.execute("""
-            INSERT INTO fees (fee_name, deadline, total, paid, remain)
-            VALUES (%s, %s, %s, %s, %s)
-            """, (fee_name, deadline, total, paid, remain))
+            INSERT INTO fees (fee_name, deadline, total, paid, remain, type)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """, (fee_name, deadline, total, paid, remain, type))
             self.conn.commit() 
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi thêm phí: {err}")
@@ -534,3 +534,22 @@ class DBManager:
         self.cursor.execute("UPDATE users SET full_name = %s, username = %s, password = %s, apartment_code = %s, phone_number = %s WHERE apartment_code = %s",
                             (full_name, username, password, apt_code, phone_number, old_apt_code))
         self.conn.commit()
+
+    def add_userfee_all(self, fee_name,type, total,  deadline):
+        self.cursor.execute("INSERT INTO fees VALUES (%s, %s,0,0,0, %s)", (fee_name, deadline, type))
+        self.conn.commit()
+        self.cursor.execute("""
+            INSERT INTO userfee (apartment_code, fee_name, total, paid, remain)
+            SELECT apartment_code, %s, %s, 0, 0
+            FROM users
+            WHERE users.account_type = 'user'
+        """, (fee_name, total))
+        self.conn.commit()
+
+    def get_all_apts(self):
+        self.cursor.execute("SELECT apartment_code FROM users WHERE account_type = 'user'")
+        return self.cursor.fetchall()
+    
+    def get_fee_by_name(self, fee_name):
+        self.cursor.execute("SELECT * FROM fees WHERE fee_name = %s", (fee_name,))
+        return self.cursor.fetchone()
