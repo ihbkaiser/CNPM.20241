@@ -8,6 +8,7 @@ from backend.auth import AuthManager
 from PIL import Image, ImageDraw, ImageFont
 from PIL import ImageTk
 from tkinter import messagebox, Toplevel
+import random
 
 class UserGUI(Tk):
     def __init__(self, root, user):
@@ -261,7 +262,7 @@ class UserGUI(Tk):
         self.noti_button.image = new_image
         if self.tree:
             self.tree.place_forget()
-        self.hide_buttons_in_region(220, 141, 1012.5, 720)
+        self.hide_buttons_in_region(207.25, 103.0, 1012.5, 720)
         self.canvas.create_rectangle(
             220,
             141,
@@ -278,6 +279,8 @@ class UserGUI(Tk):
             432.5,
             image=self.image_img
         )
+
+
         full_name = self.user.get('full_name', 'NULL')
         date_of_birth = self.user.get('dob', 'NULL')
         phone_number = self.user.get('phone_number', 'NULL')
@@ -450,13 +453,16 @@ class UserGUI(Tk):
             image=self.image_image_20
         )
 
+        random_color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+
         self.canvas.create_oval(
             229.25,
             214.0,
             363.25,
             348.0,
-            fill="blue",
-            outline="")
+            fill=random_color,  # Màu ngẫu nhiên
+            outline=""  # Không có đường viền
+        )
 
         self.image_image_21 = PhotoImage(
             file="assets/profile/image_21.png")
@@ -709,7 +715,7 @@ class UserGUI(Tk):
 
         # Save Button
         save_button = Button(self.update_window, text="Save", font=("Arial", 12, "bold"), bg="#FFB6C1", fg="#FFFFFF", command=self.save_changes)
-        save_button.place(x=120, y=260)
+        save_button.place(x=170, y=250)
 
         # Để giữ ảnh trong bộ nhớ
         self.update_window.bg_photo = bg_photo
@@ -819,7 +825,7 @@ class UserGUI(Tk):
         self.noti_button.image = new_image
         if self.tree:
             self.tree.place_forget()
-        self.hide_buttons_in_region(220, 141, 1012.5, 720)
+        self.hide_buttons_in_region(202.25, 93.0, 1012.5, 720)
 
         self.canvas.create_rectangle(
         220,
@@ -888,7 +894,7 @@ class UserGUI(Tk):
         self.noti_button.image = new_image
         if self.tree:
             self.tree.place_forget()
-        self.hide_buttons_in_region(220, 141, 1012.5, 720)
+        self.hide_buttons_in_region(207.25, 103.0, 1012.5, 720)
 
         self.canvas.create_rectangle(
         220,

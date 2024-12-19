@@ -501,7 +501,7 @@ class AdminGUI(Tk):
         self.image_image_22 = PhotoImage(
             file="assets/profile/image_22.png")
         self.image_22 = self.canvas.create_image(
-            822.25,
+            836.25,
             199.0,
             image=self.image_image_22
         )
@@ -741,7 +741,7 @@ class AdminGUI(Tk):
 
         # Save Button
         save_button = Button(self.update_window, text="Save", font=("Arial", 12, "bold"), bg="#FFB6C1", fg="#FFFFFF", command=self.save_changes)
-        save_button.place(x=120, y=260)
+        save_button.place(x=170, y=250)
 
         # Để giữ ảnh trong bộ nhớ
         self.update_window.bg_photo = bg_photo
