@@ -930,26 +930,49 @@ class UserGUI(Tk):
             height=60.0
         )
 
-        self.entry_image_2 = PhotoImage(
-            file="assets/user_gui/entry_3.png")
-        self.entry_bg_2 = self.canvas.create_image(
-            749.25,
-            259.5,
-            image=self.entry_image_2
-        )
-        self.fee_name_entry = Entry(
-            bd=0,
-            bg="#D4FC79",
-            fg="#000716",
-            highlightthickness=0,
-            font=("Arial", 20)
-        )
+        self.paid_var = tk.StringVar()
+        self.include_charity_var = tk.BooleanVar()
 
-        self.fee_name_entry.place(
+        def update_options():
+            if self.include_charity_var.get():
+                self.paid_options = self.db_manager.get_fee_need_to_pay(self.user['apartment_code'], include_charity=True)
+            else:
+                self.paid_options = self.db_manager.get_fee_need_to_pay(self.user['apartment_code'],include_charity=False)
+            self.paid_dropdown['values'] = self.paid_options
+
+        self.paid_options = self.db_manager.get_fee_need_to_pay(self.user['apartment_code'],include_charity=False)
+        self.paid_dropdown = ttk.Combobox(
+            self.root,
+            textvariable=self.paid_var,
+            values=self.paid_options,
+            font=("Arial", 20),
+            state="readonly"
+        )
+        self.paid_dropdown.place(
             x=610.25,
             y=242.0,
             width=278.0,
             height=36.0
+        )
+        self.paid_dropdown.configure(background="#00FF00", foreground="#FF0000")
+
+        self.include_charity_check = tk.Checkbutton(
+            self.root,
+            text="love people ?",
+            variable=self.include_charity_var,
+            command=update_options,
+            font=("Arial", 20),
+            background="#FFFFFF"
+        )
+        self.paid_dropdown.place(
+            x=610.25,
+            y=242.0,
+            width=278.0,
+            height=36.0
+        )
+        self.include_charity_check.place(
+            x=610.25,
+            y=290.0
         )
         
     def log_out(self):
@@ -1000,7 +1023,7 @@ class UserGUI(Tk):
                 widget.place_forget()
 
         for widget in self.root.winfo_children():
-            if isinstance(widget, (tk.Button, tk.Entry, tk.Text)):
+            if isinstance(widget, (tk.Button, tk.Entry, tk.Text, tk.Checkbutton)):
                 hide_widget(widget)
             elif isinstance(widget, tk.Canvas):
                 for canvas_widget in widget.winfo_children():
@@ -1008,9 +1031,16 @@ class UserGUI(Tk):
                         hide_widget(canvas_widget)
 
     def find_fee(self):
-        fee_name= self.fee_name_entry.get()
+        fee_name= self.paid_dropdown.get()
+        type_of_fee = self.db_manager.get_type(fee_name)
         apartment_code= self.user['apartment_code']
         user_fee_info = self.db_manager.user_fee_info(apartment_code, fee_name)
+        if user_fee_info is None and type_of_fee == 'unrequired':
+            self.db_manager.add_user_info_to_charity(apartment_code, fee_name)
+            # fetch again
+            user_fee_info = self.db_manager.user_fee_info(apartment_code, fee_name)
+        if user_fee_info is None and type_of_fee == 'required':
+            raise Exception(f"Required fee {fee_name} is not added to apartment {apartment_code}")
         try:
             apt_code = user_fee_info['apt_code']
         except:
@@ -1062,14 +1092,15 @@ class UserGUI(Tk):
             anchor="nw",
             font=("Arial", 20)
         )
-        self.canvas.create_text(
-            270.25,
-            570.0,
-            text="Total: ",
-            fill="#000000",
-            anchor="nw",
-            font=("Arial", 20)
-        )
+        if type_of_fee == 'required':
+            self.canvas.create_text(
+                270.25,
+                570.0,
+                text="Total: ",
+                fill="#000000",
+                anchor="nw",
+                font=("Arial", 20)
+            )
         self.canvas.create_text(
             270.25,
             610.0,
@@ -1078,14 +1109,15 @@ class UserGUI(Tk):
             anchor="nw",
             font=("Arial", 20)
         )
-        self.canvas.create_text(
-            270.25,
-            650.0,
-            text="Remain: ",
-            fill="#000000",
-            anchor="nw",
-            font=("Arial", 20)
-        )
+        if type_of_fee == 'required':
+            self.canvas.create_text(
+                270.25,
+                650.0,
+                text="Remain: ",
+                fill="#000000",
+                anchor="nw",
+                font=("Arial", 20)
+            )
 
         self.canvas.create_text(
             500.25,
@@ -1095,22 +1127,45 @@ class UserGUI(Tk):
             anchor="nw",
             font=("Arial", 20)
         )
+        truncated_feename = (feename[:15] + '...') if len(feename) > 15 else feename
         self.canvas.create_text(
             500.25,
             530.0,
-            text=feename,
+            text=truncated_feename,
             fill="#000000",
             anchor="nw",
-            font=("Arial", 20)
+            font=("Arial", 20),
+            tags="feename"
         )
-        self.canvas.create_text(
-            500.25,
-            570.0,
-            text=total,
-            fill="#000000",
-            anchor="nw",
-            font=("Arial", 20)
-        )
+
+        if len(feename) > 15:
+            def show_full_feename(event):
+                x, y, _, _ = self.canvas.bbox("feename")
+                self.tooltip = self.canvas.create_text(
+                    x, y - 20,
+                    anchor="nw",
+                    text=feename,
+                    fill="#000000",
+                    font=("Arial", 12),
+                    tags="full_feename"
+                )
+                
+
+
+            def hide_full_feename(event):
+                self.canvas.delete("full_feename")
+
+            self.canvas.tag_bind("feename", "<Enter>", show_full_feename)
+            self.canvas.tag_bind("feename", "<Leave>", hide_full_feename)
+        if type_of_fee == 'required':
+            self.canvas.create_text(
+                500.25,
+                570.0,
+                text=total,
+                fill="#000000",
+                anchor="nw",
+                font=("Arial", 20)
+            )
         self.canvas.create_text(
             500.25,
             610.0,
@@ -1119,14 +1174,15 @@ class UserGUI(Tk):
             anchor="nw",
             font=("Arial", 20)
         )
-        self.canvas.create_text(
-            500.25,
-            650.0,
-            text=money_remain,
-            fill="#000000",
-            anchor="nw",
-            font=("Arial", 20)
-        )
+        if type_of_fee == 'required':
+            self.canvas.create_text(
+                500.25,
+                650.0,
+                text=money_remain,
+                fill="#000000",
+                anchor="nw",
+                font=("Arial", 20)
+            )
         
         self.canvas.create_text(
             850.25,
@@ -1176,7 +1232,12 @@ class UserGUI(Tk):
 
     def pay_money(self, apt_code, fee_name, money_remain):
         money_paid = int(self.paid_entry.get())
-        if (money_paid<1000 or money_paid>money_remain or money_paid%1000!=0):
+        fee_type = self.db_manager.get_type(fee_name)
+        violate_condition_for_required = False
+        if fee_type == 'required':
+            violate_condition_for_required = money_paid<1000 or money_paid>money_remain or money_paid%1000!=0
+        condition = (fee_type == 'unrequired') or (fee_type == 'required' and not violate_condition_for_required)
+        if (not condition):
             self.canvas.create_text(
                 850.25,
                 600.0,
@@ -1211,8 +1272,9 @@ class UserGUI(Tk):
                 570.0,
                 image=self.qr_img)
 
-            self.finish_img = PhotoImage(
-                file="assets/user_gui/finish.png")
+            self.finish_img = Image.open("assets/user_gui/finish.png")
+            self.finish_img = self.finish_img.resize((200, 60))
+            self.finish_img = ImageTk.PhotoImage(self.finish_img)
             self.finish_button = Button(
                 image=self.finish_img,
                 borderwidth=0,
@@ -1249,8 +1311,9 @@ class UserGUI(Tk):
             font=("Inter Bold", 36 * -1)
         )
 
-        self.continue_img = PhotoImage(
-            file="assets/user_gui/continue.png")
+        self.continue_img = Image.open("assets/user_gui/continue.png")
+        self.continue_img = self.continue_img.resize((300, 60))
+        self.continue_img = ImageTk.PhotoImage(self.continue_img)
         self.continue_button = Button(
             image=self.continue_img,
             borderwidth=0,

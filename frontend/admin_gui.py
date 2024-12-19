@@ -1793,12 +1793,443 @@ class AdminGUI(Tk):
             self.tree.place_forget()
 
         self.canvas.create_rectangle(
+        220,
+        141.32812,
+        1012.5,
+        720,
+        fill="#FFFFFF",
+        outline="#000000")
+
+        self.canvas.create_text(
+            650,
+            170.0,
+            text="Choose fee to pay",
+            fill="#000000",
+            font=("Inter Bold", 34 * -1)
+        )
+
+        self.canvas.create_text(
+            305.25,
+            197.0,
+            anchor="nw",
+            text="Apartment Code:",
+            fill="#000000",
+            font=("Inter Bold", 20 * -1)
+        )
+
+        apartment_codes = [apt['apartment_code'] for apt in self.db_manager.get_all_apts()]
+        self.apartment_code_var = tk.StringVar()
+        self.apartment_code_dropdown = ttk.Combobox(
+            self.root,
+            textvariable=self.apartment_code_var,
+            values=apartment_codes,
+            font=("Inter", 20),
+            state="readonly"
+        )
+        self.apartment_code_dropdown.place(
+            x=610.25,
+            y=200.0,
+            width=278.0,
+            height=36.0
+        )
+        def update_fee_options():
+            apartment_code = self.apartment_code_dropdown.get()
+            if apartment_code:
+                self.paid_options = self.db_manager.get_fee_need_to_pay(apartment_code, include_charity=self.include_charity_var.get())
+                self.paid_dropdown['values'] = self.paid_options
+        self.fetch_fees_button = Button(
+            self.root,
+            text="Fetch Fees",
+            font=("Inter", 16),
+            command=update_fee_options
+        )
+        self.fetch_fees_button.place(
+            x=900.25,
+            y=200.0,
+            width=120.0,
+            height=36.0
+        )
+
+        
+
+        self.canvas.create_text(
+            305.25,
+            247.0,
+            anchor="nw",
+            text="Fee Name:",
+            fill="#000000",
+            font=("Inter Bold", 20 * -1)
+        )
+
+        self.button_image_1 = PhotoImage(
+            file="assets/user_gui/button_1.png")
+        self.button_1 = Button(
+            image=self.button_image_1,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.find_fee,
+            relief="flat"
+        )
+        self.button_1.place(
+            x=499.25,
+            y=354.0,
+            width=200.0,
+            height=60.0
+        )
+
+        self.paid_var = tk.StringVar()
+        self.include_charity_var = tk.BooleanVar()
+
+        def update_options():
+            if self.include_charity_var.get():
+                self.paid_options = self.db_manager.get_fee_need_to_pay(self.apartment_code_dropdown.get(), include_charity=True)
+            else:
+                self.paid_options = self.db_manager.get_fee_need_to_pay(self.apartment_code_dropdown.get(),include_charity=False)
+            self.paid_dropdown['values'] = self.paid_options
+
+        self.paid_options = self.db_manager.get_fee_need_to_pay(self.apartment_code_dropdown.get(),include_charity=False)
+        self.paid_dropdown = ttk.Combobox(
+            self.root,
+            textvariable=self.paid_var,
+            values=self.paid_options,
+            font=("Arial", 20),
+            state="readonly"
+        )
+        self.paid_dropdown.place(
+            x=610.25,
+            y=242.0,
+            width=278.0,
+            height=36.0
+        )
+        self.paid_dropdown.configure(background="#00FF00", foreground="#FF0000")
+        self.include_charity_check = tk.Checkbutton(
+            self.root,
+            text="Show Charity",
+            variable=self.include_charity_var,
+            command=update_options,
+            font=("Arial", 20),
+            background="#FFFFFF"
+        )
+        self.paid_dropdown.place(
+            x=610.25,
+            y=242.0,
+            width=278.0,
+            height=36.0
+        )
+        self.include_charity_check.place(
+            x=610.25,
+            y=290.0
+        )
+    
+    def find_fee(self):
+        fee_name= self.paid_dropdown.get()
+        type_of_fee = self.db_manager.get_type(fee_name)
+        apartment_code= self.apartment_code_dropdown.get()
+        user_fee_info = self.db_manager.user_fee_info(apartment_code, fee_name)
+        if user_fee_info is None and type_of_fee == 'unrequired':
+            self.db_manager.add_user_info_to_charity(apartment_code, fee_name)
+            # fetch again
+            user_fee_info = self.db_manager.user_fee_info(apartment_code, fee_name)
+        if user_fee_info is None and type_of_fee == 'required':
+            raise Exception(f"Required fee {fee_name} is not added to apartment {apartment_code}")
+        try:
+            apt_code = user_fee_info['apt_code']
+        except:
+            self.canvas.create_text(
+                585.25,
+                465.0,
+                text="No fee found",
+                fill="#000000",
+                font=("Arial", 20))
+        feename = user_fee_info['feename']
+        total= user_fee_info['total']
+        money_paid = user_fee_info['money_paid']
+        money_remain = user_fee_info['money_remain']
+        status = user_fee_info['status']
+        self.canvas.create_rectangle(
             220,
-            141.32812,
+            420,
+            700,
+            720,
+            fill="#FFFFFF",
+            outline="#000000")
+        self.canvas.create_rectangle(
+            700,
+            420,
             1012.5,
             720,
             fill="#FFFFFF",
             outline="#000000")
+        self.canvas.create_text(
+            450.25,
+            450.0,
+            text="Fee Information",
+            fill="#000000",
+            font=("Arial", 24)
+        )
+        self.canvas.create_text(
+            270.25,
+            490.0,
+            text="Apartment Code: ",
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20)
+        )
+        self.canvas.create_text(
+            270.25,
+            530.0,
+            text="Fee Name: ",
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20)
+        )
+        if type_of_fee == 'required':
+            self.canvas.create_text(
+                270.25,
+                570.0,
+                text="Total: ",
+                fill="#000000",
+                anchor="nw",
+                font=("Arial", 20)
+            )
+        self.canvas.create_text(
+            270.25,
+            610.0,
+            text="Paid: ",
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20)
+        )
+        if type_of_fee == 'required':
+            self.canvas.create_text(
+                270.25,
+                650.0,
+                text="Remain: ",
+                fill="#000000",
+                anchor="nw",
+                font=("Arial", 20)
+            )
+
+        self.canvas.create_text(
+            500.25,
+            490.0,
+            text=apt_code,
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20)
+        )
+        truncated_feename = (feename[:15] + '...') if len(feename) > 15 else feename
+        self.canvas.create_text(
+            500.25,
+            530.0,
+            text=truncated_feename,
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20),
+            tags="feename"
+        )
+
+        if len(feename) > 15:
+            def show_full_feename(event):
+                x, y, _, _ = self.canvas.bbox("feename")
+                self.tooltip = self.canvas.create_text(
+                    x, y - 20,
+                    anchor="nw",
+                    text=feename,
+                    fill="#000000",
+                    font=("Arial", 12),
+                    tags="full_feename"
+                )
+                
+
+
+            def hide_full_feename(event):
+                self.canvas.delete("full_feename")
+
+            self.canvas.tag_bind("feename", "<Enter>", show_full_feename)
+            self.canvas.tag_bind("feename", "<Leave>", hide_full_feename)
+        if type_of_fee == 'required':
+            self.canvas.create_text(
+                500.25,
+                570.0,
+                text=total,
+                fill="#000000",
+                anchor="nw",
+                font=("Arial", 20)
+            )
+        self.canvas.create_text(
+            500.25,
+            610.0,
+            text=money_paid,
+            fill="#000000",
+            anchor="nw",
+            font=("Arial", 20)
+        )
+        if type_of_fee == 'required':
+            self.canvas.create_text(
+                500.25,
+                650.0,
+                text=money_remain,
+                fill="#000000",
+                anchor="nw",
+                font=("Arial", 20)
+            )
+        
+        self.canvas.create_text(
+            850.25,
+            450.0,
+            text="Payment",
+            fill="#000000",
+            font=("Arial", 24)
+        )
+        self.button_image_2 = PhotoImage(
+            file="assets/user_gui/button_2.png")
+        self.button_2 = Button(
+            image=self.button_image_2,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=lambda: self.pay_money(apartment_code, fee_name,money_remain),
+            relief="flat"
+        )
+        self.button_2.place(
+            x=800.25,
+            y=630.0,
+            width=118.0,
+            height=46.0
+        )
+
+        self.entry_image = PhotoImage(
+            file="assets/user_gui/entry_2.png")
+        self.entry_bg = self.canvas.create_image(
+            855.75,
+            527.0,
+            image=self.entry_image
+        )
+        self.paid_entry = Entry(
+            bd=0,
+            bg="#96E6A1",
+            fg="#000716",
+            highlightthickness=0,
+            font=("Arial", 20)
+        )
+        self.paid_entry.place(
+            x=758.25,
+            y=497.0,
+            width=195.0,
+            height=58.0
+        )
+
+    def pay_money(self, apt_code, fee_name, money_remain):
+        money_paid = int(self.paid_entry.get())
+        fee_type = self.db_manager.get_type(fee_name)
+        violate_condition_for_required = False
+        if fee_type == 'required':
+            violate_condition_for_required = money_paid<1000 or money_paid>money_remain or money_paid%1000!=0
+        condition = (fee_type == 'unrequired') or (fee_type == 'required' and not violate_condition_for_required)
+        if (not condition):
+            self.canvas.create_text(
+                850.25,
+                600.0,
+                text="Invalid amount",
+                fill="red",
+                font=("Arial", 16)
+            )
+        else:       
+            self.hide_buttons_in_region(700, 420, 1012.5, 720)
+
+            self.canvas.create_rectangle(
+            700,
+            420,
+            1012.5,
+            720,
+            fill="#FFFFFF",
+
+            outline="#000000")
+            self.canvas.create_text(
+                850.25,
+                440.0,
+                text="Scan QR to payment",
+                fill="#000000",
+                font=("Arial", 20)
+            )
+
+            self.qr_img = Image.open("assets/user_gui/qr.png")
+            self.qr_img = self.qr_img.resize((200, 200))
+            self.qr_img = ImageTk.PhotoImage(self.qr_img)
+            self.canvas.create_image(
+                850.75,
+                570.0,
+                image=self.qr_img)
+
+            self.finish_img = Image.open("assets/user_gui/finish.png")
+            self.finish_img = self.finish_img.resize((200, 60))
+            self.finish_img = ImageTk.PhotoImage(self.finish_img)
+            self.finish_button = Button(
+                image=self.finish_img,
+                borderwidth=0,
+                highlightthickness=0,
+                background="#FFFFFF",
+                activebackground="#FFFFFF",
+                command=lambda: self.finish(money_paid, apt_code, fee_name),
+                relief="flat"
+            )
+            self.finish_button.place(
+                x=750,
+                y=646,
+                width=200.0,
+                height=54.0
+            )
+    
+    def finish(self, money_paid, apt_code, fee_name):
+        self.db_manager.thu_fee( apt_code, fee_name, money_paid)
+        self.hide_buttons_in_region(220,141, 1012.5, 720)
+        self.canvas.create_rectangle(
+            220,
+            141,
+            1012.5,
+            720,
+            fill="#FFFFFF",
+
+            outline="#000000")
+        self.canvas.create_text(
+            450.25,
+            158.0,
+            anchor="nw",
+            text="Payment successful",
+            fill="#000000",
+            font=("Inter Bold", 36 * -1)
+        )
+
+        self.continue_img = Image.open("assets/user_gui/continue.png")
+        self.continue_img = self.continue_img.resize((300, 60))
+        self.continue_img = ImageTk.PhotoImage(self.continue_img)
+        self.continue_button = Button(
+            image=self.continue_img,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.pay,
+            relief="flat"
+        )
+        self.continue_button.place(
+            x=450,
+            y=640,
+            width=300.0,
+            height=60.0
+        )
+
+        self.success_img = Image.open("assets/user_gui/success.png")
+        self.success_img = self.success_img.resize((400, 400))
+        self.success_img = ImageTk.PhotoImage(self.success_img)
+        self.canvas.create_image(
+            600.75,
+            400.0,
+            image=self.success_img)
 
     def show_statistic_electric(self, mode="Electricity"):
         # self.hide_buttons_in_region(220, 141.32812, 792, 579)
@@ -2745,6 +3176,10 @@ class AdminGUI(Tk):
         tk.Button(edit_window, text="Save", command=save_changes).grid(row=4, column=0, columnspan=2)
 
     def hide_buttons_in_region(self, x1, y1, x2, y2):
+        # if any pygame music is playing, stop it
+        # mixer is not initialized in the constructor, so we need to check if it is initialized
+        if pygame.mixer.get_init():
+            pygame.mixer.music.stop()
         def hide_widget(widget):
             widget_x = widget.winfo_x()
             widget_y = widget.winfo_y()
@@ -2752,7 +3187,7 @@ class AdminGUI(Tk):
                 widget.place_forget()
 
         for widget in self.root.winfo_children():
-            if isinstance(widget, (tk.Button, tk.Entry, tk.Text,ttk.Scrollbar)):
+            if isinstance(widget, (tk.Button, tk.Entry, tk.Text,ttk.Scrollbar, tk.Checkbutton)):
                 hide_widget(widget)
             elif isinstance(widget, tk.Canvas):
                 for canvas_widget in widget.winfo_children():

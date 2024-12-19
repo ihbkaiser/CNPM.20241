@@ -550,6 +550,32 @@ class DBManager:
         self.cursor.execute("SELECT apartment_code FROM users WHERE account_type = 'user'")
         return self.cursor.fetchall()
     
+    
     def get_fee_by_name(self, fee_name):
         self.cursor.execute("SELECT * FROM fees WHERE fee_name = %s", (fee_name,))
         return self.cursor.fetchone()
+
+    def get_fee_need_to_pay(self, apartment_code, include_charity=False):
+        fee_names = []
+        self.cursor.execute("SELECT userfee.fee_name FROM userfee JOIN fees ON userfee.fee_name = fees.fee_name WHERE userfee.total > userfee.paid AND fees.type = 'required' AND userfee.apartment_code = %s", (apartment_code,))
+        fee_names += [row['fee_name'] for row in self.cursor.fetchall()]
+        if include_charity:
+            self.cursor.execute("SELECT fee_name FROM fees WHERE type = 'unrequired'")
+            fee_names += [row['fee_name'] for row in self.cursor.fetchall()]
+        return fee_names
+
+    def get_fee_by_name(self, fee_name):
+        self.cursor.execute("SELECT * FROM fees WHERE fee_name = %s", (fee_name,))
+        return self.cursor.fetchone()
+    def add_user_info_to_charity(self, apt_code, fee_name):
+        self.cursor.execute("""
+        INSERT INTO userfee (apartment_code, fee_name, total, paid, remain)
+        VALUES (%s, %s, %s, %s, %s)
+        """, (apt_code, fee_name, 0, 0, None))
+        self.conn.commit()
+    def get_type(self, fee_name):
+        self.cursor.execute("SELECT type FROM fees WHERE fee_name = %s", (fee_name,))
+        result = self.cursor.fetchone()
+        if result is None:
+            return None
+        return result['type']
