@@ -275,8 +275,8 @@ class UserGUI(Tk):
         self.image_img = self.image_img.resize((817, 589))
         self.image_img = ImageTk.PhotoImage(self.image_img)
         self.image_1 = self.canvas.create_image(
-            613.25,
-            432.5,
+            626.25,
+            435.5,
             image=self.image_img
         )
 
@@ -298,15 +298,6 @@ class UserGUI(Tk):
             text="User information",
             fill="#000000",
             font=("Inter Black", 30 * -1)
-        )
-
-        self.canvas.create_text(
-            207.25,
-            103.0,
-            anchor="nw",
-            text="Profile",
-            fill="#000000",
-            font=("Inter Bold", 33 * -1)
         )
 
         self.image_image_2 = PhotoImage(

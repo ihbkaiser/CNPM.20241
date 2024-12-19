@@ -323,8 +323,8 @@ class AdminGUI(Tk):
         self.image_img = self.image_img.resize((817, 589))
         self.image_img = ImageTk.PhotoImage(self.image_img)
         self.image_1 = self.canvas.create_image(
-            613.25,
-            432.5,
+            626.25,
+            435.5,
             image=self.image_img
         )
         full_name = self.user.get('full_name', 'NULL')
@@ -1238,7 +1238,7 @@ class AdminGUI(Tk):
                     font=("Inter", 20 * -1)
                 )
                 return
-            if self.db_manager.get_user_by_apartment_code(apt_code):
+            if self.db_manager.get_user_by_apartment_code(apt_code) and apt_code != old_apt_code:
                 self.canvas.create_text(
                     500,
                     600,
@@ -2421,6 +2421,8 @@ class AdminGUI(Tk):
             image=self.button_image_13,
             borderwidth=0,
             highlightthickness=0,
+            background="#ffffff",
+            activebackground="#ffffff",
             command=self.show_voluntary_statistic,
             relief="flat"
         )
@@ -2437,6 +2439,8 @@ class AdminGUI(Tk):
             image=self.button_image_14,
             borderwidth=0,
             highlightthickness=0,
+            background="#ffffff",
+            activebackground="#ffffff",
             command=self.show_housing_statistic,
             relief="flat"
         )
@@ -2612,6 +2616,8 @@ class AdminGUI(Tk):
             image=self.button_image_9,
             borderwidth=0,
             highlightthickness=0,
+            background="#ffffff",
+            activebackground="#ffffff",
             command=self.submit_housing_statistic,
             relief="flat"
         )
@@ -2629,6 +2635,8 @@ class AdminGUI(Tk):
             image=self.button_image_10,
             borderwidth=0,
             highlightthickness=0,
+            background="#ffffff",
+            activebackground="#ffffff",
             command=self.statistic,
             relief="flat"
         )

@@ -1537,8 +1537,8 @@ class RegisterFrame(Frame):
         self.image_image_2 = PhotoImage(
             file="assets/frame1/image_2.png")
         self.image_2 = self.canvas.create_image(
-            522.0,
-            47.0,
+            530.0,
+            52.0,
             image=self.image_image_2
         )
 
