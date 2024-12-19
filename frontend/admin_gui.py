@@ -12,6 +12,7 @@ from matplotlib.gridspec import GridSpec
 import cv2
 import pandas as pd 
 from os import environ
+from tkinter import messagebox, Toplevel
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 # database ready
@@ -73,7 +74,7 @@ class AdminGUI(Tk):
             301.640625,
             18.984375,
             anchor="nw",
-            text="Hello, Admin  ",
+            text="Hello, " + self.user['full_name'],
             fill="#000000",
             font=("Inter Bold", 28 * -1)
         )
@@ -306,29 +307,532 @@ class AdminGUI(Tk):
         self.statistic_button.image = new_image
         if self.tree:
             self.tree.place_forget()
-        self.hide_buttons_in_region(190, 79.32812, 1012, 720)
-
+        if self.tree:
+            self.tree.place_forget()
+        self.hide_buttons_in_region(220, 141, 1012.5, 720)
         self.canvas.create_rectangle(
-            220, 141.32812, 1012.5, 720,
-            fill="#FFFFFF", outline="#000000"
+            220,
+            141,
+            1012.5,
+            720,
+            fill="#FFFFFF",
+            outline="#000000")
+        
+        self.image_img = Image.open("assets/profile/image_1.png")
+        self.image_img = self.image_img.resize((817, 589))
+        self.image_img = ImageTk.PhotoImage(self.image_img)
+        self.image_1 = self.canvas.create_image(
+            613.25,
+            432.5,
+            image=self.image_img
         )
+        full_name = self.user.get('full_name', 'NULL')
+        date_of_birth = self.user.get('dob', 'NULL')
+        phone_number = self.user.get('phone_number', 'NULL')
+        gender = self.user.get('gender', 'NULL')
+        apartment_code = self.user.get('apartment_code', 'NULL')
+        hometown = self.user.get('hometown', 'NULL')
+        id_card = self.user.get('id_card', 'NULL')
 
+        highlight_color = "#FF0000"  # Red color for highlighting
 
         self.canvas.create_text(
-            424.25,
-            147.0,
+            576.25,
+            180.0,
             anchor="nw",
-            text="This is just an example.  \nAbsolutely don’t deploy!",
-            fill="#2E0DEB",
-            font=("Inter", 32 * -1)
+            text="Admin information",
+            fill="#000000",
+            font=("Inter Black", 30 * -1)
         )
-        self.sample_img = PhotoImage(
-            file="assets/admin_gui/image_3.png")
-        self.sample_image_element = self.canvas.create_image(
-            609.25,
-            451.0,
-            image=self.sample_img
+
+        self.image_image_2 = PhotoImage(
+            file="assets/profile/image_2.png")
+        self.image_2 = self.canvas.create_image(
+            98.25,
+            33.0,
+            image=self.image_image_2
         )
+
+
+        self.image_image_5 = PhotoImage(
+            file="assets/profile/image_5.png")
+        self.image_5 = self.canvas.create_image(
+            495.25,
+            18.0,
+            image=self.image_image_5
+        )
+
+        self.image_image_6 = PhotoImage(
+            file="assets/profile/image_6.png")
+        self.image_6 = self.canvas.create_image(
+            667.25,
+            231.0,
+            image=self.image_image_6
+        )
+
+        self.image_image_7 = PhotoImage(
+            file="assets/profile/image_7.png")
+        self.image_7 = self.canvas.create_image(
+            939.25,
+            595.0,
+            image=self.image_image_7
+        )
+
+        self.image_image_8 = PhotoImage(
+            file="assets/profile/image_8.png")
+        self.image_8 = self.canvas.create_image(
+            373.25,
+            74.0,
+            image=self.image_image_8
+        )
+
+        self.image_image_9 = PhotoImage(
+            file="assets/profile/image_9.png")
+        self.image_9 = self.canvas.create_image(
+            607.25,
+            55.0,
+            image=self.image_image_9
+        )
+
+        self.image_image_10 = PhotoImage(
+            file="assets/profile/image_10.png")
+        self.image_10 = self.canvas.create_image(
+            431.25,
+            183.0,
+            image=self.image_image_10
+        )
+
+        self.image_image_11 = PhotoImage(
+            file="assets/profile/image_11.png")
+        self.image_11 = self.canvas.create_image(
+            415.25,
+            490.0,
+            image=self.image_image_11
+        )
+
+        self.image_image_12 = PhotoImage(
+            file="assets/profile/image_12.png")
+        self.image_12 = self.canvas.create_image(
+            811.25,
+            443.0,
+            image=self.image_image_12
+        )
+
+        self.image_image_13 = PhotoImage(
+            file="assets/profile/image_13.png")
+        self.image_13 = self.canvas.create_image(
+            760.25,
+            666.0,
+            image=self.image_image_13
+        )
+
+        self.image_image_14 = PhotoImage(
+            file="assets/profile/image_14.png")
+        self.image_14 = self.canvas.create_image(
+            276.25,
+            354.0,
+            image=self.image_image_14
+        )
+
+        self.image_image_15 = PhotoImage(
+            file="assets/profile/image_15.png")
+        self.image_15 = self.canvas.create_image(
+            932.25,
+            319.0,
+            image=self.image_image_15
+        )
+
+        self.image_image_16 = PhotoImage(
+            file="assets/profile/image_16.png")
+        self.image_16 = self.canvas.create_image(
+            330.25,
+            610.0,
+            image=self.image_image_16
+        )
+
+        self.image_image_17 = PhotoImage(
+            file="assets/profile/image_17.png")
+        self.image_17 = self.canvas.create_image(
+            639.25,
+            134.0,
+            image=self.image_image_17
+        )
+
+        self.image_image_18 = PhotoImage(
+            file="assets/profile/image_18.png")
+        self.image_18 = self.canvas.create_image(
+            103.25,
+            235.0,
+            image=self.image_image_18
+        )
+
+        self.image_image_19 = PhotoImage(
+            file="assets/profile/image_19.png")
+        self.image_19 = self.canvas.create_image(
+            180.25,
+            473.0,
+            image=self.image_image_19
+        )
+
+        self.image_image_20 = PhotoImage(
+            file="assets/profile/image_20.png")
+        self.image_20 = self.canvas.create_image(
+            36.25,
+            447.0,
+            image=self.image_image_20
+        )
+
+        self.canvas.create_oval(
+            229.25,
+            214.0,
+            363.25,
+            348.0,
+            fill="blue",
+            outline="")
+
+        self.image_image_21 = PhotoImage(
+            file="assets/profile/image_21.png")
+        self.image_21 = self.canvas.create_image(
+            66.25,
+            89.0,
+            image=self.image_image_21
+        )
+
+        self.image_image_22 = PhotoImage(
+            file="assets/profile/image_22.png")
+        self.image_22 = self.canvas.create_image(
+            822.25,
+            199.0,
+            image=self.image_image_22
+        )
+
+        self.image_image_23 = PhotoImage(
+            file="assets/profile/image_23.png")
+        self.image_23 = self.canvas.create_image(
+            544.25,
+            198.0,
+            image=self.image_image_23
+        )
+        self.canvas.create_text(
+            406.25,
+            236.0,
+            anchor="nw",
+            text=f"Full Name: {full_name}",
+            fill=highlight_color if full_name == 'NULL' else "#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.image_image_24 = PhotoImage(
+            file="assets/profile/image_24.png")
+        self.image_24 = self.canvas.create_image(
+            391.25,
+            245.0,
+            image=self.image_image_24
+        )
+
+        self.canvas.create_text(
+            682.25,
+            295.0,
+            anchor="nw",
+            text=f"Date of birth: {date_of_birth}",
+            fill=highlight_color if date_of_birth == 'NULL' else "#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.canvas.create_text(
+            406.25,
+            356.0,
+            anchor="nw",
+            text=f"Phone Number: {phone_number}",
+            fill=highlight_color if phone_number == 'NULL' else "#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.canvas.create_text(
+            405.25,
+            293.0,
+            anchor="nw",
+            text=f"Gender: {gender}",
+            fill=highlight_color if gender == 'NULL' else "#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.image_image_25 = PhotoImage(
+            file="assets/profile/image_25.png")
+        self.image_25 = self.canvas.create_image(
+            388.25,
+            307.0,
+            image=self.image_image_25
+        )
+
+        self.image_image_26 = PhotoImage(
+            file="assets/profile/image_26.png")
+        self.image_26 = self.canvas.create_image(
+            664.25,
+            309.0,
+            image=self.image_image_26
+        )
+        self.image_image_27 = PhotoImage(
+            file="assets/profile/image_27.png")
+        self.image_27 = self.canvas.create_image(
+            388.25,
+            368.0,
+            image=self.image_image_27
+        )
+
+        self.canvas.create_text(
+            406.25,
+            417.0,
+            anchor="nw",
+            text=f"Apartment Code: {apartment_code}",
+            fill=highlight_color if apartment_code == 'NULL' else "#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.image_image_28 = PhotoImage(
+            file="assets/profile/image_28.png")
+        self.image_28 = self.canvas.create_image(
+            391.25,
+            430.0,
+            image=self.image_image_28
+        )
+
+        self.canvas.create_text(
+            406.25,
+            478.0,
+            anchor="nw",
+            text=f"Hometown: {hometown}",
+            fill=highlight_color if hometown == 'NULL' else "#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.image_image_29 = PhotoImage(
+            file="assets/profile/image_29.png")
+        self.image_29 = self.canvas.create_image(
+            388.25,
+            493.0,
+            image=self.image_image_29
+        )
+
+        self.canvas.create_text(
+            406.25,
+            540.0,
+            anchor="nw",
+            text=f"ID Card: {id_card}",
+            fill=highlight_color if id_card == 'NULL' else "#000000",
+            font=("Inter Bold", 24 * -1)
+        )
+
+        self.image_image_30 = PhotoImage(
+            file="assets/profile/image_30.png")
+        self.image_30 = self.canvas.create_image(
+            388.25,
+            555.0,
+            image=self.image_image_30
+        )
+
+        self.button_image_5 = PhotoImage(
+            file="assets/profile/button_5.png")
+        self.button_5 = Button(
+            image=self.button_image_5,
+            borderwidth=0,
+            highlightthickness=0,
+            bg="#ffffff",
+            activebackground="#ffffff",
+            command=self.button_5_click,
+            relief="flat"
+        )
+        self.button_5.place(
+            x=376.25,
+            y=616.0,
+            width=176.0,
+            height=38.232208251953125
+        )
+
+        self.button_image_6 = PhotoImage(
+            file="assets/profile/button_6.png")
+        self.button_6 = Button(
+            image=self.button_image_6,
+            borderwidth=0,
+            highlightthickness=0,
+            bg="#ffffff",
+            activebackground="#ffffff",
+            command=self.button_6_click,
+            relief="flat"
+        )
+        self.button_6.place(
+            x=612.25,
+            y=616.0,
+            width=267.0,
+            height=38.22999954223633
+        )
+
+        self.image_image_31 = PhotoImage(
+            file="assets/profile/image_31.png")
+        self.image_31 = self.canvas.create_image(
+            855.25,
+            524.0,
+            image=self.image_image_31
+        )
+
+        self.image_image_32 = PhotoImage(
+            file="assets/profile/image_32.png")
+        self.image_32 = self.canvas.create_image(
+            306.25,
+            202.0,
+            image=self.image_image_32
+        )
+
+    def button_5_click(self):
+        self.update_window = Toplevel(self.root)
+        self.update_window.title("Update Information")
+        self.update_window.geometry("400x300")
+        self.update_window.resizable(False, False)
+        
+        # Thêm canvas làm nền
+        canvas = Canvas(self.update_window, width=400, height=300)
+        canvas.pack(fill="both", expand=True)
+        
+        # Thêm ảnh nền (ảnh phải cùng thư mục hoặc cung cấp đường dẫn đầy đủ)
+        bg_image = Image.open("assets/User_update.png")
+        bg_image = bg_image.resize((400, 300))  # Điều chỉnh kích thước ảnh
+        bg_photo = ImageTk.PhotoImage(bg_image)
+        canvas.create_image(0, 0, image=bg_photo, anchor="nw")
+
+        # Thêm nội dung vào cửa sổ
+        label_font = ("Arial", 11, "bold")  # Đặt phông chữ cho các nhãn
+        entry_font = ("Arial", 11)  # Đặt phông chữ cho ô nhập liệu
+
+        # Full Name
+        Label(self.update_window, text="Full Name:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=20)
+        self.full_name_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.full_name_entry.place(x=180, y=20)
+        self.full_name_entry.insert(0, self.user.get('full_name', ''))
+
+        # Date of Birth
+        Label(self.update_window, text="Date of Birth:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=60)
+        self.dob_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.dob_entry.place(x=180, y=60)
+        self.dob_entry.insert(0, self.user.get('dob', ''))
+
+        # Phone Number
+        Label(self.update_window, text="Phone Number:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=100)
+        self.phone_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.phone_entry.place(x=180, y=100)
+        self.phone_entry.insert(0, self.user.get('phone_number', ''))
+
+        # Gender
+        Label(self.update_window, text="Gender:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=140)
+        self.gender_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.gender_entry.place(x=180, y=140)
+        self.gender_entry.insert(0, self.user.get('gender', ''))
+
+        # Hometown
+        Label(self.update_window, text="Hometown:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=180)
+        self.hometown_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.hometown_entry.place(x=180, y=180)
+        self.hometown_entry.insert(0, self.user.get('hometown', ''))
+
+        # ID Card
+        Label(self.update_window, text="ID Card:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=50, y=220)
+        self.id_card_entry = Entry(self.update_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.id_card_entry.place(x=180, y=220)
+        self.id_card_entry.insert(0, self.user.get('id_card', ''))
+
+        # Save Button
+        save_button = Button(self.update_window, text="Save", font=("Arial", 12, "bold"), bg="#FFB6C1", fg="#FFFFFF", command=self.save_changes)
+        save_button.place(x=120, y=260)
+
+        # Để giữ ảnh trong bộ nhớ
+        self.update_window.bg_photo = bg_photo
+
+    def save_changes(self):
+        if messagebox.askyesno("Confirm", "Bạn có chắc chắn muốn thay đổi không?"):
+            self.user['full_name'] = self.full_name_entry.get()
+            self.user['dob'] = self.dob_entry.get()
+            self.user['phone_number'] = self.phone_entry.get()
+            self.user['gender'] = self.gender_entry.get()
+            self.user['hometown'] = self.hometown_entry.get()
+            self.user['id_card'] = self.id_card_entry.get()
+
+            # Update the user information in the database
+            self.db_manager.update_user(**self.user)
+
+            messagebox.showinfo("Success", "Information updated successfully")
+            self.update_window.destroy()
+            self.show_profile()
+
+    def button_6_click(self):
+        self.change_password_window = Toplevel(self.root)
+        self.change_password_window.title("Change Password")
+        self.change_password_window.geometry("350x150")
+        self.change_password_window.resizable(False, False)
+
+        # Add canvas as background
+        canvas = Canvas(self.change_password_window, width=350, height=150)
+        canvas.pack(fill="both", expand=True)
+
+        # Add background image
+        bg_image = Image.open("assets/User_change.png")
+        bg_image = bg_image.resize((350, 150))  # Adjust the image size
+        bg_photo = ImageTk.PhotoImage(bg_image)
+        canvas.create_image(0, 0, image=bg_photo, anchor="nw")
+
+        # Add content to the window
+        label_font = ("Arial", 10, "bold")  # Set font for labels
+        entry_font = ("Arial", 10)  # Set font for entry fields
+
+        # Adjusted coordinates
+        x_label = 20  # x position for labels
+        x_entry = 160  # x position for entry fields
+        y_start = 20  # Starting y position
+        y_gap = 30  # Gap between rows
+
+        # Current Password
+        Label(self.change_password_window, text="Current Password:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=x_label, y=y_start)
+        self.current_password_entry = Entry(self.change_password_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat", show="*")
+        self.current_password_entry.place(x=x_entry, y=y_start)
+
+        # New Password
+        Label(self.change_password_window, text="New Password:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=x_label, y=y_start + y_gap)
+        self.new_password_entry = Entry(self.change_password_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.new_password_entry.place(x=x_entry, y=y_start + y_gap)
+
+        # Confirm Password
+        Label(self.change_password_window, text="Confirm Password:", bg="#FFE6E6", fg="#000000", font=label_font).place(x=x_label, y=y_start + 2 * y_gap)
+        self.confirm_password_entry = Entry(self.change_password_window, bg="#FFF5F5", fg="#000000", font=entry_font, relief="flat")
+        self.confirm_password_entry.place(x=x_entry, y=y_start + 2 * y_gap)
+
+        # Save Button
+        button_width = 80  # Approximate button width in pixels
+        x_center = (300 - button_width) / 2  # Centering the button horizontally
+        save_button = Button(self.change_password_window, text="Save", font=("Arial", 10, "bold"), bg="#FFB6C1", fg="#FFFFFF", command=self.save_password)
+        save_button.place(x=x_center+40, y=105)  # Place Save button centered vertically near the bottoms
+
+        # Keep the background image in memory
+        self.change_password_window.bg_photo = bg_photo
+
+
+    def save_password(self):
+        current_password = self.current_password_entry.get()
+        new_password = self.new_password_entry.get()
+        confirm_password = self.confirm_password_entry.get()
+
+        if not current_password or not new_password or not confirm_password:
+            messagebox.showerror("Error", "All fields are required")
+            return
+
+        if new_password != confirm_password:
+            messagebox.showerror("Error", "New password and confirm password do not match")
+            return
+
+        try:
+            self.db_manager.update_user_password(self.user['username'], new_password)
+            messagebox.showinfo("Success", "Password updated successfully")
+            self.change_password_window.destroy()
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+
 
         
     def view_admin(self, editable=False):
