@@ -330,12 +330,12 @@ class DBManager:
         self.cursor.execute("SELECT fee_name FROM fees")
         return [row['fee_name'] for row in self.cursor.fetchall()]
 
-    def add_fee(self, fee_name, deadline, total, paid, remain):
+    def add_fee(self, fee_name, deadline, total, paid, remain, type):
         try:
             self.cursor.execute("""
-            INSERT INTO fees (fee_name, deadline, total, paid, remain)
-            VALUES (%s, %s, %s, %s, %s)
-            """, (fee_name, deadline, total, paid, remain))
+            INSERT INTO fees (fee_name, deadline, total, paid, remain, type)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """, (fee_name, deadline, total, paid, remain, type))
             self.conn.commit() 
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi thêm phí: {err}")

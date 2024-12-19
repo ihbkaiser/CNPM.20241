@@ -981,7 +981,7 @@ class AdminGUI(Tk):
             relief="flat"
         )
         self.add_all_button.place(
-            x=250.0,
+            x=230.0,
             y=665.0,
             anchor="nw",
             width=220,
@@ -989,7 +989,7 @@ class AdminGUI(Tk):
         )
 
         self.add_img=Image.open("assets/admin_gui/add1.png")
-        self.add_img = self.add_img.resize((220, 45))
+        self.add_img = self.add_img.resize((320, 45))
         self.add_img = ImageTk.PhotoImage(self.add_img)
         self.add_button = Button(
             image=self.add_img, 
@@ -1001,10 +1001,30 @@ class AdminGUI(Tk):
             relief="flat"
         )
         self.add_button.place(
-            x=600.0,
+            x=660.0,
             y=665.0,
             anchor="nw",
-            width=420,
+            width=320,
+            height=45
+        )
+
+        self.new_img=Image.open("assets/admin_gui/new_fee.png")
+        self.new_img = self.new_img.resize((150, 45))
+        self.new_img = ImageTk.PhotoImage(self.new_img)
+        self.new_fee_button = Button(
+            image=self.new_img, 
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.new_fee,
+            relief="flat"
+        )
+        self.new_fee_button.place(
+            x=480.0,
+            y=665.0,
+            anchor="nw",
+            width=150,
             height=45
         )
 
@@ -1013,7 +1033,20 @@ class AdminGUI(Tk):
         popup.title("Add Fee to All Apartments")
         popup.geometry("400x420")
         popup.resizable(False, False)
-        Label(popup, text="Fee Name:",font=("Arial",20)).place(x=20, y=20)
+        # Create canvas to hold background image
+        bg_canvas = Canvas(popup, width=400, height=420, highlightthickness=0)
+        bg_canvas.pack(fill="both", expand=True)
+
+        # Load and display background image
+        bg_image = Image.open("assets/admin_gui/bg.png")
+        bg_image = bg_image.resize((400, 420))
+        self.bg_photo = ImageTk.PhotoImage(bg_image) # Save as instance var to prevent garbage collection
+        bg_canvas.create_image(0, 0, image=self.bg_photo, anchor="nw")
+
+        # Create frame to hold other widgets
+        content_frame = Frame(popup, bg='#FFFFFF')
+        content_frame.place(relx=0.5, rely=0.5, anchor="center")
+        Label(popup, text="Fee Name:",font=("Arial",20), bg="#E1F3FD").place(x=20, y=20)
         self.fee_name_entry = Entry(popup,  font=("Arial",20))
         self.fee_name_entry.place(x=170, y=20,height=30, width=200)
 
@@ -1024,25 +1057,25 @@ class AdminGUI(Tk):
             else:
                 self.amount_entry.config(state="normal")
 
-        Label(popup, text="Type:", font=("Arial",20)).place(x=20, y=80)
+        Label(popup, text="Type:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=80)
         self.type_entry = ttk.Combobox(popup, values=["Required", "Unrequired"],  font=("Arial",18) )
         self.type_entry.place(x=170, y=80, height=30, width=200)
         self.type_entry.bind("<<ComboboxSelected>>", on_type_selected)
 
-        Label(popup, text="Total:", font=("Arial",20)).place(x=20, y=140)
+        Label(popup, text="Total:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=140)
         self.amount_entry = Entry(popup,  font=("Arial",20))
         self.amount_entry.place(x=170, y=140,height=30, width=200)
 
-        Label(popup, text="Deadline:", font=("Arial",20)).place(x=20, y=200)
+        Label(popup, text="Deadline:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=200)
         self.deadline_entry = DateEntry(popup,  font=("Arial",20), date_pattern='y-mm-dd')
         self.deadline_entry.place(x=170, y=200,height=30, width=200)
 
-        Label(popup, text="Time:", font=("Arial",20)).place(x=20, y=260)
+        Label(popup, text="Time:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=260)
         self.hour_entry = ttk.Combobox(popup, values=[f"{i:02d}" for i in range(24)], font=("Arial",18), width=3)
         self.hour_entry.place(x=170, y=260, height=30, width=60)
         self.minute_entry = ttk.Combobox(popup, values=[f"{i:02d}" for i in range(60)], font=("Arial",18), width=3)
         self.minute_entry.place(x=240, y=260, height=30, width=60)
-        self.success_label = Label(popup, text="", font=("Arial",20), fg="red")
+        self.success_label = Label(popup, text="", font=("Arial",20), fg="red", bg="#E1F3FD")
         self.success_label.place(x=50, y=385)
 
         def submit_entries():
@@ -1084,13 +1117,26 @@ class AdminGUI(Tk):
         popup.title("Add Fee to Apartment")
         popup.geometry("400x300")
         popup.resizable(False, False)
-        Label(popup, text="Apartment:", font=("Arial",20)).place(x=20, y=20)
+         # Create canvas to hold background image
+        bg_canvas = Canvas(popup, width=400, height=300, highlightthickness=0)
+        bg_canvas.pack(fill="both", expand=True)
+
+        # Load and display background image
+        bg_image = Image.open("assets/admin_gui/bg.png")
+        bg_image = bg_image.resize((400, 300))
+        self.bg_photo = ImageTk.PhotoImage(bg_image) # Save as instance var to prevent garbage collection
+        bg_canvas.create_image(0, 0, image=self.bg_photo, anchor="nw")
+
+        # Create frame to hold other widgets
+        content_frame = Frame(popup, bg='#FFFFFF')
+        content_frame.place(relx=0.5, rely=0.5, anchor="center")
+        Label(popup, text="Apartment:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=20)
         apt_list = []
         for apt in self.db_manager.get_all_apts():
             apt_list.append(apt['apartment_code'])
         self.apt_entry = ttk.Combobox(popup, values=apt_list,  font=("Arial",18) )
         self.apt_entry.place(x=170, y=20, height=30, width=200)
-        Label(popup, text="Fee Name:", font=("Arial",20)).place(x=20, y=80)
+        Label(popup, text="Fee Name:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=80)
         fees_list = []
         selected_apt = None
         def on_apt_selected(*args):
@@ -1124,11 +1170,11 @@ class AdminGUI(Tk):
 
         self.fee_entry.bind("<<ComboboxSelected>>", on_fee_selected)
 
-        Label(popup, text="Total:", font=("Arial",20)).place(x=20, y=140)
+        Label(popup, text="Total:", font=("Arial",20), bg="#E1F3FD").place(x=20, y=140)
         self.amount_entry = Entry(popup, font=("Arial",20))
         self.amount_entry.place(x=170, y=140,height=30, width=200)
 
-        self.success_label = Label(popup, text="", font=("Arial",20), fg="red")
+        self.success_label = Label(popup, text="", font=("Arial",20), fg="red", bg="#E1F3FD")
         self.success_label.place(x=50, y=260)
 
         def submit_entries():
@@ -1154,6 +1200,64 @@ class AdminGUI(Tk):
             popup.after(2000, popup.destroy)
 
         Button(popup, text="Add", command=submit_entries, font=("Arial",20)).place(x=170, y=200)
+
+    def new_fee(self):
+        popup = Toplevel(self.canvas)
+        popup.title("Create New Fee") 
+        popup.geometry("400x380")
+        popup.resizable(False, False)
+
+        # Create canvas to hold background image
+        bg_canvas = Canvas(popup, width=400, height=380, highlightthickness=0)
+        bg_canvas.pack(fill="both", expand=True)
+
+        # Load and display background image
+        bg_image = Image.open("assets/admin_gui/bg.png")
+        bg_image = bg_image.resize((400, 380))
+        self.bg_photo = ImageTk.PhotoImage(bg_image) # Save as instance var to prevent garbage collection
+        bg_canvas.create_image(0, 0, image=self.bg_photo, anchor="nw")
+
+        # Create frame to hold other widgets
+        content_frame = Frame(popup, bg='#FFFFFF')
+        content_frame.place(relx=0.5, rely=0.5, anchor="center")
+        Label(popup, text="Fee Name:",font=("Arial",20),bg="#E1F3FD").place(x=20, y=20)
+        self.fee_name_entry = Entry(popup,  font=("Arial",20))
+        self.fee_name_entry.place(x=170, y=20,height=30, width=200)
+
+        Label(popup, text="Type:", font=("Arial",20),bg="#E1F3FD").place(x=20, y=80)
+        self.type_entry = ttk.Combobox(popup, values=["Required", "Unrequired"],  font=("Arial",18) )
+        self.type_entry.place(x=170, y=80, height=30, width=200)
+
+        Label(popup, text="Deadline:", font=("Arial",20),bg="#E1F3FD").place(x=20, y=140)
+        self.deadline_entry = DateEntry(popup,  font=("Arial",20), date_pattern='y-mm-dd')
+        self.deadline_entry.place(x=170, y=140,height=30, width=200)
+
+        Label(popup, text="Time:", font=("Arial",20),bg="#E1F3FD").place(x=20, y=200)
+        self.hour_entry = ttk.Combobox(popup, values=[f"{i:02d}" for i in range(24)], font=("Arial",18), width=3)
+        self.hour_entry.place(x=170, y=200, height=30, width=60)
+        self.minute_entry = ttk.Combobox(popup, values=[f"{i:02d}" for i in range(60)], font=("Arial",18), width=3)
+        self.minute_entry.place(x=240, y=200, height=30, width=60)
+        self.success_label = Label(popup, text="", font=("Arial",20), fg="red",bg="#E1F3FD")
+        self.success_label.place(x=50, y=325)
+
+        def submit_entries():
+            fee_name = self.fee_name_entry.get()
+            fee_type = self.type_entry.get()
+            fee_type=fee_type.lower()
+            if not fee_name or not fee_type:
+                self.success_label.config(text="Please fill in all fields!")
+            deadline_date = self.deadline_entry.get()
+            deadline_time = f"{self.hour_entry.get()}:{self.minute_entry.get()}:00"
+            if not deadline_date or not self.hour_entry.get() or not self.minute_entry.get(): 
+                self.success_label.config(text="Please fill in all fields!")
+                return
+            deadline = f"{deadline_date} {deadline_time}"
+            self.db_manager.add_fee(fee_name, deadline, 0, 0, 0, fee_type)
+            self.success_label.config(text="Fee added successfully!", fg="green")
+            popup.after(2000, popup.destroy)
+
+        Button(popup, text="Add",  command=submit_entries, font=("Arial",20)).place(x=170, y=260)
+        
 
 
 
