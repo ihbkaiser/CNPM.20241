@@ -1,12 +1,10 @@
 import yaml
-
-def generate_sql_file():
-    with open('config.yml', 'r') as file:
+with open('config.yml', 'r') as file:
         config = yaml.safe_load(file)
 
-    db_config = config['db']
-    sql_filename = 'setup.sql'
-
+db_config = config['db']
+sql_filename = 'setup.sql'
+def generate_sql_file():
     try:
         # Create SQL file and write queries to it
         with open(sql_filename, 'w') as sql_file:
@@ -25,7 +23,9 @@ def generate_sql_file():
 
             # Create the database if it does not exist
             create_db_query = f"CREATE DATABASE IF NOT EXISTS {db_config['database']};"
+            use_db_query = f"USE {db_config['database']};"
             sql_file.write(create_db_query + '\n')
+            sql_file.write(use_db_query + '\n')
 
             sql_file.write("FLUSH PRIVILEGES;\n")
 
@@ -33,5 +33,13 @@ def generate_sql_file():
 
     except Exception as e:
         print(f"Error: {e}")
-
-generate_sql_file()
+if __name__ == 'main':
+    generate_sql_file()
+    with open('mock_data.sql', 'r') as file:
+        content = file.readlines()
+    with open('mock_data.sql', 'w') as file:
+            # First, write the "USE db;" line
+            file.write(f"USE {db_config['database']};\n")
+            
+            # Then, write the original content back
+            file.writelines(content)
