@@ -256,7 +256,26 @@ class LoginFrame(Frame):
             relief="flat"
         )
         button_6.place(
-            x=674.0,
+            x=724.0,
+            y=611.0,
+            width=60.0,
+            height=60.0
+        )
+
+        self.zalo_image_img = Image.open("assets/frame0/zalo.png")
+        self.zalo_image_img = self.zalo_image_img.resize((60, 60))
+        self.zalo_image_img = ImageTk.PhotoImage(self.zalo_image_img)
+        self.zalo_button = Button(
+            image=self.zalo_image_img,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.open_zalo,
+            relief="flat"
+        )
+        self.zalo_button.place(
+            x=624.0,
             y=611.0,
             width=60.0,
             height=60.0
@@ -548,6 +567,11 @@ class LoginFrame(Frame):
         
         submit_button = Button(self.password_prompt_window, text="Submit", command=self.check_password)
         submit_button.pack(pady=10)
+
+    def open_zalo(self):
+        """Open Zalo app."""
+        webbrowser.open("https://id.zalo.me/account?continue=http%3A%2F%2Fzalo%2Eme%2Fg%2Ftgdmhp753")
+    
 
     def check_password(self):
         """Check if the entered password is correct and open a web page if it is."""
