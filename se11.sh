@@ -1,7 +1,7 @@
 #!/bin/bash
-
 echo "Setting up SE11's project"
 sudo apt update
+sudo add-apt-repository -y universe
 sudo apt install -y python3 python3-tk python3-venv python3-pip expect
 python3 -m venv se11_env
 source se11_env/bin/activate
