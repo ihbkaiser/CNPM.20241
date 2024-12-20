@@ -39,25 +39,20 @@ send \"exit\r\"
 interact
 "
 
-# Check if mock_data.sql exists and execute it if so
+echo "Enjoy!"
 if [ -f mock_data.sql ]; then
     echo "Running mock_data.sql..."
     expect -c "
     spawn sudo mysql -u root -p
     expect \"Enter password:\"
-    send \"\r\"  
+    send \"\r\"
     expect \"mysql>\"
     send \"source mock_data.sql\r\"
     expect \"mysql>\"
     send \"exit\r\"
     interact
     "
-else
-    echo "mock_data.sql not found. Skipping mock data insertion."
 fi
-
-echo "Enjoy!"
-
 # If main.py exists, run it
 if [ -f main.py ]; then
     python3 main.py

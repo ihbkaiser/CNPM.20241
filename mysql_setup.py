@@ -6,7 +6,7 @@ db_config = config['db']
 sql_filename = 'setup.sql'
 def generate_sql_file():
     try:
-        # Create SQL file and write queries to it
+        
         with open(sql_filename, 'w') as sql_file:
             # Create the user
             create_user_query = f"""
@@ -33,11 +33,12 @@ def generate_sql_file():
 
     except Exception as e:
         print(f"Error: {e}")
-if __name__ == 'main':
+if __name__ == '__main__':
     generate_sql_file()
     with open('mock_data.sql', 'r') as file:
         content = file.readlines()
-    with open('mock_data.sql', 'w') as file:
+    if not content[0].startswith(f"USE {db_config['database']}"):
+        with open('mock_data.sql', 'w') as file:
             # First, write the "USE db;" line
             file.write(f"USE {db_config['database']};\n")
             
