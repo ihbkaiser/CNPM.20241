@@ -579,3 +579,9 @@ class DBManager:
         if result is None:
             return None
         return result['type']
+    
+    def delete_fee_to_all(self, fee_name):
+        self.cursor.execute("DELETE FROM userfee WHERE fee_name = %s", (fee_name,))
+        self.conn.commit()
+        self.cursor.execute("DELETE FROM fees WHERE fee_name = %s", (fee_name,))
+        self.conn.commit()
