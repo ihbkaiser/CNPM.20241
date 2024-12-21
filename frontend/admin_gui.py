@@ -16,6 +16,7 @@ from os import environ
 from tkinter import messagebox, Toplevel
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
+from datetime import datetime
 # database ready
 
 class AdminGUI(Tk):
@@ -540,6 +541,15 @@ class AdminGUI(Tk):
             font=("Inter Bold", 24 * -1)
         )
 
+        self.hello_text_field = self.canvas.create_text(
+            301.640625,
+            18.984375,
+            anchor="nw",
+            text="Hello, " + self.user['full_name'],
+            fill="#000000",
+            font=("Inter Bold", 28 * -1)
+        )
+
         self.canvas.create_text(
             406.25,
             356.0,
@@ -684,6 +694,8 @@ class AdminGUI(Tk):
             image=self.image_image_32
         )
 
+
+
     def button_5_click(self):
         self.update_window = Toplevel(self.root)
         self.update_window.title("Update Information")
@@ -748,20 +760,47 @@ class AdminGUI(Tk):
         self.update_window.bg_photo = bg_photo
 
     def save_changes(self):
+        import re
+        full_name = self.full_name_entry.get()
+        dob = self.dob_entry.get()
+        phone_number = self.phone_entry.get()
+        gender = self.gender_entry.get()
+        hometown = self.hometown_entry.get()
+        id_card = self.id_card_entry.get()
+
+        # Validate date of birth
+        try:
+            datetime.strptime(dob, "%Y-%m-%d")
+        except ValueError:
+            messagebox.showerror("Error", "Date of birth must be in YYYY-MM-DD format")
+            return
+        
+        # Validate phone number
+        if not re.match(r'^\d{10}$', phone_number):
+            messagebox.showerror("Error", "Phone number must be 10 digits")
+            return
+
+        # Validate gender
+        if gender not in ["male", "female", "undefined"]:
+            messagebox.showerror("Error", "Gender must be 'male', 'female', or 'undefined'")
+            return
+        
+
         if messagebox.askyesno("Confirm", "Bạn có chắc chắn muốn thay đổi không?"):
-            self.user['full_name'] = self.full_name_entry.get()
-            self.user['dob'] = self.dob_entry.get()
-            self.user['phone_number'] = self.phone_entry.get()
-            self.user['gender'] = self.gender_entry.get()
-            self.user['hometown'] = self.hometown_entry.get()
-            self.user['id_card'] = self.id_card_entry.get()
+            self.user['full_name'] = full_name
+            self.user['dob'] = dob
+            self.user['phone_number'] = phone_number
+            self.user['gender'] = gender
+            self.user['hometown'] = hometown
+            self.user['id_card'] = id_card
 
             # Update the user information in the database
             self.db_manager.update_user(**self.user)
 
             messagebox.showinfo("Success", "Information updated successfully")
             self.update_window.destroy()
-            self.show_profile()
+            self.show_home()
+
 
     def button_6_click(self):
         self.change_password_window = Toplevel(self.root)

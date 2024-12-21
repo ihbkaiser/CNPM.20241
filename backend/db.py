@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import mysql.connector
 
 class DBManager:
@@ -280,10 +282,15 @@ class DBManager:
         self.cursor.execute("DELETE FROM users WHERE username = %s", (username,))
         self.conn.commit()
 
-    def update_user(self, username, password, account_type, full_name, phone_number,  apartment_code, email, dob, gender, id_card, hometown):
-        self.cursor.execute("UPDATE users SET password = %s, account_type = %s, full_name = %s, phone_number = %s, apartment_code = %s, email = %s, dob = %s, gender = %s, id_card = %s, hometown = %s WHERE username = %s",
-                            (password, account_type, full_name, phone_number, apartment_code, email, dob, gender, id_card, hometown, username))
-        self.conn.commit()
+    def update_user(self, username, password, account_type, full_name, phone_number, apartment_code, email, dob, gender, id_card, hometown):
+        try:    
+            self.cursor.execute("UPDATE users SET password = %s, account_type = %s, full_name = %s, phone_number = %s, apartment_code = %s, email = %s, dob = %s, gender = %s, id_card = %s, hometown = %s WHERE username = %s",
+                                (password, account_type, full_name, phone_number, apartment_code, email, dob, gender, id_card, hometown, username))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            raise Exception(f"Lỗi khi cập nhật tài khoản: {err}")
+        except ValueError as ve:
+            raise Exception(str(ve))
 
     def get_all_users(self, account_type=None):
         if account_type:
