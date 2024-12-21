@@ -1476,7 +1476,50 @@ class AdminGUI(Tk):
             fee_name = self.tree.item(selected_item, 'text')
             if messagebox.askokcancel("Delete Fee", f"Are you sure you want to delete {fee_name} for all apartment?"):
                 self.db_manager.delete_fee_to_all(fee_name)
-                self.tree.delete(selected_item)
+                self.tree.place_forget()
+                fee_list = self.db_manager.get_all_userfee()
+
+                # Create a Treeview
+                style = ttk.Style()
+                style.configure(
+                "Custom.Treeview",
+                font=("Arial", 14),  # Font set to Arial, size 14
+                background="pink",  # Pink background
+                foreground="black",  # Black text
+                fieldbackground="pink",  # Pink table field background
+                rowheight=30  # Adjust row height for better readability
+            )
+                style.configure(
+                "Custom.Treeview.Heading",
+                font=("Arial", 14, "bold"),  # Bold font for headings
+                background="pink",  # Pink header background
+                foreground="black"  # Black text for headers
+            )
+                self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
+                self.tree["columns"] = ("zero", "one", "three","four")
+                self.tree.column("#0", width=200, minwidth=100)
+                self.tree.column("zero", width=100, minwidth=100)
+                self.tree.column("one", width=70, minwidth=100)
+                # self.tree.column("two", width=70, minwidth=100)
+                self.tree.column("three", width=70, minwidth=100)
+                self.tree.column("four", width=150, minwidth=100)
+
+                self.tree.heading("#0", text="Fee Name", anchor=tk.W)
+                self.tree.heading("zero", text="Apartment", anchor=tk.W)
+                self.tree.heading("one", text="Total", anchor=tk.W)
+                # self.tree.heading("two", text="Paid", anchor=tk.W)
+                self.tree.heading("three", text="Remain", anchor=tk.W)
+                self.tree.heading("four", text="Deadline", anchor=tk.W)
+
+                # Insert some sample data
+                for i in range(len(fee_list)):
+                    self.tree.insert("", "end", text=f"{fee_list[i]['fee_name']}", values=(f"{fee_list[i]['apartment_code']}",f"{fee_list[i]['total']}",  f"{fee_list[i]['remain']}", f"{fee_list[i]['deadline']}"))
+
+                # Place the Treeview on top of the Canvas
+                self.tree.place(x=220, y=141, width=792, height=506)
+                self.tree.bind("<Double-1>", confirm_delete_fee)
+                self.tree.bind("<Double-3>", confirm_delete_fee2)
+
 
 
         self.tree.bind("<Double-1>", confirm_delete_fee)
