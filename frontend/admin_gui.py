@@ -1509,7 +1509,17 @@ class AdminGUI(Tk):
                 self.db_manager.delete_userfee(fee_name, values[0])
                 self.tree.delete(selected_item)
 
+        def confirm_delete_fee2(event):
+            selected_item = self.tree.selection()[0]
+            values = self.tree.item(selected_item, 'values')
+            fee_name = self.tree.item(selected_item, 'text')
+            if messagebox.askokcancel("Delete Fee", f"Are you sure you want to delete {fee_name} for all apartment?"):
+                self.db_manager.delete_fee_to_all(fee_name)
+                self.tree.delete(selected_item)
+
+
         self.tree.bind("<Double-1>", confirm_delete_fee)
+        self.tree.bind("<Double-3>", confirm_delete_fee2)
 
         self.addall_img=Image.open("assets/admin_gui/add_all.png")
         self.addall_img = self.addall_img.resize((220, 45))
