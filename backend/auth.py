@@ -30,7 +30,7 @@ class AuthManager:
         if not apartment_code:
             raise Exception("Apartment code is required. Please enter a valid apartment code.")
         
-        self.db.add_user(username, password, full_name, phone_number, apartment_code, email=email, account_type=account_type, email=email, account_type=account_type, dob=dob, gender=gender, id_card=id_card, hometown=hometown)
+        self.db.add_user(username, password, full_name, phone_number, apartment_code, email=email, account_type=account_type, dob=dob, gender=gender, id_card=id_card, hometown=hometown)
 
     def login(self, username, password):
         user = self.db.get_user(username)
