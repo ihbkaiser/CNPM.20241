@@ -818,7 +818,7 @@ class RootGUI(Tk):
         new_image = PhotoImage(file="assets/admin_gui/button_1.png")
         self.home_button.config(image=new_image)
         self.home_button.image = new_image
-        new_image = PhotoImage(file="assets/admin_gui/button_2_red.png")
+        new_image = PhotoImage(file="assets/admin_gui/button_10_red.png")
         self.view_admin_button.config(image=new_image)
         self.view_admin_button.image = new_image
         new_image = PhotoImage(file="assets/admin_gui/button_3.png")
