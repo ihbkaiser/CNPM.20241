@@ -264,12 +264,12 @@ class DBManager:
         if self.cursor.fetchone() is None:
             self.add_user('root', 'rootpassword', 'Root User', '09111111111', 'N/A', 'root')
 
-    def add_user(self, username, password, full_name, phone_number, apartment_code, account_type='user', email=None):
+    def add_user(self, username, password, full_name, phone_number, apartment_code, account_type='user', email='default@gmail.com', dob='1999-01-01', gender='undefined', id_card='000000000000', hometown='EARTH'):
         try:
             self.cursor.execute("""
-            INSERT INTO users (username, password, account_type, full_name, phone_number, apartment_code, email)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (username, password, account_type, full_name, phone_number, apartment_code, email))
+            INSERT INTO users (username, password, account_type, full_name, phone_number, apartment_code, email, dob, gender, id_card, hometown)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (username, password, account_type, full_name, phone_number, apartment_code, email, dob, gender, id_card, hometown))
             self.conn.commit() 
         except mysql.connector.Error as err:
             raise Exception(f"Lỗi khi thêm tài khoản: {err}")

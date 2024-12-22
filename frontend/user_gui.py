@@ -897,7 +897,8 @@ class UserGUI(Tk):
 
         # Insert some sample data
         for i in range(len(fee_list)):
-            self.tree.insert("", "end", text=f"{fee_list[i]['fee_name']}", values=(f"{fee_list[i]['total']}", f"{fee_list[i]['paid']}", f"{fee_list[i]['remain']}", f"{fee_list[i]['deadline']}"))
+            remain = 0 if fee_list[i]['remain'] == None else fee_list[i]['remain']
+            self.tree.insert("", "end", text=f"{fee_list[i]['fee_name']}", values=(f"{fee_list[i]['total']}", f"{fee_list[i]['paid']}", f"{max(0,int(remain))}", f"{fee_list[i]['deadline']}"))
 
         # Place the Treeview on top of the Canvas
         self.tree.place(x=220, y=141, width=792, height=579)
@@ -993,7 +994,7 @@ class UserGUI(Tk):
 
         self.include_charity_check = tk.Checkbutton(
             self.root,
-            text="love people ?",
+            text="Include charity",
             variable=self.include_charity_var,
             command=update_options,
             font=("Arial", 20),
@@ -1162,7 +1163,7 @@ class UserGUI(Tk):
             anchor="nw",
             font=("Arial", 20)
         )
-        truncated_feename = (feename[:15] + '...') if len(feename) > 15 else feename
+        truncated_feename = (feename[:12] + '...') if len(feename) > 12 else feename
         self.canvas.create_text(
             500.25,
             530.0,
@@ -1173,7 +1174,7 @@ class UserGUI(Tk):
             tags="feename"
         )
 
-        if len(feename) > 15:
+        if len(feename) > 12:
             def show_full_feename(event):
                 x, y, _, _ = self.canvas.bbox("feename")
                 self.tooltip = self.canvas.create_text(
@@ -1271,7 +1272,11 @@ class UserGUI(Tk):
         violate_condition_for_required = False
         if fee_type == 'required':
             violate_condition_for_required = money_paid<1000 or money_paid>money_remain or money_paid%1000!=0
-        condition = (fee_type == 'unrequired') or (fee_type == 'required' and not violate_condition_for_required)
+        violate_condition_for_unrequired = False
+        if fee_type == 'unrequired':
+            violate_condition_for_unrequired = money_paid<1000 or money_paid%1000!=0
+        
+        condition = (fee_type == 'unrequired' and not violate_condition_for_unrequired) or (fee_type == 'required' and not violate_condition_for_required)
         if (not condition):
             self.canvas.create_text(
                 850.25,
@@ -1300,7 +1305,7 @@ class UserGUI(Tk):
             )
 
             self.qr_img = Image.open("assets/user_gui/qr.png")
-            self.qr_img = self.qr_img.resize((200, 200))
+            self.qr_img = self.qr_img.resize((180,180))
             self.qr_img = ImageTk.PhotoImage(self.qr_img)
             self.canvas.create_image(
                 850.75,

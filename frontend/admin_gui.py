@@ -1696,6 +1696,12 @@ class AdminGUI(Tk):
                 if total == '0':
                     self.success_label.config(text="Total cannot be 0!")
                     return
+                if int(total) < 0:
+                    self.success_label.config(text="Total cannot be negative!")
+                    return
+                if int(total) % 1000 != 0:
+                    self.success_label.config(text="Total must be a multiple of 1000!")
+                    return
                 deadline_date = self.deadline_entry.get()
                 deadline_time = f"{self.hour_entry.get()}:{self.minute_entry.get()}:00"
                 if not deadline_date or not self.hour_entry.get() or not self.minute_entry.get(): 
@@ -1789,6 +1795,12 @@ class AdminGUI(Tk):
                     return
                 if total == '0':
                     self.success_label.config(text="Total cannot be 0!")
+                    return
+                if int(total) < 0:
+                    self.success_label.config(text="Total cannot be negative!")
+                    return
+                if int(total) % 1000 != 0:
+                    self.success_label.config(text="Total must be a multiple of 1000!")
                     return
                 self.db_manager.add_userfee(apt_name, fee_name, total, 0, total)
             
@@ -3354,7 +3366,9 @@ class AdminGUI(Tk):
         # Use OpenCV to open and display the image
         img = cv2.imread("assets/admin_gui/fee_summary.png")
         resized_img = cv2.resize(img, (600, 500))
+        cv2.namedWindow("Fee Summary Visualization", cv2.WINDOW_NORMAL)
         cv2.imshow("Fee Summary Visualization", resized_img)
+        cv2.setWindowProperty("Fee Summary Visualization", cv2.WND_PROP_RESIZABLE, cv2.WINDOW_AUTOSIZE)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 

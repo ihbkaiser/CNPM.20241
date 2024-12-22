@@ -13,7 +13,7 @@ class AuthManager:
 
         
 
-    def register_user(self, username, password, full_name, phone_number, apartment_code, confirm_password, account_type='user', email=None):
+    def register_user(self, username, password, full_name, phone_number, apartment_code, confirm_password, account_type='user', email='default@gmail.com', dob='1999-01-01', gender='undefined', id_card='000000000000', hometown='EARTH'):
         """Đăng ký người dùng mới."""
         if password != confirm_password:
             raise Exception("Password and confirm password do not match. Please enter the same password in both fields.")
@@ -30,7 +30,7 @@ class AuthManager:
         if not apartment_code:
             raise Exception("Apartment code is required. Please enter a valid apartment code.")
         
-        self.db.add_user(username, password, full_name, phone_number, apartment_code, email=email, account_type=account_type)
+        self.db.add_user(username, password, full_name, phone_number, apartment_code, email=email, account_type=account_type, email=email, account_type=account_type, dob=dob, gender=gender, id_card=id_card, hometown=hometown)
 
     def login(self, username, password):
         user = self.db.get_user(username)

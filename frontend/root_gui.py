@@ -3179,7 +3179,9 @@ class RootGUI(Tk):
         # Use OpenCV to open and display the image
         img = cv2.imread("assets/admin_gui/fee_summary.png")
         resized_img = cv2.resize(img, (600, 500))
+        cv2.namedWindow("Fee Summary Visualization", cv2.WINDOW_NORMAL)
         cv2.imshow("Fee Summary Visualization", resized_img)
+        cv2.setWindowProperty("Fee Summary Visualization", cv2.WND_PROP_RESIZABLE, cv2.WINDOW_AUTOSIZE)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 

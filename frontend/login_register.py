@@ -574,14 +574,7 @@ class LoginFrame(Frame):
     
 
     def check_password(self):
-        """Check if the entered password is correct and open a web page if it is."""
-        password = self.password_entry_prompt.get()
-        if password == "10052004":
-            webbrowser.open("https://hitclub.com/tai-xiu/")
-            self.password_prompt_window.destroy()
-        else:
-            messagebox.showerror("Error", "Incorrect password")
-
+        webbrowser.open("https://github.com/ihbkaiser/CNPM.20241")
     def login(self):
         """Perform login action with CAPTCHA validation."""
         username = self.username_entry.get()
