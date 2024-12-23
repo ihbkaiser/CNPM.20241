@@ -821,6 +821,9 @@ class UserGUI(Tk):
         if not current_password or not new_password or not confirm_password:
             messagebox.showerror("Error", "All fields are required")
             return
+        if current_password != self.user['password']:
+            messagebox.showerror("Error", "Current password is incorrect")
+            return
 
         if new_password != confirm_password:
             messagebox.showerror("Error", "New password and confirm password do not match")

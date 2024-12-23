@@ -857,6 +857,9 @@ class AdminGUI(Tk):
         current_password = self.current_password_entry.get()
         new_password = self.new_password_entry.get()
         confirm_password = self.confirm_password_entry.get()
+        if current_password != self.user['password']:
+            messagebox.showerror("Error", "Current password is incorrect")
+            return
 
         if not current_password or not new_password or not confirm_password:
             messagebox.showerror("Error", "All fields are required")

@@ -1646,6 +1646,9 @@ class RegisterFrame(Frame):
         full_name = self.fullname_entry.get()
         phone_number = self.phonenumber_entry.get()
         apartment_code = self.apartment_code_entry.get()
+        if self.controller.auth_manager.check_duplicate(username, password):
+            messagebox.showerror("Register Error", "ERROR ")
+            return
 
         # Validate phone number
         if not re.fullmatch(r'\d{10}', phone_number):

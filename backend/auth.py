@@ -42,6 +42,12 @@ class AuthManager:
         if logged_in_user['account_type'] == 'root':
             return self.db.get_all_users(account_type)
         raise Exception("Không có quyền truy cập")
+    def check_duplicate(self, username, password):
+        user = self.db.get_user(username)
+        if user and user['password'] == password:
+            return True
+        return False
+
 
     def change_password(self, username, phone_number , new_password):
         """Thay đổi mật khẩu của người dùng."""
