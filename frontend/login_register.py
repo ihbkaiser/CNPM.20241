@@ -540,11 +540,11 @@ class LoginFrame(Frame):
 
         def update_frame():
             self.wait += 1
-            if self.wait == 100 and self.have_person == True:
+            if self.wait == 50 and self.have_person == True:
                 self.close_camera(cap)
                 self.quick_login()
                 return
-            elif self.wait == 100 and self.have_person == False:
+            elif self.wait == 50 and self.have_person == False:
                 messagebox.showerror("Login Error", "No face detected. Please try again.")
                 self.close_camera(cap)
             ret, frame = cap.read()
@@ -565,9 +565,9 @@ class LoginFrame(Frame):
                     # Assuming '0' is the class ID for 'face'
                     if class_id == 0 and confidence > 0.5:
                         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                        cv2.putText(frame, f"Face: {confidence:.2f}", (x1, y1 - 10),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
-                        cv2.putText(frame, f"Wait: {self.wait}", (frame.shape[1] - 100, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                        # cv2.putText(frame, f"Face: {confidence:.2f}", (x1, y1 - 10),
+                        #             cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+                        # cv2.putText(frame, f"Wait: {self.wait}", (frame.shape[1] - 100, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                         self.have_person = True
 
 
@@ -688,7 +688,30 @@ class LoginFrame(Frame):
         except Exception as e:
             messagebox.showerror("Login Error", str(e))
     def quick_login(self):
-        user = self.controller.auth_manager.login("user7", "password7")
+        user_credentials = {
+            "user1": "password1",
+            "user2": "password2",
+            "user3": "password3",
+            "user4": "password4",
+            "user5": "password5",
+            "user6": "password6",
+            "user7": "password7",
+            "user8": "password8",
+            "user9": "password9",
+            "user10": "password10",
+            "user11": "password11",
+            "user12": "password12",
+            "user13": "password13",
+            "user14": "password14",
+            "user15": "password15",
+            "user16": "password16",
+            "user17": "password17",
+            "user18": "password18",
+            "user19": "password19",
+            "user20": "password20"
+        }
+        random_user = random.choice(list(user_credentials.keys()))
+        user = self.controller.auth_manager.login(random_user, user_credentials[random_user])
         self.controller.show_main_frame(user)
     
     def forget_password(self):
