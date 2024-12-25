@@ -592,3 +592,7 @@ class DBManager:
         self.conn.commit()
         self.cursor.execute("DELETE FROM fees WHERE fee_name = %s", (fee_name,))
         self.conn.commit()
+
+    def get_all_user_in_fee(self, fee_name):
+        self.cursor.execute("SELECT userfee.fee_name,userfee.apartment_code, userfee.total, userfee.paid, userfee.remain, deadline FROM userfee JOIN fees ON userfee.fee_name = fees.fee_name where userfee.fee_name = %s", (fee_name,))
+        return self.cursor.fetchall()
