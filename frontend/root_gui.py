@@ -1145,7 +1145,7 @@ class RootGUI(Tk):
             relief="flat"
         )
         self.button_1.place(
-            x=270.0,
+            x=380.0,
             y=650.0,
             width=176.0,
             height=38.232208251953125
@@ -1163,7 +1163,7 @@ class RootGUI(Tk):
             relief="flat"
         )
         self.button_2.place(
-            x=520.0,
+            x=630.0,
             y=650.0,
             width=176.0,
             height=38.232208251953125

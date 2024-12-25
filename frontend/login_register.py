@@ -16,6 +16,8 @@ import zxcvbn
 import re 
 import webbrowser
 import cv2
+import torch
+from ultralytics import YOLO
 class LoginFrame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -252,11 +254,29 @@ class LoginFrame(Frame):
             highlightthickness=0,
             background="#FFFFFF",
             activebackground="#FFFFFF",
-            command=self.open_password_prompt,
+            command=self.open_github,
             relief="flat"
         )
         button_6.place(
             x=724.0,
+            y=611.0,
+            width=60.0,
+            height=60.0
+        )
+        self.cam_img = Image.open("assets/frame0/camera.png")
+        self.cam_img = self.cam_img.resize((60, 60))
+        self.cam_img = ImageTk.PhotoImage(self.cam_img)
+        self.cam_button = Button(
+            image=self.cam_img,
+            borderwidth=0,
+            highlightthickness=0,
+            background="#FFFFFF",
+            activebackground="#FFFFFF",
+            command=self.open_camera,
+            relief="flat"
+        )
+        self.cam_button.place(
+            x=524.0,
             y=611.0,
             width=60.0,
             height=60.0
@@ -498,8 +518,82 @@ class LoginFrame(Frame):
             68.0,
             image=self.image_image_27
         )
+    def open_camera(self):
+    # Load YOLOv11 model
+        model = YOLO("yolo11s.pt")
 
-    
+        # Initialize the camera
+        cap = cv2.VideoCapture(0)
+        if not cap.isOpened():
+            messagebox.showerror("Camera Error", "Unable to access the camera.")
+            return
+
+        # Create a new window for the camera feed
+        self.camera_window = Toplevel(self)
+        self.camera_window.title("Camera Feed")
+        self.camera_window.geometry("800x600")
+
+        self.camera_label = Label(self.camera_window)
+        self.camera_label.pack()
+        self.wait = 0
+        self.have_person = False
+
+        def update_frame():
+            self.wait += 1
+            if self.wait == 100 and self.have_person == True:
+                self.close_camera(cap)
+                self.quick_login()
+                return
+            elif self.wait == 100 and self.have_person == False:
+                messagebox.showerror("Login Error", "No face detected. Please try again.")
+                self.close_camera(cap)
+            ret, frame = cap.read()
+            if not ret:
+                messagebox.showerror("Camera Error", "Failed to read frame from the camera.")
+                self.close_camera(cap)
+                return
+
+            # Perform YOLO inference
+            results = model.predict(frame, conf=0.5)
+            for result in results:
+                boxes = result.boxes
+                for box in boxes:
+                    x1, y1, x2, y2 = map(int, box.xyxy[0])
+                    confidence = box.conf[0].item()
+                    class_id = int(box.cls[0].item())
+
+                    # Assuming '0' is the class ID for 'face'
+                    if class_id == 0 and confidence > 0.5:
+                        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                        cv2.putText(frame, f"Face: {confidence:.2f}", (x1, y1 - 10),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+                        cv2.putText(frame, f"Wait: {self.wait}", (frame.shape[1] - 100, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                        self.have_person = True
+
+
+            # Convert the frame to ImageTk format for Tkinter
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            img = Image.fromarray(frame_rgb)
+            imgtk = ImageTk.PhotoImage(image=img)
+            self.camera_label.imgtk = imgtk
+            self.camera_label.configure(image=imgtk)
+
+            # Schedule the next frame update
+            self.camera_window.after(2, update_frame)
+
+        update_frame()
+
+        # Ensure camera is released when the window is closed
+        self.camera_window.protocol("WM_DELETE_WINDOW", lambda: self.close_camera(cap))
+    def close_camera(self, cap):
+        if cap.isOpened():
+            cap.release()
+        if self.camera_window:
+            self.camera_window.destroy()
+        print("Camera closed")
+
+ 
+
     def add_placeholder(self, entry, placeholder_text):
         entry.insert(0, placeholder_text)
         entry.config(fg='grey')
@@ -555,25 +649,13 @@ class LoginFrame(Frame):
             image=self.captcha_image
         )
 
-    def open_password_prompt(self):
-        """Open a new window to prompt for a password."""
-        self.password_prompt_window = Toplevel(self)
-        self.password_prompt_window.title("Enter Password")
-        self.password_prompt_window.geometry("300x150")
-        
-        Label(self.password_prompt_window, text="Enter Password:").pack(pady=10)
-        self.password_entry_prompt = Entry(self.password_prompt_window, show="*")
-        self.password_entry_prompt.pack(pady=10)
-        
-        submit_button = Button(self.password_prompt_window, text="Submit", command=self.check_password)
-        submit_button.pack(pady=10)
 
     def open_zalo(self):
         """Open Zalo app."""
         webbrowser.open("https://id.zalo.me/account?continue=http%3A%2F%2Fzalo%2Eme%2Fg%2Ftgdmhp753")
     
 
-    def check_password(self):
+    def open_github(self):
         webbrowser.open("https://github.com/ihbkaiser/CNPM.20241")
     def login(self):
         """Perform login action with CAPTCHA validation."""
@@ -605,6 +687,9 @@ class LoginFrame(Frame):
             self.controller.show_main_frame(user)
         except Exception as e:
             messagebox.showerror("Login Error", str(e))
+    def quick_login(self):
+        user = self.controller.auth_manager.login("user7", "password7")
+        self.controller.show_main_frame(user)
     
     def forget_password(self):
         self.controller.show_forget_frame(user)
