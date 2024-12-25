@@ -1568,11 +1568,13 @@ class AdminGUI(Tk):
             search_window.title("Search")
             search_window.geometry("300x100")
             
-            Label(search_window, text="Search:").pack(pady=5)
+            Label(search_window, text="Search with fee name:").pack(pady=5)
             search_entry = Entry(search_window)
             search_entry.pack(pady=5)
             
             def search():
+                if self.tree:
+                    self.tree.place_forget()
                 query = search_entry.get()
                 fee_list = self.db_manager.get_all_user_in_fee(query)
                 # Create a Treeview
@@ -1604,6 +1606,9 @@ class AdminGUI(Tk):
 
                 # Place the Treeview on top of the Canvas
                 self.tree.place(x=220, y=141, width=792, height=506)
+                self.tree.bind('<Control-f>', open_search)
+                self.tree.bind("<Double-1>", confirm_delete_fee)
+                self.tree.bind("<Double-3>", confirm_delete_fee2)
                 search_window.destroy()
 
             
