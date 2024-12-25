@@ -936,6 +936,12 @@ class UserGUI(Tk):
 
         # Place the Treeview on top of the Canvas
         self.tree.place(x=220, y=141, width=792, height=579)
+        # Create a scrollbar
+        scrollbar = ttk.Scrollbar(self.root, orient='vertical', command=self.tree.yview)
+        scrollbar.place(x=1012.5-20, y=141, height=579)
+        self.tree.configure(yscrollcommand=scrollbar.set)
+
+        
 
         # Bind double-click event
         # self.tree.bind("<Double-1>", self.on_double_click)

@@ -1562,8 +1562,61 @@ class AdminGUI(Tk):
                 self.tree.bind("<Double-1>", confirm_delete_fee)
                 self.tree.bind("<Double-3>", confirm_delete_fee2)
 
+        # Add Ctrl+F search functionality
+        def open_search(event=None):
+            search_window = Toplevel(self.root)
+            search_window.title("Search")
+            search_window.geometry("300x100")
+            
+            Label(search_window, text="Search with fee name:").pack(pady=5)
+            search_entry = Entry(search_window)
+            search_entry.pack(pady=5)
+            
+            def search():
+                if self.tree:
+                    self.tree.place_forget()
+                query = search_entry.get()
+                fee_list = self.db_manager.get_all_user_in_fee(query)
+                # Create a Treeview
+                style.configure(
+                "Custom.Treeview.Heading",
+                font=("Arial", 14, "bold"),  # Bold font for headings
+                background="pink",  # Pink header background
+                foreground="black"  # Black text for headers
+            )
+                self.tree = ttk.Treeview(self.root, style="Custom.Treeview")
+                self.tree["columns"] = ("zero", "one", "three","four")
+                self.tree.column("#0", width=200, minwidth=100)
+                self.tree.column("zero", width=100, minwidth=100)
+                self.tree.column("one", width=70, minwidth=100)
+                # self.tree.column("two", width=70, minwidth=100)
+                self.tree.column("three", width=70, minwidth=100)
+                self.tree.column("four", width=150, minwidth=100)
 
+                self.tree.heading("#0", text="Fee Name", anchor=tk.W)
+                self.tree.heading("zero", text="Apartment", anchor=tk.W)
+                self.tree.heading("one", text="Total", anchor=tk.W)
+                # self.tree.heading("two", text="Paid", anchor=tk.W)
+                self.tree.heading("three", text="Remain", anchor=tk.W)
+                self.tree.heading("four", text="Deadline", anchor=tk.W)
 
+                # Insert some sample data
+                for i in range(len(fee_list)):
+                    self.tree.insert("", "end", text=f"{fee_list[i]['fee_name']}", values=(f"{fee_list[i]['apartment_code']}",f"{fee_list[i]['total']}",  f"{fee_list[i]['remain']}", f"{fee_list[i]['deadline']}"))
+
+                # Place the Treeview on top of the Canvas
+                self.tree.place(x=220, y=141, width=792, height=506)
+                self.tree.bind('<Control-f>', open_search)
+                self.tree.bind("<Double-1>", confirm_delete_fee)
+                self.tree.bind("<Double-3>", confirm_delete_fee2)
+                search_window.destroy()
+
+            
+            Button(search_window, text="Find", command=search).pack(pady=5)
+            search_entry.focus_set()
+            
+        # Bind Ctrl+F to open search
+        self.tree.bind('<Control-f>', open_search)
         self.tree.bind("<Double-1>", confirm_delete_fee)
         self.tree.bind("<Double-3>", confirm_delete_fee2)
 
