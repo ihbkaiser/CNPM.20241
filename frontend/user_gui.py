@@ -10,6 +10,9 @@ from PIL import ImageTk
 from tkinter import messagebox, Toplevel
 import random
 from datetime import datetime 
+from tkinter import PhotoImage
+from openpyxl import load_workbook
+import os
 
 class UserGUI(Tk):
     def __init__(self, root, user):
@@ -453,16 +456,44 @@ class UserGUI(Tk):
             image=self.image_image_20
         )
 
-        random_color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        # random_color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        image_folder = "assets/radom"
+        image_files = [f for f in os.listdir(image_folder) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
-        self.canvas.create_oval(
+        # Chọn ngẫu nhiên một tệp ảnh
+        random_image_file = random.choice(image_files)
+        random_image_path = os.path.join(image_folder, random_image_file)
+
+        # Mở và nhúng ảnh vào canvas
+        random_image = Image.open(random_image_path)
+        random_image = random_image.resize((134, 134))  # Điều chỉnh kích thước ảnh nếu cần
+
+        # Tạo hình tròn
+        mask = Image.new("L", random_image.size, 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0, random_image.size[0], random_image.size[1]), fill=255)
+
+        # Áp dụng mặt nạ hình tròn lên ảnh
+        random_image.putalpha(mask)
+        random_image_tk = ImageTk.PhotoImage(random_image)
+
+        self.canvas.create_image(
             229.25,
             214.0,
-            363.25,
-            348.0,
-            fill=random_color,  # Màu ngẫu nhiên
-            outline=""  # Không có đường viền
+            anchor="nw",
+            image=random_image_tk
         )
+
+        # Để giữ ảnh trong bộ nhớ
+        self.random_image_tk = random_image_tk
+        # self.canvas.create_oval(
+        #     229.25,
+        #     214.0,
+        #     363.25,
+        #     348.0,
+        #     fill=random_color,  # Màu ngẫu nhiên
+        #     outline=""  # Không có đường viền
+        # )
 
         self.image_image_21 = PhotoImage(
             file="assets/profile/image_21.png")
